@@ -56,5 +56,4 @@ This challenge is more than a resume builder:
 
 ---
 
-## Repository Structure
 
