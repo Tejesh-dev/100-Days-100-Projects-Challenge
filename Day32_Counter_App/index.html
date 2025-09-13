@@ -1,0 +1,300 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <title>Premium Counter</title>
+    <meta name="description" content="A premium-styled counter with persistence." />
+    <style>
+      :root {
+        /* Color system (4 total): 1 primary, 2 neutrals, 1 accent */
+        --color-primary: #0f172a; /* deep slate/navy */
+        --color-neutral-0: #ffffff; /* white */
+        --color-neutral-100: #f1f5f9; /* light slate background */
+        --color-accent: #c19a35; /* refined gold */
+
+        /* Tokens */
+        --radius-lg: 16px;
+        --radius-sm: 10px;
+        --shadow-lg: 0 10px 30px rgba(15, 23, 42, 0.12);
+        --shadow-md: 0 6px 18px rgba(15, 23, 42, 0.10);
+        --ring: 0 0 0 3px rgba(193, 154, 53, 0.25);
+        --transition-fast: 160ms cubic-bezier(0.2, 0.6, 0.2, 1);
+      }
+
+      /* Typography: up to 2 families — serif for headings, system sans for body */
+      html {
+        font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+        color: var(--color-primary);
+        background: radial-gradient(1400px 800px at 50% -300px, #ffffff 0%, var(--color-neutral-100) 60%, #e9eef5 100%);
+        /* subtle gradient for page backdrop is allowed here as a background accent */
+      }
+
+      body {
+        margin: 0;
+        min-height: 100svh;
+        display: grid;
+        place-items: center;
+        padding: 24px;
+      }
+
+      .shell {
+        width: 100%;
+        max-width: 520px;
+      }
+
+      .card {
+        background: var(--color-neutral-0);
+        border-radius: var(--radius-lg);
+        box-shadow: var(--shadow-lg);
+        padding: 28px;
+        border: 1px solid rgba(15, 23, 42, 0.06);
+      }
+
+      .header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 20px;
+      }
+
+      .title {
+        font-weight: 700;
+        letter-spacing: 0.2px;
+        font-size: 20px;
+      }
+
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 12px;
+        border-radius: var(--radius-sm);
+        background: #fff7e0; /* light gold tint derived from accent */
+        color: #8a6a15; /* readable on the tint */
+        font-size: 12px;
+        font-weight: 600;
+        border: 1px solid rgba(193, 154, 53, 0.35);
+      }
+
+      .value-wrap {
+        display: grid;
+        place-items: center;
+        padding: 26px 16px;
+        margin: 4px 0 22px;
+        border-radius: var(--radius-sm);
+        background: linear-gradient(180deg, #ffffff 0%, #fafcff 100%);
+        border: 1px solid rgba(15, 23, 42, 0.06);
+      }
+
+      .value {
+        font-variant-numeric: tabular-nums;
+        font-size: clamp(48px, 9vw, 72px);
+        line-height: 1.1;
+        letter-spacing: -0.5px;
+        font-weight: 800;
+      }
+
+      .controls {
+        display: grid;
+        grid-template-columns: 1fr auto 1fr;
+        gap: 12px;
+      }
+
+      .btn {
+        appearance: none;
+        border: 1px solid rgba(15, 23, 42, 0.12);
+        background: var(--color-neutral-0);
+        color: var(--color-primary);
+        padding: 14px 16px;
+        border-radius: 12px;
+        font-weight: 700;
+        font-size: 16px;
+        cursor: pointer;
+        transition: transform var(--transition-fast), box-shadow var(--transition-fast), background var(--transition-fast), color var(--transition-fast);
+        box-shadow: var(--shadow-md);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        user-select: none;
+      }
+      .btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 10px 24px rgba(15, 23, 42, 0.14);
+      }
+      .btn:active {
+        transform: translateY(0);
+        box-shadow: var(--shadow-md);
+      }
+      .btn:focus-visible {
+        outline: none;
+        box-shadow: var(--shadow-md), var(--ring);
+      }
+
+      .btn--primary {
+        background: var(--color-primary);
+        color: var(--color-neutral-0);
+        border-color: rgba(15, 23, 42, 0.9);
+      }
+      .btn--primary:hover {
+        background: #0c1324;
+      }
+
+      .btn--ghost {
+        background: var(--color-neutral-0);
+      }
+
+      .btn--accent {
+        background: var(--color-accent);
+        border-color: #b78a2c;
+        color: #14120b;
+      }
+      .btn--accent:hover {
+        background: #b78a2c;
+      }
+
+      .btn[disabled],
+      .btn[aria-disabled="true"] {
+        opacity: 0.5;
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: var(--shadow-md);
+      }
+
+      .spacer {
+        height: 10px;
+      }
+
+      .footer {
+        margin-top: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        color: rgba(15, 23, 42, 0.7);
+        font-size: 12px;
+      }
+
+      .hint {
+        opacity: 0.85;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .btn {
+          transition: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="shell" aria-labelledby="counter-heading">
+      <section class="card" role="region" aria-label="Counter">
+        <header class="header">
+          <h1 id="counter-heading" class="title">Counter</h1>
+          <span class="badge" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#c19a35" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path d="M12 2l2.39 4.84L20 8.27l-3.8 3.7.9 5.25L12 15.9l-4.1 2.32.9-5.25L5 8.27l5.61-1.43L12 2z"/>
+            </svg>
+            Premium
+          </span>
+        </header>
+
+        <div class="value-wrap" aria-live="polite" aria-atomic="true">
+          <div id="value" class="value">0</div>
+        </div>
+
+        <div class="controls">
+          <button id="dec" class="btn btn--ghost" type="button" aria-label="Decrease count">−</button>
+          <button id="reset" class="btn btn--accent" type="button" aria-label="Reset count to zero">Reset</button>
+          <button id="inc" class="btn btn--primary" type="button" aria-label="Increase count">+</button>
+        </div>
+
+        <div class="footer">
+          <div class="hint">Values are saved automatically.</div>
+          <div id="saved-indicator" class="hint" aria-live="polite"></div>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      (function () {
+        const STORAGE_KEY = 'premium-counter:value';
+
+        const valueEl = document.getElementById('value');
+        const decBtn = document.getElementById('dec');
+        const incBtn = document.getElementById('inc');
+        const resetBtn = document.getElementById('reset');
+        const savedIndicator = document.getElementById('saved-indicator');
+
+        function readInitial() {
+          const raw = localStorage.getItem(STORAGE_KEY);
+          const n = Number.parseInt(raw, 10);
+          return Number.isFinite(n) && n >= 0 ? n : 0;
+        }
+
+        let count = readInitial();
+        render();
+
+        function render() {
+          valueEl.textContent = String(count);
+          const atZero = count <= 0;
+          decBtn.disabled = atZero;
+          decBtn.setAttribute('aria-disabled', String(atZero));
+        }
+
+        function persist() {
+          try {
+            localStorage.setItem(STORAGE_KEY, String(count));
+            announceSaved();
+          } catch (err) {
+            // fail silently for storage errors
+          }
+        }
+
+        let saveTimer;
+        function announceSaved() {
+          clearTimeout(saveTimer);
+          savedIndicator.textContent = 'Saved';
+          saveTimer = setTimeout(() => {
+            savedIndicator.textContent = '';
+          }, 900);
+        }
+
+        incBtn.addEventListener('click', () => {
+          count += 1;
+          render();
+          persist();
+        });
+
+        decBtn.addEventListener('click', () => {
+          if (count > 0) {
+            count -= 1;
+            render();
+            persist();
+          }
+        });
+
+        resetBtn.addEventListener('click', () => {
+          count = 0;
+          render();
+          persist();
+        });
+
+        // Keyboard support (+ / - keys)
+        window.addEventListener('keydown', (e) => {
+          if (e.key === '+') {
+            incBtn.click();
+          } else if (e.key === '-') {
+            decBtn.click();
+          } else if (e.key.toLowerCase() === 'r') {
+            resetBtn.click();
+          }
+        });
+      })();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Character Counter</title>
+    <!-- Use Tailwind CSS for a minimal, responsive design -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #1f2937; /* Dark background */
+        }
+        
+        /* Keyframe animation for a subtle glow */
+        @keyframes pulse-glow {
+            0%, 100% {
+                box-shadow: 0 0 0px rgba(59, 130, 246, 0.4);
+            }
+            50% {
+                box-shadow: 0 0 10px rgba(59, 130, 246, 0.8);
+            }
+        }
+        
+        /* Apply the animation on focus, a bit subtle */
+        #textArea:focus {
+            animation: pulse-glow 1.5s infinite ease-in-out;
+        }
+
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen p-4">
+
+    <!-- Main container for the app -->
+    <div class="w-full max-w-2xl bg-gray-800 rounded-xl shadow-lg p-6 sm:p-8">
+        <h1 class="text-3xl font-bold text-gray-100 text-center mb-6">Character Counter</h1>
+
+        <!-- Textarea for user input -->
+        <textarea
+            id="textArea"
+            class="w-full p-4 border border-gray-600 rounded-lg bg-gray-700 text-gray-100 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-400 transition duration-300 resize-none"
+            rows="10"
+            placeholder="Start typing here..."
+        ></textarea>
+
+        <!-- Container for character count display -->
+        <div class="mt-4 flex justify-between items-center text-gray-400">
+            <div>
+                Characters Typed:
+                <span id="currentCharCount" class="font-semibold text-lg text-gray-100">0</span>
+            </div>
+            <div>
+                Remaining:
+                <span id="remainingCharCount" class="font-semibold text-lg text-green-400">200</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Get references to the HTML elements
+        const textArea = document.getElementById('textArea');
+        const currentCharCountSpan = document.getElementById('currentCharCount');
+        const remainingCharCountSpan = document.getElementById('remainingCharCount');
+
+        // Define the character limit
+        const characterLimit = 200;
+
+        /**
+         * Updates the character counts and applies a warning style if the limit is reached.
+         * @param {Event} event - The input event from the textarea.
+         */
+        textArea.addEventListener('input', (event) => {
+            const currentLength = textArea.value.length;
+            const remainingCount = characterLimit - currentLength;
+
+            // Update the displayed character counts
+            currentCharCountSpan.textContent = currentLength;
+            remainingCharCountSpan.textContent = remainingCount;
+
+            // Apply/remove a red warning style based on the remaining count
+            if (remainingCount <= 0) {
+                remainingCharCountSpan.classList.remove('text-green-400');
+                remainingCharCountSpan.classList.add('text-red-400');
+            } else {
+                remainingCharCountSpan.classList.remove('text-red-400');
+                remainingCharCountSpan.classList.add('text-green-400');
+            }
+
+            // Optional: Prevent further typing once the limit is reached
+            if (currentLength > characterLimit) {
+                textArea.value = textArea.value.substring(0, characterLimit);
+                remainingCharCountSpan.textContent = 0;
+            }
+        });
+    </script>
+</body>
+</html>

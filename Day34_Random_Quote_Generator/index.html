@@ -1,0 +1,432 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Random Quote Generator</title>
+  <meta name="description" content="Get a random inspirational or funny quote. Tweet or copy it, with smooth animations and API fallback." />
+  <style>
+    /* Design tokens: exactly 5 colors total */
+    :root{
+      --primary: #0ea5a7;   /* teal */
+      --bg: #ffffff;        /* white */
+      --text: #0f172a;      /* near-black */
+      --muted: #64748b;     /* gray */
+      --accent: #f59e0b;    /* amber */
+      
+      --radius: 14px;
+      --shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+      --card-border: rgba(14, 165, 167, 0.18); /* derived from primary */
+      --bg-tint: rgba(14, 165, 167, 0.08);     /* derived from primary */ 
+      --transition-fast: 160ms cubic-bezier(.2,.7,.2,1);
+      --transition-slow: 300ms cubic-bezier(.2,.7,.2,1);
+    }
+
+    /* Base */
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body{
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      line-height: 1.6;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      transition: background-color var(--transition-slow);
+    }
+    /* Background tint toggle (changes each quote) */
+    body.tint { background-color: var(--bg-tint); }
+
+    .container{
+      width: 100%;
+      max-width: 720px;
+      background: #fff;
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 24px;
+    }
+
+    header{
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .brand{
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .logo{
+      width: 32px; height: 32px; border-radius: 8px; background: var(--primary);
+      display: grid; place-items: center; color: #fff; font-weight: 700;
+    }
+    .title{
+      margin: 0;
+      font-size: clamp(1.1rem, 1rem + 1vw, 1.5rem);
+      letter-spacing: -0.01em;
+    }
+
+    .help{
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .quote-card{
+      position: relative;
+      padding: 24px;
+      border-radius: calc(var(--radius) - 4px);
+      border: 1px dashed rgba(14,165,167,0.25);
+      background: #fff;
+      transition: transform var(--transition-slow), box-shadow var(--transition-slow);
+    }
+    .quote-card:hover{
+      transform: translateY(-1px);
+      box-shadow: 0 16px 40px rgba(15, 23, 42, 0.1);
+    }
+
+    blockquote{
+      margin: 0;
+      font-size: clamp(1.125rem, 1rem + 1vw, 1.6rem);
+      font-weight: 600;
+      letter-spacing: -.01em;
+    }
+    .big-quote{
+      color: var(--primary);
+      font-size: 2rem;
+      font-weight: 800;
+      margin-right: 6px;
+      user-select: none;
+    }
+    .author{
+      margin-top: 12px;
+      color: var(--muted);
+      font-weight: 500;
+      font-size: 0.975rem;
+    }
+
+    .controls{
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      margin-top: 20px;
+    }
+
+    button{
+      appearance: none;
+      border: 0;
+      padding: 10px 14px;
+      border-radius: 10px;
+      background: var(--primary);
+      color: #fff;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform var(--transition-fast), box-shadow var(--transition-fast), filter var(--transition-fast);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    button:hover{ filter: brightness(0.95); }
+    button:active{ transform: translateY(1px); }
+    button:focus-visible{
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+
+    .btn-outline{
+      background: #fff;
+      color: var(--text);
+      border: 1px solid var(--card-border);
+    }
+    .btn-outline:hover{
+      background: rgba(14,165,167,0.06);
+    }
+
+    .icon{
+      width: 18px; height: 18px; display: inline-block;
+    }
+
+    /* Spinner for loading state (API) */
+    .spinner{
+      width: 16px; height: 16px;
+      border: 2px solid rgba(255,255,255,0.6);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Animations for quote transition */
+    .anim{
+      transition: opacity var(--transition-slow), transform var(--transition-slow);
+      will-change: opacity, transform;
+    }
+    .fade-out{ opacity: 0; transform: translateY(6px); }
+    .fade-in{ opacity: 1; transform: translateY(0); }
+
+    /* Small helpers */
+    .row{
+      display: flex; justify-content: space-between; align-items: center; gap: 12px;
+    }
+    .actions{
+      display: flex; gap: 8px; flex-wrap: wrap;
+    }
+    .status{
+      font-size: 0.85rem; color: var(--muted);
+    }
+    .sr-only{
+      position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+      overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+    }
+
+    /* Responsive */
+    @media (max-width: 480px){
+      .controls{ gap: 8px; }
+      button{ padding: 9px 12px; }
+      .row{ flex-direction: column; align-items: flex-start; }
+    }
+
+    /* Respect reduced motion */
+    @media (prefers-reduced-motion: reduce){
+      .anim, body { transition: none !important; }
+      .quote-card:hover{ transform: none; box-shadow: var(--shadow); }
+    }
+  </style>
+</head>
+<body>
+  <main class="container" role="main">
+    <header aria-label="App header">
+      <div class="brand">
+        <div class="logo" aria-hidden="true">Q</div>
+        <h1 class="title text-balance">Random Quote Generator</h1>
+      </div>
+      <p class="help">Click “Get New Quote” or share it</p>
+    </header>
+
+    <section class="quote-card">
+      <blockquote id="quote" class="anim fade-in" aria-live="polite" aria-atomic="true">
+        <span class="big-quote" aria-hidden="true">“</span><span id="quote-text">Loading an inspiring thought...</span><span class="big-quote" aria-hidden="true">”</span>
+      </blockquote>
+      <div id="author" class="author anim fade-in">
+        — <cite id="quote-author">Please wait</cite>
+      </div>
+
+      <div class="controls">
+        <div class="row" style="width:100%">
+          <div class="actions">
+            <button id="new-btn" aria-label="Get a new quote">
+              <span id="new-btn-label">Get New Quote</span>
+              <span id="new-btn-spin" class="spinner" style="display:none" aria-hidden="true"></span>
+            </button>
+            <button id="copy-btn" class="btn-outline" aria-label="Copy quote to clipboard" title="Copy">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M9 9.75A2.25 2.25 0 0 1 11.25 7.5h6A2.25 2.25 0 0 1 19.5 9.75v6A2.25 2.25 0 0 1 17.25 18h-6A2.25 2.25 0 0 1 9 15.75v-6Z" stroke="currentColor" stroke-width="1.6"/>
+                <path d="M6.75 15.75h-.75A2.25 2.25 0 0 1 3.75 13.5v-6A2.25 2.25 0 0 1 6 5.25h6A2.25 2.25 0 0 1 14.25 7.5v.75" stroke="currentColor" stroke-width="1.6"/>
+              </svg>
+              Copy
+            </button>
+            <button id="tweet-btn" class="btn-outline" aria-label="Tweet this quote" title="Tweet">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M21 5.92a7.5 7.5 0 0 1-2.17.6 3.77 3.77 0 0 0 1.65-2.08 7.53 7.53 0 0 1-2.39.91A3.75 3.75 0 0 0 12.1 8.3a10.66 10.66 0 0 1-7.74-3.93 3.75 3.75 0 0 0 1.16 5.01 3.7 3.7 0 0 1-1.7-.47v.05c0 1.82 1.3 3.35 3.03 3.7a3.78 3.78 0 0 1-1.69.06 3.76 3.76 0 0 0 3.5 2.61A7.52 7.52 0 0 1 3 17.54a10.63 10.63 0 0 0 5.76 1.69c6.91 0 10.69-5.72 10.69-10.69 0-.16 0-.31-.01-.47A7.63 7.63 0 0 0 21 5.92Z" stroke="currentColor" stroke-width="1.6"/>
+              </svg>
+              Tweet
+            </button>
+          </div>
+          <div class="status" id="status" aria-live="polite"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    // Predefined quotes (fallback when API fails). Keep it short and varied.
+    const LOCAL_QUOTES = [
+      { text: "The best way to predict the future is to invent it.", author: "Alan Kay" },
+      { text: "What we think, we become.", author: "Buddha" },
+      { text: "Simplicity is the soul of efficiency.", author: "Austin Freeman" },
+      { text: "Stay hungry. Stay foolish.", author: "Steve Jobs" },
+      { text: "Whether you think you can or think you can’t, you’re right.", author: "Henry Ford" },
+      { text: "You miss 100% of the shots you don’t take.", author: "Wayne Gretzky" },
+      { text: "Creativity is intelligence having fun.", author: "Albert Einstein" },
+      { text: "Make it work, make it right, make it fast.", author: "Kent Beck" },
+      { text: "Done is better than perfect.", author: "Sheryl Sandberg" },
+      { text: "If you’re going through hell, keep going.", author: "Winston Churchill" }
+    ];
+
+    // DOM elements
+    const quoteEl = document.getElementById('quote-text');
+    const authorEl = document.getElementById('quote-author');
+    const newBtn = document.getElementById('new-btn');
+    const newBtnLabel = document.getElementById('new-btn-label');
+    const newBtnSpin = document.getElementById('new-btn-spin');
+    const copyBtn = document.getElementById('copy-btn');
+    const tweetBtn = document.getElementById('tweet-btn');
+    const statusEl = document.getElementById('status');
+    const blockquote = document.getElementById('quote');
+    const authorWrap = document.getElementById('author');
+
+    const LS_KEY = 'rqg:lastQuote';
+    const LS_BG = 'rqg:lastTint';
+    let lastLocalIndex = -1;
+
+    function setLoading(isLoading){
+      if(isLoading){
+        newBtn.setAttribute('aria-busy', 'true');
+        newBtnSpin.style.display = 'inline-block';
+        newBtnLabel.textContent = 'Loading...';
+      }else{
+        newBtn.removeAttribute('aria-busy');
+        newBtnSpin.style.display = 'none';
+        newBtnLabel.textContent = 'Get New Quote';
+      }
+    }
+
+    function fadeOutIn(updateFn){
+      blockquote.classList.add('fade-out');
+      authorWrap.classList.add('fade-out');
+      setTimeout(() => {
+        updateFn();
+        blockquote.classList.remove('fade-out');
+        authorWrap.classList.remove('fade-out');
+        blockquote.classList.add('fade-in');
+        authorWrap.classList.add('fade-in');
+        setTimeout(() => {
+          blockquote.classList.remove('fade-in');
+          authorWrap.classList.remove('fade-in');
+        }, 320);
+      }, 200);
+    }
+
+    function pickLocalQuote(){
+      if(LOCAL_QUOTES.length === 0) return { text: "No local quotes available.", author: "System" };
+      let idx;
+      do { idx = Math.floor(Math.random() * LOCAL_QUOTES.length); } while(idx === lastLocalIndex && LOCAL_QUOTES.length > 1);
+      lastLocalIndex = idx;
+      return LOCAL_QUOTES[idx];
+    }
+
+    async function fetchApiQuote(prevText){
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 4500);
+      try{
+        const r = await fetch('https://api.quotable.io/random', { signal: controller.signal, cache: 'no-store' });
+        if(!r.ok) throw new Error('API error: ' + r.status);
+        const data = await r.json();
+        // Avoid immediate duplicate
+        if(prevText && data.content && data.content.trim() === prevText.trim()){
+          // one more try quickly (no infinite loop)
+          const r2 = await fetch('https://api.quotable.io/random', { cache: 'no-store' });
+          if(r2.ok){
+            const d2 = await r2.json();
+            return { text: d2.content, author: d2.author || "Unknown" };
+          }
+        }
+        return { text: data.content, author: data.author || "Unknown" };
+      } finally {
+        clearTimeout(timeout);
+      }
+    }
+
+    function setStatus(msg){
+      statusEl.textContent = msg || '';
+      if(msg){
+        setTimeout(() => { if(statusEl.textContent === msg) statusEl.textContent = ''; }, 2200);
+      }
+    }
+
+    function setBackgroundTintToggle(){
+      // Toggle a subtle body tint between on/off to "change" background
+      const wasTint = localStorage.getItem(LS_BG) === '1';
+      const willTint = !wasTint;
+      document.body.classList.toggle('tint', willTint);
+      localStorage.setItem(LS_BG, willTint ? '1' : '0');
+    }
+
+    function renderQuote(q){
+      fadeOutIn(() => {
+        quoteEl.textContent = q.text;
+        authorEl.textContent = q.author ? q.author : 'Unknown';
+      });
+      // Save for reload persistence
+      try{ localStorage.setItem(LS_KEY, JSON.stringify(q)); } catch {}
+      setBackgroundTintToggle();
+      // Update share links state
+      updateShareButtons(q);
+    }
+
+    function updateShareButtons(q){
+      const tweetText = `"${q.text}" — ${q.author}`;
+      const url = "https://twitter.com/intent/tweet?text=" + encodeURIComponent(tweetText);
+      tweetBtn.onclick = () => window.open(url, '_blank', 'noopener,noreferrer');
+      copyBtn.onclick = async () => {
+        try{
+          await navigator.clipboard.writeText(tweetText);
+          copyBtn.textContent = 'Copied!';
+          setTimeout(() => { copyBtn.innerHTML = '<svg class="icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M9 9.75A2.25 2.25 0 0 1 11.25 7.5h6A2.25 2.25 0 0 1 19.5 9.75v6A2.25 2.25 0 0 1 17.25 18h-6A2.25 2.25 0 0 1 9 15.75v-6Z" stroke="currentColor" stroke-width="1.6"/><path d="M6.75 15.75h-.75A2.25 2.25 0 0 1 3.75 13.5v-6A2.25 2.25 0 0 1 6 5.25h6A2.25 2.25 0 0 1 14.25 7.5v.75" stroke="currentColor" stroke-width="1.6"/></svg> Copy'; }, 1200);
+          setStatus('Quote copied to clipboard');
+        } catch {
+          setStatus('Copy failed. Please try again.');
+        }
+      };
+    }
+
+    async function getNewQuote(){
+      const prevText = quoteEl.textContent;
+      setLoading(true);
+      try{
+        // Try API first
+        let q = null;
+        try{
+          q = await fetchApiQuote(prevText);
+        }catch(e){
+          // API failed or timed out; fallback
+          q = null;
+        }
+        if(!q || !q.text){
+          q = pickLocalQuote();
+          setStatus('Loaded from local quotes');
+        }else{
+          setStatus('Loaded from API');
+        }
+        // Prevent exact consecutive repeat even after fallback
+        if(q.text && prevText && q.text.trim() === prevText.trim()){
+          // get a different local quote
+          const alt = pickLocalQuote();
+          if(alt && alt.text) q = alt;
+        }
+        renderQuote(q);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    // Initialize
+    (function init(){
+      // Restore last quote if available
+      try{
+        const saved = JSON.parse(localStorage.getItem(LS_KEY) || 'null');
+        if(saved && saved.text){
+          quoteEl.textContent = saved.text;
+          authorEl.textContent = saved.author || 'Unknown';
+          updateShareButtons(saved);
+        }else{
+          // first load, fetch one
+          getNewQuote();
+        }
+      } catch {
+        getNewQuote();
+      }
+      // Restore last tint state
+      const wasTint = localStorage.getItem(LS_BG) === '1';
+      document.body.classList.toggle('tint', wasTint);
+
+      newBtn.addEventListener('click', getNewQuote);
+    })();
+  </script>
+</body>
+</html>

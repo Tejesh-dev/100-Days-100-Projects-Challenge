@@ -1,0 +1,338 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <title>Premium Digital Clock — HH:MM:SS</title>
+    <meta name="description" content="A premium digital clock in pure HTML, CSS, and JavaScript with a clear 'How it works' explanation." />
+
+    <style>
+      :root {
+        /* Color system (exactly 5 total) */
+        --bg: #0b0f14;        /* neutral background */
+        --surface: #0f1720;   /* neutral surface/card */
+        --text: #e6edf3;      /* neutral foreground */
+        --brand: #10b981;     /* emerald (brand/accent) */
+        --accent: #f59e0b;    /* amber (accent) */
+
+        /* Sizing and rhythm */
+        --radius: 14px;
+        --container: 960px;
+      }
+
+      /* Base reset and typography */
+      * { box-sizing: border-box; }
+      html, body { height: 100%; }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+        line-height: 1.55;
+      }
+
+      .sr-only {
+        position: absolute;
+        width: 1px; height: 1px;
+        padding: 0; margin: -1px;
+        overflow: hidden; clip: rect(0, 0, 1px, 1px);
+        white-space: nowrap; border: 0;
+      }
+
+      main {
+        min-height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+      }
+
+      .wrap {
+        width: 100%;
+        max-width: var(--container);
+        display: grid;
+        gap: 24px;
+      }
+
+      header h1 {
+        margin: 0;
+        font-weight: 700;
+        letter-spacing: -0.01em;
+        text-wrap: balance;
+      }
+
+      header p {
+        margin: 6px 0 0 0;
+        opacity: 0.8;
+      }
+
+      /* Card */
+      .card {
+        background: var(--surface);
+        border: 1px solid rgba(230, 237, 243, 0.08);
+        border-radius: var(--radius);
+        padding: clamp(16px, 3vw, 24px);
+        box-shadow:
+          0 1px 1px rgba(0,0,0,0.25),
+          0 8px 24px rgba(0,0,0,0.25);
+      }
+
+      .stack {
+        display: grid;
+        gap: 16px;
+      }
+
+      /* Status row */
+      .status {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: var(--brand);
+        box-shadow: 0 0 0 0 rgba(16,185,129,0.6);
+        animation: pulse 2s ease-in-out infinite;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .dot { animation: none; }
+      }
+
+      @keyframes pulse {
+        0%   { box-shadow: 0 0 0 0 rgba(16,185,129,0.6); }
+        70%  { box-shadow: 0 0 0 10px rgba(16,185,129,0); }
+        100% { box-shadow: 0 0 0 0 rgba(16,185,129,0); }
+      }
+
+      .status small {
+        opacity: 0.85;
+      }
+
+      /* Clock display */
+      .clock {
+        display: flex;
+        align-items: baseline;
+        justify-content: center;
+        gap: clamp(8px, 1.6vw, 14px);
+        padding: clamp(16px, 4vw, 32px);
+        border-radius: calc(var(--radius) - 4px);
+        border: 1px solid rgba(230, 237, 243, 0.06);
+        background: #0c141c;
+      }
+
+      .digits {
+        font-variant-numeric: tabular-nums;
+        font-feature-settings: "tnum" 1, "ss01" 0;
+        font-weight: 700;
+        letter-spacing: 0.02em;
+        font-size: clamp(46px, 14vw, 124px);
+        line-height: 1;
+        display: inline-flex;
+        align-items: baseline;
+        gap: clamp(6px, 1vw, 12px);
+      }
+
+      .sep {
+        color: var(--accent);
+        font-weight: 700;
+        transform: translateY(-1px);
+      }
+
+      .label {
+        display: block;
+        text-align: center;
+        opacity: 0.8;
+        font-size: 14px;
+      }
+
+      /* How it works */
+      .grid {
+        display: grid;
+        gap: 16px;
+      }
+
+      @media (min-width: 780px) {
+        .grid {
+          grid-template-columns: 1fr 1fr;
+          gap: 20px;
+        }
+      }
+
+      .muted { opacity: 0.8; }
+
+      pre {
+        margin: 0;
+        background: #0c141c;
+        color: var(--text);
+        border: 1px solid rgba(230, 237, 243, 0.06);
+        border-radius: calc(var(--radius) - 4px);
+        padding: 14px 16px;
+        overflow: auto;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+        font-size: 13px;
+        line-height: 1.5;
+      }
+
+      code { font-family: inherit; }
+
+      footer {
+        text-align: center;
+        opacity: 0.7;
+        font-size: 14px;
+      }
+
+      a {
+        color: var(--brand);
+        text-decoration: none;
+      }
+      a:hover { text-decoration: underline; }
+    </style>
+  </head>
+
+  <body>
+    <main>
+      <div class="wrap">
+        <header>
+          <h1>Premium Digital Clock</h1>
+          <p class="muted">24‑hour HH:MM:SS with tabular digits. Built with only HTML, CSS, and JavaScript.</p>
+        </header>
+
+         Clock Card 
+        <section class="card stack" aria-labelledby="clock-heading">
+          <div class="status" aria-live="polite">
+            <span class="dot" aria-hidden="true"></span>
+            <small>Live</small>
+          </div>
+
+          <h2 id="clock-heading" class="sr-only">Current time</h2>
+
+          <div class="clock">
+            <time
+              id="clock"
+              class="digits"
+              role="timer"
+              aria-live="polite"
+              aria-atomic="true"
+              datetime=""
+            >
+              <span id="hh">00</span>
+              <span class="sep" aria-hidden="true">:</span>
+              <span id="mm">00</span>
+              <span class="sep" aria-hidden="true">:</span>
+              <span id="ss">00</span>
+            </time>
+          </div>
+
+          <small class="label muted">24‑hour format (HH:MM:SS), updates every second with drift correction.</small>
+        </section>
+
+         How it works 
+        <section class="grid">
+          <article class="card">
+            <h3 style="margin-top:0">How it works</h3>
+            <ol class="muted" style="margin: 8px 0 0 18px; padding:0; display:grid; gap:8px;">
+              <li>Read the current time with <code>new Date()</code>.</li>
+              <li>Format hours, minutes, and seconds with leading zeros.</li>
+              <li>Render into the <code>&lt;time&gt;</code> element and update its <code>datetime</code> attribute.</li>
+              <li>Schedule the next tick exactly at the next second boundary to avoid drift.</li>
+            </ol>
+          </article>
+
+          <article class="card">
+            <h3 style="margin-top:0">Core logic</h3>
+            <pre><code>// Pads a number to 2 digits: 7 → "07"
+const pad2 = (n) => String(n).padStart(2, "0");
+
+// Renders current time as HH:MM:SS (24-hour)
+function render(now = new Date()) {
+  const h = pad2(now.getHours());
+  const m = pad2(now.getMinutes());
+  const s = pad2(now.getSeconds());
+
+  hh.textContent = h;
+  mm.textContent = m;
+  ss.textContent = s;
+
+  // Machine-readable time for assistive tech and SEO
+  clockEl.setAttribute("datetime", now.toISOString());
+}
+
+// Aligns updates to the next exact second to prevent drift
+function scheduleNextTick() {
+  const now = new Date();
+  render(now);
+  const msUntilNextSecond = 1000 - now.getMilliseconds();
+  setTimeout(scheduleNextTick, msUntilNextSecond);
+}</code></pre>
+          </article>
+        </section>
+
+        <footer class="muted">
+          Color system (5): background, surface, text, emerald brand, amber accent. No gradients.
+        </footer>
+      </div>
+    </main>
+
+    <noscript>
+      <div style="max-width:960px;margin:16px auto;color:#e6edf3;opacity:.85;padding:12px 16px;border:1px solid rgba(230,237,243,.08);border-radius:10px;background:#0f1720;">
+        JavaScript is required to update the time.
+      </div>
+    </noscript>
+
+    <script defer>
+      //  Premium digital clock with drift-corrected updates and accessible <time> element
+
+      // Cache elements once
+      const clockEl = document.getElementById("clock");
+      const hh = document.getElementById("hh");
+      const mm = document.getElementById("mm");
+      const ss = document.getElementById("ss");
+
+      // Pads a number to 2 digits: 7 → "07"
+      const pad2 = (n) => String(n).padStart(2, "0");
+
+      // Render current time as HH:MM:SS (24-hour) and update datetime
+      function render(now = new Date()) {
+        const h = pad2(now.getHours());
+        const m = pad2(now.getMinutes());
+        const s = pad2(now.getSeconds());
+
+        hh.textContent = h;
+        mm.textContent = m;
+        ss.textContent = s;
+
+        // Machine-readable time for AT and parsers
+        clockEl.setAttribute("datetime", now.toISOString());
+      }
+
+      // Align updates to next exact second to avoid drift
+      function scheduleNextTick() {
+        const now = new Date();
+        render(now);
+        const msUntilNextSecond = 1000 - now.getMilliseconds();
+        setTimeout(scheduleNextTick, msUntilNextSecond);
+      }
+
+      // Start immediately when DOM is ready
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", scheduleNextTick, { once: true });
+      } else {
+        scheduleNextTick();
+      }
+
+      // If the tab becomes visible after being hidden, snap back to current time
+      document.addEventListener("visibilitychange", () => {
+        if (!document.hidden) {
+          render(new Date());
+        }
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Health Calculator</title>
+    <!-- Tailwind CSS CDN for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #e5e7eb;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 450px;
+        }
+    </style>
+</head>
+<body class="bg-gray-200 p-4">
+    <div class="container bg-white p-10 rounded-3xl shadow-2xl w-full">
+        <!-- Main Header -->
+        <div class="text-center mb-10">
+            <h1 class="text-4xl font-extrabold text-slate-800">Health Metrics</h1>
+            <p class="text-gray-500 mt-2">Calculate your BMI & Daily Calorie Needs</p>
+        </div>
+
+        <!-- Input Section -->
+        <div class="space-y-6">
+            <div>
+                <label for="gender" class="block text-gray-700 font-medium mb-2">Gender</label>
+                <select id="gender" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-500">
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                </select>
+            </div>
+            <div>
+                <label for="age" class="block text-gray-700 font-medium mb-2">Age</label>
+                <input type="number" id="age" placeholder="e.g., 30" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-500">
+            </div>
+            <div>
+                <label for="weight" class="block text-gray-700 font-medium mb-2">Weight (kg)</label>
+                <input type="number" id="weight" placeholder="e.g., 70" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-500">
+            </div>
+            <div>
+                <label for="height" class="block text-gray-700 font-medium mb-2">Height (cm)</label>
+                <input type="number" id="height" placeholder="e.g., 175" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-500">
+            </div>
+            <div>
+                <label for="activity" class="block text-gray-700 font-medium mb-2">Activity Level</label>
+                <select id="activity" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-500">
+                    <option value="1.2">Sedentary (little to no exercise)</option>
+                    <option value="1.375">Lightly Active (1-3 days/week)</option>
+                    <option value="1.55">Moderately Active (3-5 days/week)</option>
+                    <option value="1.725">Very Active (6-7 days/week)</option>
+                    <option value="1.9">Extra Active (daily intense exercise)</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Buttons -->
+        <div class="flex space-x-4 mt-8">
+            <button id="calculate-btn" class="w-full bg-slate-700 text-white font-semibold py-3 rounded-lg hover:bg-slate-800 transition duration-300 shadow-md">
+                Calculate Metrics
+            </button>
+            <button id="clear-btn" class="w-full bg-gray-300 text-gray-800 font-semibold py-3 rounded-lg hover:bg-gray-400 transition duration-300 shadow-md">
+                Clear
+            </button>
+        </div>
+
+        <!-- Result Display -->
+        <div class="mt-10 text-center" id="result-container">
+            <div class="mb-6">
+                <p class="text-xl font-bold text-gray-600 mb-1">Your BMI <span class="text-sm font-normal">(Body Mass Index)</span></p>
+                <p id="bmi-value" class="text-5xl font-extrabold text-slate-700 mb-2">0.00</p>
+                <p id="bmi-category" class="text-lg text-gray-600 font-medium">Please enter your details</p>
+            </div>
+            <div>
+                <p class="text-xl font-bold text-gray-600 mb-1">Daily Calorie Need <span class="text-sm font-normal">(TDEE)</span></p>
+                <p id="calories-value" class="text-5xl font-extrabold text-slate-700">0</p>
+                <p id="calories-category" class="text-lg text-gray-600 font-medium">calories/day</p>
+            </div>
+        </div>
+
+        <hr class="my-10 border-gray-300">
+
+        <!-- BMI Information Section -->
+        <div class="mt-8">
+            <h2 class="text-2xl font-bold text-slate-800 mb-4 text-center">Understanding BMI</h2>
+            <p class="text-gray-600 text-sm leading-relaxed mb-4">
+                <b>Body Mass Index (BMI)<b> is a simple calculation using a person's height and weight. It is a widely used screening tool to categorize an individual as underweight, normal weight, overweight, or obese. While it doesn't measure body fat directly, it's a quick and easy way to estimate potential health risks related to body weight.
+            </p>
+            <p class="text-gray-600 text-sm leading-relaxed mb-4">
+                <b>Why is it important? BMI is a useful indicator because it correlates with a higher risk of health conditions like heart disease, high blood pressure, type 2 diabetes, and certain cancers. It provides a general starting point for a conversation about a person's health with their doctor.
+            </p>
+            <p class="text-gray-600 text-sm leading-relaxed">
+                <b>Limitations: It's important to remember that BMI has limitations. It doesn't distinguish between muscle and fat, so a highly muscular person might have a high BMI but not be overweight. It also may not be as accurate for older adults, pregnant women, or certain ethnic groups. Therefore, BMI should be used as a general guide, not a definitive health diagnosis.
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Get DOM elements
+        const genderInput = document.getElementById('gender');
+        const ageInput = document.getElementById('age');
+        const weightInput = document.getElementById('weight');
+        const heightInput = document.getElementById('height');
+        const activityInput = document.getElementById('activity');
+        const calculateBtn = document.getElementById('calculate-btn');
+        const clearBtn = document.getElementById('clear-btn');
+        const bmiValueDisplay = document.getElementById('bmi-value');
+        const bmiCategoryDisplay = document.getElementById('bmi-category');
+        const caloriesValueDisplay = document.getElementById('calories-value');
+        const caloriesCategoryDisplay = document.getElementById('calories-category');
+
+        // Function to calculate BMI and Daily Calorie Need
+        const calculateMetrics = () => {
+            // Get values from input fields and convert them to numbers
+            const gender = genderInput.value;
+            const age = parseFloat(ageInput.value);
+            const weight = parseFloat(weightInput.value);
+            const height = parseFloat(heightInput.value);
+            const activityLevel = parseFloat(activityInput.value);
+
+            // Input validation
+            if (isNaN(weight) || isNaN(height) || isNaN(age) || weight <= 0 || height <= 0 || age <= 0) {
+                // Display error message for invalid inputs
+                bmiValueDisplay.textContent = 'Error';
+                bmiCategoryDisplay.textContent = 'Please enter valid positive numbers.';
+                bmiCategoryDisplay.style.color = '#ef4444'; // red-500
+                caloriesValueDisplay.textContent = 'Error';
+                caloriesCategoryDisplay.textContent = 'Please enter valid positive numbers.';
+                caloriesCategoryDisplay.style.color = '#ef4444';
+                return;
+            }
+
+            // --- BMI Calculation ---
+            const heightInMeters = height / 100;
+            const bmi = weight / (heightInMeters * heightInMeters);
+            bmiValueDisplay.textContent = bmi.toFixed(2);
+
+            let bmiCategory = '';
+            let bmiColor = '';
+            if (bmi < 18.5) {
+                bmiCategory = 'Underweight';
+                bmiColor = '#f59e0b'; // amber-500
+            } else if (bmi >= 18.5 && bmi < 24.9) {
+                bmiCategory = 'Normal';
+                bmiColor = '#22c55e'; // green-500
+            } else if (bmi >= 25 && bmi < 29.9) {
+                bmiCategory = 'Overweight';
+                bmiColor = '#fb923c'; // orange-500
+            } else {
+                bmiCategory = 'Obese';
+                bmiColor = '#ef4444'; // red-500
+            }
+            bmiCategoryDisplay.textContent = bmiCategory;
+            bmiValueDisplay.style.color = bmiColor;
+            bmiCategoryDisplay.style.color = bmiColor;
+
+            // --- Daily Calorie Need Calculation (Mifflin-St Jeor) ---
+            let bmr;
+            if (gender === 'male') {
+                bmr = (10 * weight) + (6.25 * height) - (5 * age) + 5;
+            } else { // female
+                bmr = (10 * weight) + (6.25 * height) - (5 * age) - 161;
+            }
+
+            const dailyCalories = bmr * activityLevel;
+            caloriesValueDisplay.textContent = Math.round(dailyCalories);
+            caloriesCategoryDisplay.style.color = '#4b5563';
+        };
+
+        // Function to clear inputs and results
+        const clearResults = () => {
+            weightInput.value = '';
+            heightInput.value = '';
+            ageInput.value = '';
+            bmiValueDisplay.textContent = '0.00';
+            bmiCategoryDisplay.textContent = 'Please enter your details';
+            caloriesValueDisplay.textContent = '0';
+            caloriesCategoryDisplay.textContent = 'calories/day';
+
+            // Reset text color to default
+            bmiValueDisplay.style.color = '#475569'; // slate-700
+            bmiCategoryDisplay.style.color = '#4b5563'; // gray-600
+        };
+
+        // Add event listeners to the buttons
+        calculateBtn.addEventListener('click', calculateMetrics);
+        clearBtn.addEventListener('click', clearResults);
+    </script>
+</body>
+</html>

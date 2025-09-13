@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ColorCraft Pro - Advanced Color Generator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;600;700&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --background: #ffffff;
+            --foreground: #1f2937;
+            --card: #f1f5f9;
+            --card-foreground: #374151;
+            --primary: #1f2937;
+            --primary-foreground: #ffffff;
+            --secondary: #8b5cf6;
+            --secondary-foreground: #ffffff;
+            --muted: #f1f5f9;
+            --muted-foreground: #6b7280;
+            --accent: #8b5cf6;
+            --border: #e5e7eb;
+            --input: #f1f5f9;
+            --ring: rgba(139, 92, 246, 0.5);
+            --radius: 0.5rem;
+        }
+
+        .dark {
+            --background: #0f172a;
+            --foreground: #f1f5f9;
+            --card: #1e293b;
+            --card-foreground: #e2e8f0;
+            --primary: #8b5cf6;
+            --secondary: #475569;
+            --muted: #334155;
+            --muted-foreground: #94a3b8;
+            --border: #334155;
+            --input: #1e293b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background: var(--background);
+            color: var(--foreground);
+            line-height: 1.6;
+            transition: all 0.3s ease;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding: 20px 0;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .logo {
+            font-family: 'Work Sans', sans-serif;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .theme-toggle {
+            background: var(--card);
+            border: 2px solid var(--border);
+            color: var(--foreground);
+            padding: 10px 15px;
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+
+        .theme-toggle:hover {
+            background: var(--muted);
+            transform: translateY(-2px);
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: var(--card);
+            border: 2px solid var(--border);
+            border-radius: var(--radius);
+            padding: 25px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-title {
+            font-family: 'Work Sans', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--foreground);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .color-generator {
+            text-align: center;
+        }
+
+        .color-display {
+            width: 100%;
+            height: 200px;
+            border-radius: var(--radius);
+            margin-bottom: 20px;
+            border: 3px solid var(--border);
+            transition: all 0.5s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .color-info {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 15px;
+            font-family: 'Work Sans', sans-serif;
+            font-weight: 600;
+        }
+
+        .btn {
+            background: var(--primary);
+            color: var(--primary-foreground);
+            border: none;
+            padding: 12px 24px;
+            border-radius: var(--radius);
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin: 5px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-secondary {
+            background: var(--secondary);
+            color: var(--secondary-foreground);
+        }
+
+        .palette-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .palette-color {
+            height: 80px;
+            border-radius: var(--radius);
+            border: 2px solid var(--border);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .palette-color:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .palette-color::after {
+            content: attr(data-color);
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 5px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-align: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .palette-color:hover::after {
+            opacity: 1;
+        }
+
+        .harmony-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .harmony-btn {
+            background: var(--muted);
+            color: var(--muted-foreground);
+            border: 2px solid var(--border);
+            padding: 8px 16px;
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .harmony-btn.active {
+            background: var(--accent);
+            color: var(--secondary-foreground);
+            border-color: var(--accent);
+        }
+
+        .format-converter {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .format-input {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .format-input label {
+            font-weight: 600;
+            color: var(--muted-foreground);
+            font-size: 0.9rem;
+        }
+
+        .format-input input {
+            background: var(--input);
+            border: 2px solid var(--border);
+            padding: 10px;
+            border-radius: var(--radius);
+            color: var(--foreground);
+            font-family: 'Work Sans', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        .format-input input:focus {
+            outline: none;
+            border-color: var(--ring);
+            box-shadow: 0 0 0 3px var(--ring);
+        }
+
+        .accessibility-checker {
+            margin-top: 20px;
+        }
+
+        .contrast-result {
+            background: var(--muted);
+            padding: 15px;
+            border-radius: var(--radius);
+            margin-top: 10px;
+            border-left: 4px solid var(--accent);
+        }
+
+        .export-section {
+            grid-column: 1 / -1;
+            text-align: center;
+        }
+
+        .saved-colors {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 15px;
+        }
+
+        .saved-color {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 3px solid var(--border);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .saved-color:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--accent);
+            color: var(--secondary-foreground);
+            padding: 15px 20px;
+            border-radius: var(--radius);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        @media (max-width: 768px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+            
+            .harmony-selector {
+                justify-content: center;
+            }
+            
+            .format-converter {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="logo">
+                <i class="fas fa-palette"></i>
+                ColorCraft Pro
+            </div>
+            <button class="theme-toggle" onclick="toggleTheme()">
+                <i class="fas fa-moon"></i> Toggle Theme
+            </button>
+        </header>
+
+        <div class="main-grid">
+            <!-- Color Generator -->
+            <div class="card">
+                <h2 class="card-title">
+                    <i class="fas fa-magic"></i>
+                    Color Generator
+                </h2>
+                <div class="color-generator">
+                    <div class="color-display" id="colorDisplay">
+                        <div class="color-info" id="colorInfo">
+                            #3B82F6 | RGB(59, 130, 246) | HSL(217, 91%, 60%)
+                        </div>
+                    </div>
+                    <div>
+                        <button class="btn" onclick="generateRandomColor()">
+                            <i class="fas fa-dice"></i> Random Color
+                        </button>
+                        <button class="btn btn-secondary" onclick="saveCurrentColor()">
+                            <i class="fas fa-heart"></i> Save Color
+                        </button>
+                    </div>
+                    <div class="saved-colors" id="savedColors"></div>
+                </div>
+            </div>
+
+            <!-- Palette Generator -->
+            <div class="card">
+                <h2 class="card-title">
+                    <i class="fas fa-swatchbook"></i>
+                    Color Harmony
+                </h2>
+                <div class="harmony-selector">
+                    <button class="harmony-btn active" data-harmony="complementary">Complementary</button>
+                    <button class="harmony-btn" data-harmony="triadic">Triadic</button>
+                    <button class="harmony-btn" data-harmony="analogous">Analogous</button>
+                    <button class="harmony-btn" data-harmony="monochromatic">Monochromatic</button>
+                </div>
+                <div class="palette-grid" id="paletteGrid"></div>
+                <button class="btn" onclick="generatePalette()">
+                    <i class="fas fa-sync"></i> Generate Palette
+                </button>
+            </div>
+
+            <!-- Format Converter -->
+            <div class="card">
+                <h2 class="card-title">
+                    <i class="fas fa-exchange-alt"></i>
+                    Format Converter
+                </h2>
+                <div class="format-converter">
+                    <div class="format-input">
+                        <label>HEX</label>
+                        <input type="text" id="hexInput" placeholder="#3B82F6" oninput="convertColor('hex')">
+                    </div>
+                    <div class="format-input">
+                        <label>RGB</label>
+                        <input type="text" id="rgbInput" placeholder="rgb(59, 130, 246)" oninput="convertColor('rgb')">
+                    </div>
+                    <div class="format-input">
+                        <label>HSL</label>
+                        <input type="text" id="hslInput" placeholder="hsl(217, 91%, 60%)" oninput="convertColor('hsl')">
+                    </div>
+                    <div class="format-input">
+                        <label>CSS Variable</label>
+                        <input type="text" id="cssInput" placeholder="--primary-color: #3B82F6;" readonly>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Accessibility Checker -->
+            <div class="card">
+                <h2 class="card-title">
+                    <i class="fas fa-universal-access"></i>
+                    Accessibility Checker
+                </h2>
+                <div class="format-converter">
+                    <div class="format-input">
+                        <label>Background Color</label>
+                        <input type="color" id="bgColorPicker" value="#ffffff" onchange="checkContrast()">
+                    </div>
+                    <div class="format-input">
+                        <label>Text Color</label>
+                        <input type="color" id="textColorPicker" value="#000000" onchange="checkContrast()">
+                    </div>
+                </div>
+                <div class="contrast-result" id="contrastResult">
+                    <strong>Contrast Ratio: 21:1</strong><br>
+                    ✅ WCAG AA Compliant<br>
+                    ✅ WCAG AAA Compliant
+                </div>
+            </div>
+
+            <!-- Export Section -->
+            <div class="card export-section">
+                <h2 class="card-title">
+                    <i class="fas fa-download"></i>
+                    Export & Share
+                </h2>
+                <div>
+                    <button class="btn" onclick="exportCSS()">
+                        <i class="fas fa-file-code"></i> Export CSS
+                    </button>
+                    <button class="btn btn-secondary" onclick="exportJSON()">
+                        <i class="fas fa-file-alt"></i> Export JSON
+                    </button>
+                    <button class="btn" onclick="copyPalette()">
+                        <i class="fas fa-copy"></i> Copy Palette
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="notification" id="notification"></div>
+
+    <script>
+        class ColorCraftPro {
+            constructor() {
+                this.currentColor = '#3B82F6';
+                this.currentPalette = [];
+                this.savedColors = JSON.parse(localStorage.getItem('savedColors')) || [];
+                this.currentHarmony = 'complementary';
+                this.isDark = false;
+                
+                this.init();
+            }
+
+            init() {
+                this.updateColorDisplay();
+                this.generatePalette();
+                this.loadSavedColors();
+                this.setupEventListeners();
+                this.checkContrast();
+                this.updateFormatInputs();
+            }
+
+            setupEventListeners() {
+                // Harmony selector
+                document.querySelectorAll('.harmony-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        document.querySelectorAll('.harmony-btn').forEach(b => b.classList.remove('active'));
+                        e.target.classList.add('active');
+                        this.currentHarmony = e.target.dataset.harmony;
+                        this.generatePalette();
+                    });
+                });
+
+                // Saved color clicks
+                document.addEventListener('click', (e) => {
+                    if (e.target.classList.contains('saved-color')) {
+                        this.currentColor = e.target.style.backgroundColor;
+                        this.currentColor = this.rgbToHex(this.currentColor);
+                        this.updateColorDisplay();
+                        this.generatePalette();
+                        this.updateFormatInputs();
+                    }
+                });
+            }
+
+            generateRandomColor() {
+                const letters = '0123456789ABCDEF';
+                let color = '#';
+                for (let i = 0; i < 6; i++) {
+                    color += letters[Math.floor(Math.random() * 16)];
+                }
+                this.currentColor = color;
+                this.updateColorDisplay();
+                this.generatePalette();
+                this.updateFormatInputs();
+            }
+
+            updateColorDisplay() {
+                const display = document.getElementById('colorDisplay');
+                const info = document.getElementById('colorInfo');
+                
+                display.style.background = `linear-gradient(135deg, ${this.currentColor}, ${this.adjustBrightness(this.currentColor, -20)})`;
+                
+                const rgb = this.hexToRgb(this.currentColor);
+                const hsl = this.rgbToHsl(rgb.r, rgb.g, rgb.b);
+                
+                info.innerHTML = `
+                    ${this.currentColor.toUpperCase()} | 
+                    RGB(${rgb.r}, ${rgb.g}, ${rgb.b}) | 
+                    HSL(${Math.round(hsl.h)}, ${Math.round(hsl.s)}%, ${Math.round(hsl.l)}%)
+                `;
+            }
+
+            generatePalette() {
+                const baseColor = this.currentColor;
+                let palette = [];
+
+                switch (this.currentHarmony) {
+                    case 'complementary':
+                        palette = this.generateComplementary(baseColor);
+                        break;
+                    case 'triadic':
+                        palette = this.generateTriadic(baseColor);
+                        break;
+                    case 'analogous':
+                        palette = this.generateAnalogous(baseColor);
+                        break;
+                    case 'monochromatic':
+                        palette = this.generateMonochromatic(baseColor);
+                        break;
+                }
+
+                this.currentPalette = palette;
+                this.displayPalette(palette);
+            }
+
+            generateComplementary(color) {
+                const rgb = this.hexToRgb(color);
+                const hsl = this.rgbToHsl(rgb.r, rgb.g, rgb.b);
+                
+                return [
+                    color,
+                    this.hslToHex((hsl.h + 180) % 360, hsl.s, hsl.l),
+                    this.adjustBrightness(color, 20),
+                    this.adjustBrightness(color, -20),
+                    this.hslToHex(hsl.h, hsl.s * 0.5, hsl.l)
+                ];
+            }
+
+            generateTriadic(color) {
+                const rgb = this.hexToRgb(color);
+                const hsl = this.rgbToHsl(rgb.r, rgb.g, rgb.b);
+                
+                return [
+                    color,
+                    this.hslToHex((hsl.h + 120) % 360, hsl.s, hsl.l),
+                    this.hslToHex((hsl.h + 240) % 360, hsl.s, hsl.l),
+                    this.adjustBrightness(color, 15),
+                    this.adjustBrightness(color, -15)
+                ];
+            }
+
+            generateAnalogous(color) {
+                const rgb = this.hexToRgb(color);
+                const hsl = this.rgbToHsl(rgb.r, rgb.g, rgb.b);
+                
+                return [
+                    this.hslToHex((hsl.h - 30 + 360) % 360, hsl.s, hsl.l),
+                    this.hslToHex((hsl.h - 15 + 360) % 360, hsl.s, hsl.l),
+                    color,
+                    this.hslToHex((hsl.h + 15) % 360, hsl.s, hsl.l),
+                    this.hslToHex((hsl.h + 30) % 360, hsl.s, hsl.l)
+                ];
+            }
+
+            generateMonochromatic(color) {
+                return [
+                    this.adjustBrightness(color, -40),
+                    this.adjustBrightness(color, -20),
+                    color,
+                    this.adjustBrightness(color, 20),
+                    this.adjustBrightness(color, 40)
+                ];
+            }
+
+            displayPalette(palette) {
+                const grid = document.getElementById('paletteGrid');
+                grid.innerHTML = '';
+                
+                palette.forEach(color => {
+                    const colorDiv = document.createElement('div');
+                    colorDiv.className = 'palette-color';
+                    colorDiv.style.backgroundColor = color;
+                    colorDiv.dataset.color = color.toUpperCase();
+                    colorDiv.addEventListener('click', () => {
+                        this.currentColor = color;
+                        this.updateColorDisplay();
+                        this.updateFormatInputs();
+                        this.showNotification(`Color ${color} selected!`);
+                    });
+                    grid.appendChild(colorDiv);
+                });
+            }
+
+            saveCurrentColor() {
+                if (!this.savedColors.includes(this.currentColor)) {
+                    this.savedColors.push(this.currentColor);
+                    localStorage.setItem('savedColors', JSON.stringify(this.savedColors));
+                    this.loadSavedColors();
+                    this.showNotification('Color saved!');
+                } else {
+                    this.showNotification('Color already saved!');
+                }
+            }
+
+            loadSavedColors() {
+                const container = document.getElementById('savedColors');
+                container.innerHTML = '';
+                
+                this.savedColors.forEach(color => {
+                    const colorDiv = document.createElement('div');
+                    colorDiv.className = 'saved-color';
+                    colorDiv.style.backgroundColor = color;
+                    colorDiv.title = color;
+                    container.appendChild(colorDiv);
+                });
+            }
+
+            updateFormatInputs() {
+                const rgb = this.hexToRgb(this.currentColor);
+                const hsl = this.rgbToHsl(rgb.r, rgb.g, rgb.b);
+                
+                document.getElementById('hexInput').value = this.currentColor.toUpperCase();
+                document.getElementById('rgbInput').value = `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`;
+                document.getElementById('hslInput').value = `hsl(${Math.round(hsl.h)}, ${Math.round(hsl.s)}%, ${Math.round(hsl.l)}%)`;
+                document.getElementById('cssInput').value = `--primary-color: ${this.currentColor};`;
+            }
+
+            convertColor(fromFormat) {
+                const hexInput = document.getElementById('hexInput');
+                const rgbInput = document.getElementById('rgbInput');
+                const hslInput = document.getElementById('hslInput');
+                const cssInput = document.getElementById('cssInput');
+
+                try {
+                    let color;
+                    
+                    if (fromFormat === 'hex') {
+                        color = hexInput.value;
+                        if (this.isValidHex(color)) {
+                            this.currentColor = color;
+                            const rgb = this.hexToRgb(color);
+                            const hsl = this.rgbToHsl(rgb.r, rgb.g, rgb.b);
+                            rgbInput.value = `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`;
+                            hslInput.value = `hsl(${Math.round(hsl.h)}, ${Math.round(hsl.s)}%, ${Math.round(hsl.l)}%)`;
+                            cssInput.value = `--primary-color: ${color};`;
+                            this.updateColorDisplay();
+                        }
+                    }
+                } catch (error) {
+                    console.log('Invalid color format');
+                }
+            }
+
+            checkContrast() {
+                const bgColor = document.getElementById('bgColorPicker').value;
+                const textColor = document.getElementById('textColorPicker').value;
+                const result = document.getElementById('contrastResult');
+                
+                const ratio = this.getContrastRatio(bgColor, textColor);
+                const aaPass = ratio >= 4.5;
+                const aaaPass = ratio >= 7;
+                
+                result.innerHTML = `
+                    <strong>Contrast Ratio: ${ratio.toFixed(2)}:1</strong><br>
+                    ${aaPass ? '✅' : '❌'} WCAG AA Compliant (4.5:1)<br>
+                    ${aaaPass ? '✅' : '❌'} WCAG AAA Compliant (7:1)
+                `;
+                
+                result.style.borderLeftColor = aaPass ? '#10b981' : '#ef4444';
+            }
+
+            exportCSS() {
+                const css = `:root {
+    --primary: ${this.currentColor};
+    --palette-1: ${this.currentPalette[0] || this.currentColor};
+    --palette-2: ${this.currentPalette[1] || this.currentColor};
+    --palette-3: ${this.currentPalette[2] || this.currentColor};
+    --palette-4: ${this.currentPalette[3] || this.currentColor};
+    --palette-5: ${this.currentPalette[4] || this.currentColor};
+}`;
+                
+                this.downloadFile('colors.css', css);
+                this.showNotification('CSS exported!');
+            }
+
+            exportJSON() {
+                const data = {
+                    primary: this.currentColor,
+                    palette: this.currentPalette,
+                    harmony: this.currentHarmony,
+                    saved: this.savedColors
+                };
+                
+                this.downloadFile('colors.json', JSON.stringify(data, null, 2));
+                this.showNotification('JSON exported!');
+            }
+
+            copyPalette() {
+                const paletteText = this.currentPalette.join(', ');
+                navigator.clipboard.writeText(paletteText).then(() => {
+                    this.showNotification('Palette copied to clipboard!');
+                });
+            }
+
+            downloadFile(filename, content) {
+                const element = document.createElement('a');
+                element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(content));
+                element.setAttribute('download', filename);
+                element.style.display = 'none';
+                document.body.appendChild(element);
+                element.click();
+                document.body.removeChild(element);
+            }
+
+            showNotification(message) {
+                const notification = document.getElementById('notification');
+                notification.textContent = message;
+                notification.classList.add('show');
+                
+                setTimeout(() => {
+                    notification.classList.remove('show');
+                }, 3000);
+            }
+
+            // Utility functions
+            hexToRgb(hex) {
+                const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+                return result ? {
+                    r: parseInt(result[1], 16),
+                    g: parseInt(result[2], 16),
+                    b: parseInt(result[3], 16)
+                } : null;
+            }
+
+            rgbToHex(rgb) {
+                if (typeof rgb === 'string') {
+                    const match = rgb.match(/\d+/g);
+                    if (match) {
+                        const r = parseInt(match[0]);
+                        const g = parseInt(match[1]);
+                        const b = parseInt(match[2]);
+                        return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+                    }
+                }
+                return rgb;
+            }
+
+            rgbToHsl(r, g, b) {
+                r /= 255;
+                g /= 255;
+                b /= 255;
+                
+                const max = Math.max(r, g, b);
+                const min = Math.min(r, g, b);
+                let h, s, l = (max + min) / 2;
+
+                if (max === min) {
+                    h = s = 0;
+                } else {
+                    const d = max - min;
+                    s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+                    
+                    switch (max) {
+                        case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+                        case g: h = (b - r) / d + 2; break;
+                        case b: h = (r - g) / d + 4; break;
+                    }
+                    h /= 6;
+                }
+
+                return { h: h * 360, s: s * 100, l: l * 100 };
+            }
+
+            hslToHex(h, s, l) {
+                h /= 360;
+                s /= 100;
+                l /= 100;
+                
+                const hue2rgb = (p, q, t) => {
+                    if (t < 0) t += 1;
+                    if (t > 1) t -= 1;
+                    if (t < 1/6) return p + (q - p) * 6 * t;
+                    if (t < 1/2) return q;
+                    if (t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+                    return p;
+                };
+
+                let r, g, b;
+                if (s === 0) {
+                    r = g = b = l;
+                } else {
+                    const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+                    const p = 2 * l - q;
+                    r = hue2rgb(p, q, h + 1/3);
+                    g = hue2rgb(p, q, h);
+                    b = hue2rgb(p, q, h - 1/3);
+                }
+
+                const toHex = (c) => {
+                    const hex = Math.round(c * 255).toString(16);
+                    return hex.length === 1 ? '0' + hex : hex;
+                };
+
+                return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
+            }
+
+            adjustBrightness(hex, percent) {
+                const rgb = this.hexToRgb(hex);
+                const adjust = (color) => {
+                    const adjusted = color + (color * percent / 100);
+                    return Math.max(0, Math.min(255, Math.round(adjusted)));
+                };
+                
+                const r = adjust(rgb.r);
+                const g = adjust(rgb.g);
+                const b = adjust(rgb.b);
+                
+                return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
+            }
+
+            getContrastRatio(color1, color2) {
+                const getLuminance = (color) => {
+                    const rgb = this.hexToRgb(color);
+                    const [r, g, b] = [rgb.r, rgb.g, rgb.b].map(c => {
+                        c = c / 255;
+                        return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+                    });
+                    return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+                };
+
+                const lum1 = getLuminance(color1);
+                const lum2 = getLuminance(color2);
+                const brightest = Math.max(lum1, lum2);
+                const darkest = Math.min(lum1, lum2);
+                
+                return (brightest + 0.05) / (darkest + 0.05);
+            }
+
+            isValidHex(hex) {
+                return /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/.test(hex);
+            }
+        }
+
+        // Global functions
+        function toggleTheme() {
+            document.body.classList.toggle('dark');
+            const isDark = document.body.classList.contains('dark');
+            const icon = document.querySelector('.theme-toggle i');
+            icon.className = isDark ? 'fas fa-sun' : 'fas fa-moon';
+        }
+
+        function generateRandomColor() {
+            colorCraft.generateRandomColor();
+        }
+
+        function saveCurrentColor() {
+            colorCraft.saveCurrentColor();
+        }
+
+        function generatePalette() {
+            colorCraft.generatePalette();
+        }
+
+        function convertColor(format) {
+            colorCraft.convertColor(format);
+        }
+
+        function checkContrast() {
+            colorCraft.checkContrast();
+        }
+
+        function exportCSS() {
+            colorCraft.exportCSS();
+        }
+
+        function exportJSON() {
+            colorCraft.exportJSON();
+        }
+
+        function copyPalette() {
+            colorCraft.copyPalette();
+        }
+
+        // Initialize the app
+        const colorCraft = new ColorCraftPro();
+    </script>
+</body>
+</html>

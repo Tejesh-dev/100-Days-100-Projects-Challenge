@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Form Validator</title>
+
+    <style>
+        /* CSS Variables for theming */
+        :root {
+            --primary-color: #007bff;
+            --secondary-color: #6c757d;
+            --success-color: #28a745;
+            --error-color: #dc3545;
+            --border-color: #ced4da;
+            --bg-color: #f8f9fa;
+            --text-color: #212529;
+            --input-bg-color: #fff;
+            --shadow-color: rgba(0, 0, 0, 0.1);
+            --focus-ring-color: rgba(0, 123, 255, 0.25);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --primary-color: #1a73e8;
+                --secondary-color: #adb5bd;
+                --success-color: #28a745;
+                --error-color: #dc3545;
+                --border-color: #495057;
+                --bg-color: #121212;
+                --text-color: #e0e0e0;
+                --input-bg-color: #212121;
+                --shadow-color: rgba(255, 255, 255, 0.1);
+                --focus-ring-color: rgba(26, 115, 232, 0.5);
+            }
+        }
+
+        * {
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            color: var(--text-color);
+        }
+
+        body {
+            background-color: var(--bg-color);
+            padding: 20px;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 500px;
+            background-color: var(--input-bg-color);
+            padding: 2.5rem 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px var(--shadow-color);
+            margin-top: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 2rem;
+            font-size: 2rem;
+            color: var(--primary-color);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            background-color: var(--input-bg-color);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px var(--focus-ring-color);
+        }
+
+        .form-group.success .form-control {
+            border-color: var(--success-color);
+        }
+
+        .form-group.error .form-control {
+            border-color: var(--error-color);
+        }
+
+        .form-message {
+            display: flex;
+            align-items: center;
+            margin-top: 0.5rem;
+            font-size: 0.875rem;
+            min-height: 1.25rem;
+        }
+        
+        .form-message.error-message {
+            color: var(--error-color);
+        }
+
+        .form-message.success-message {
+            color: var(--success-color);
+        }
+
+        .form-message.suggestion {
+            color: var(--secondary-color);
+        }
+
+        .form-message svg {
+            margin-right: 0.5rem;
+            flex-shrink: 0;
+        }
+        
+        .form-message a {
+            color: var(--primary-color);
+            text-decoration: underline;
+            cursor: pointer;
+        }
+
+        /* Password field styling */
+        .password-container {
+            position: relative;
+        }
+
+        .password-container .form-control {
+            padding-right: 3rem;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.25rem;
+            font-size: 1rem;
+            line-height: 1;
+        }
+
+        .toggle-password svg {
+            width: 1.25rem;
+            height: 1.25rem;
+            pointer-events: none;
+            color: var(--secondary-color);
+        }
+
+        .password-strength {
+            margin-top: 0.5rem;
+            display: flex;
+            align-items: center;
+            font-size: 0.875rem;
+        }
+
+        .password-strength-bar {
+            flex-grow: 1;
+            height: 6px;
+            background-color: var(--border-color);
+            border-radius: 3px;
+            margin-left: 0.5rem;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .password-strength-bar-fill {
+            height: 100%;
+            width: 0;
+            transition: width 0.3s ease-in-out;
+            border-radius: 3px;
+        }
+
+        .strength-weak .password-strength-bar-fill {
+            background-color: var(--error-color);
+        }
+
+        .strength-medium .password-strength-bar-fill {
+            background-color: orange;
+        }
+
+        .strength-strong .password-strength-bar-fill {
+            background-color: var(--success-color);
+        }
+
+        .strength-weak span { color: var(--error-color); }
+        .strength-medium span { color: orange; }
+        .strength-strong span { color: var(--success-color); }
+
+        .strength-requirements {
+            font-size: 0.75rem;
+            margin-top: 0.5rem;
+            list-style: none;
+            padding: 0;
+            line-height: 1.4;
+        }
+        
+        .strength-requirements li {
+            color: var(--secondary-color);
+            transition: color 0.2s;
+        }
+
+        .strength-requirements li.met {
+            color: var(--success-color);
+        }
+
+        /* Submit button */
+        .btn-submit {
+            width: 100%;
+            padding: 0.75rem;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s, opacity 0.2s;
+        }
+
+        .btn-submit:hover:not(:disabled) {
+            background-color: #0056b3;
+        }
+
+        .btn-submit:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        /* Global messages */
+        .global-messages {
+            margin-bottom: 1.5rem;
+        }
+
+        .error-summary {
+            background-color: rgba(220, 53, 69, 0.1);
+            color: var(--error-color);
+            border: 1px solid var(--error-color);
+            padding: 1rem;
+            border-radius: 8px;
+        }
+
+        .error-summary ul {
+            list-style-type: disc;
+            margin-top: 0.5rem;
+            margin-bottom: 0;
+            padding-left: 1.5rem;
+        }
+        
+        .success-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            visibility: hidden;
+            opacity: 0;
+            transition: visibility 0s 0.3s, opacity 0.3s ease-in-out;
+        }
+
+        .success-modal.is-active {
+            visibility: visible;
+            opacity: 1;
+            transition-delay: 0s;
+        }
+
+        .success-modal-content {
+            background-color: var(--input-bg-color);
+            padding: 2rem;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 4px 20px var(--shadow-color);
+            transform: scale(0.95);
+            transition: transform 0.3s ease-in-out;
+        }
+        
+        .success-modal.is-active .success-modal-content {
+            transform: scale(1);
+        }
+
+        .success-modal-content h2 {
+            color: var(--success-color);
+            margin-top: 0;
+        }
+
+        /* Screen reader only class */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+    </style>
+</head>
+<body>
+
+<main class="container">
+    <h1>Create Your Account</h1>
+    <form id="registrationForm" novalidate>
+        <div class="global-messages"></div>
+        
+        <div class="form-group" data-field="fullName">
+            <label for="fullName">Full Name</label>
+            <input type="text" id="fullName" name="fullName" class="form-control" autocomplete="name" required aria-describedby="fullNameError fullNameSuccess">
+            <div id="fullNameError" class="form-message error-message" aria-live="polite"></div>
+            <div id="fullNameSuccess" class="form-message success-message"></div>
+        </div>
+
+        <div class="form-group" data-field="email">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" class="form-control" autocomplete="email" required aria-describedby="emailError emailSuccess">
+            <div id="emailError" class="form-message error-message" aria-live="polite"></div>
+            <div id="emailSuccess" class="form-message success-message"></div>
+        </div>
+
+        <div class="form-group" data-field="password">
+            <label for="password">Password</label>
+            <div class="password-container">
+                <input type="password" id="password" name="password" class="form-control" autocomplete="new-password" required aria-describedby="passwordError passwordSuccess passwordStrengthMessage">
+                <button type="button" class="toggle-password" aria-label="Show password" aria-controls="password">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 4.5c-4.42 0-8 3.58-8 8s3.58 8 8 8 8-3.58 8-8-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6s2.69-6 6-6 6 2.69 6 6-2.69 6-6 6zm0-10c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm0 6c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="password-strength" id="passwordStrengthMessage" aria-live="polite" aria-atomic="true">
+                <span id="strengthText">Weak</span>
+                <div class="password-strength-bar"><div class="password-strength-bar-fill"></div></div>
+            </div>
+            <ul class="strength-requirements">
+                <li id="req-length">At least 10 characters</li>
+                <li id="req-upper">At least one uppercase letter</li>
+                <li id="req-lower">At least one lowercase letter</li>
+                <li id="req-number">At least one number</li>
+                <li id="req-special">At least one special character</li>
+            </ul>
+            <div id="passwordError" class="form-message error-message" aria-live="polite"></div>
+            <div id="passwordSuccess" class="form-message success-message"></div>
+        </div>
+        
+        <div class="form-group" data-field="confirmPassword">
+            <label for="confirmPassword">Confirm Password</label>
+            <div class="password-container">
+                <input type="password" id="confirmPassword" name="confirmPassword" class="form-control" autocomplete="new-password" required aria-describedby="confirmPasswordError confirmPasswordSuccess">
+                <button type="button" class="toggle-password" aria-label="Show confirm password" aria-controls="confirmPassword">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 4.5c-4.42 0-8 3.58-8 8s3.58 8 8 8 8-3.58 8-8-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6s2.69-6 6-6 6 2.69 6 6-2.69 6-6 6zm0-10c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm0 6c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/>
+                    </svg>
+                </button>
+            </div>
+            <div id="confirmPasswordError" class="form-message error-message" aria-live="polite"></div>
+            <div id="confirmPasswordSuccess" class="form-message success-message"></div>
+        </div>
+
+        <div class="form-group" data-field="phone">
+            <label for="phone">Phone <span class="sr-only">(optional)</span></label>
+            <input type="tel" id="phone" name="phone" class="form-control" autocomplete="tel" aria-describedby="phoneError phoneSuccess">
+            <div id="phoneError" class="form-message error-message" aria-live="polite"></div>
+            <div id="phoneSuccess" class="form-message success-message"></div>
+        </div>
+
+        <button type="submit" class="btn-submit">Register</button>
+    </form>
+</main>
+
+<div id="successModal" class="success-modal" role="dialog" aria-modal="true" aria-labelledby="successModalTitle">
+    <div class="success-modal-content">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="var(--success-color)" width="64px" height="64px">
+            <path d="M0 0h24v24H0z" fill="none"/>
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+        </svg>
+        <h2 id="successModalTitle">Registration Successful!</h2>
+        <p>You have successfully created your account. Welcome aboard!</p>
+    </div>
+</div>
+
+<script>
+    // Self-contained Vanilla JS for form validation
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const form = document.getElementById('registrationForm');
+        const formGroups = form.querySelectorAll('.form-group');
+        const globalMessages = form.querySelector('.global-messages');
+        const submitButton = form.querySelector('.btn-submit');
+
+        const successModal = document.getElementById('successModal');
+        const modalContent = successModal.querySelector('.success-modal-content');
+
+        // Regex patterns and blacklists
+        const REGEX = {
+            fullName: /^[a-zA-Z\s]+$/,
+            email: /^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/,
+            password: {
+                length: /^.{10,}$/,
+                upper: /[A-Z]/,
+                lower: /[a-z]/,
+                number: /[0-9]/,
+                special: /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?`~]/
+            },
+            phone: /^\+?[0-9\s-]{7,}$/ // Allows +, digits, spaces, and dashes, min 7 chars
+        };
+
+        const WEAK_PASSWORDS = ['password', '123456', 'qwerty', 'admin'];
+
+        // Utility functions
+        function trimAndNormalize(input) {
+            return input.trim().replace(/\s+/g, ' ');
+        }
+
+        function debounce(func, delay) {
+            let timeout;
+            return (...args) => {
+                clearTimeout(timeout);
+                timeout = setTimeout(() => func.apply(this, args), delay);
+            };
+        }
+
+        function getFieldData(element) {
+            const container = element.closest('.form-group');
+            return {
+                element: element,
+                container: container,
+                name: container.dataset.field,
+                value: trimAndNormalize(element.value)
+            };
+        }
+
+        function showMessage(element, message, type) {
+            const container = element.closest('.form-group');
+            const messageElement = container.querySelector(`.${type}-message`);
+            
+            // Clear other messages first to avoid visual clutter
+            clearMessages(element);
+
+            if (messageElement && message) {
+                messageElement.innerHTML = message;
+                messageElement.style.display = 'flex';
+                // For screen readers
+                element.setAttribute('aria-describedby', `${element.id}${type.charAt(0).toUpperCase() + type.slice(1)}${message ? ' ' : ''}${element.id}Error ${element.id}Success`);
+            }
+        }
+        
+        function clearMessages(element) {
+            const container = element.closest('.form-group');
+            container.classList.remove('error', 'success');
+            const messages = container.querySelectorAll('.form-message');
+            messages.forEach(msg => msg.innerHTML = '');
+            element.removeAttribute('aria-describedby');
+            // Re-add default describedby
+            if(container.querySelector('.error-message') || container.querySelector('.success-message')) {
+                const errorId = container.querySelector('.error-message')?.id || '';
+                const successId = container.querySelector('.success-message')?.id || '';
+                const ids = [errorId, successId].filter(Boolean).join(' ');
+                if (ids) {
+                    element.setAttribute('aria-describedby', ids);
+                }
+            }
+        }
+
+        // Specific field validation functions
+        function validateFullName(field) {
+            const { value } = field;
+            if (value === '') {
+                return { error: 'Full name is required.' };
+            }
+            if (!REGEX.fullName.test(value)) {
+                return { error: 'Full name can only contain letters and spaces.' };
+            }
+            const words = value.split(' ').filter(word => word.length > 0);
+            if (words.length < 2) {
+                return { error: 'Full name must contain at least two words.' };
+            }
+            if (words.some(word => word.length < 2)) {
+                return { error: 'Each word must be at least two characters long.' };
+            }
+            return { success: 'Looks good!' };
+        }
+
+        function validateEmail(field) {
+            const { value } = field;
+            if (value === '') {
+                return { error: 'Email is required.' };
+            }
+            if (!REGEX.email.test(value)) {
+                // Simple typo suggestions
+                const domains = ['gmail.com', 'yahoo.com', 'hotmail.com', 'outlook.com'];
+                const parts = value.split('@');
+                const [username, domain] = parts;
+                let suggestion = null;
+
+                if (parts.length === 2) {
+                    const matchedDomain = domains.find(d => d.startsWith(domain));
+                    if (matchedDomain) {
+                        suggestion = `Did you mean: <a href="#" data-value="${username}@${matchedDomain}">${username}@${matchedDomain}</a>?`;
+                    }
+                }
+                return { error: 'Please enter a valid email address.', suggestion: suggestion };
+            }
+            return { success: 'Valid email.' };
+        }
+
+        function validatePassword(field) {
+            const { value } = field;
+            const passwordStrength = checkPasswordStrength(value);
+            
+            if (value === '') {
+                return { error: 'Password is required.' };
+            }
+            if (WEAK_PASSWORDS.includes(value.toLowerCase())) {
+                return { error: 'This is a common weak password. Please choose a stronger one.' };
+            }
+            if (!passwordStrength.isStrong) {
+                return { error: 'Password is not strong enough. Please meet all requirements below.' };
+            }
+            return { success: 'Strong password.' };
+        }
+
+        function checkPasswordStrength(password) {
+            const requirements = {
+                length: REGEX.password.length.test(password),
+                upper: REGEX.password.upper.test(password),
+                lower: REGEX.password.lower.test(password),
+                number: REGEX.password.number.test(password),
+                special: REGEX.password.special.test(password)
+            };
+
+            const metCount = Object.values(requirements).filter(Boolean).length;
+            let strength = 'weak';
+            let barWidth = 0;
+            
+            if (metCount >= 5) {
+                strength = 'strong';
+                barWidth = 100;
+            } else if (metCount >= 3) {
+                strength = 'medium';
+                barWidth = (metCount / 5) * 100;
+            } else if (password.length > 0) {
+                strength = 'weak';
+                barWidth = (metCount / 5) * 100;
+            }
+
+            return {
+                strength,
+                barWidth,
+                requirements,
+                isStrong: strength === 'strong'
+            };
+        }
+
+        function updatePasswordStrengthMeter(field) {
+            const { element, value } = field;
+            const container = element.closest('.form-group');
+            const strengthMeter = container.querySelector('.password-strength');
+            const strengthText = container.querySelector('#strengthText');
+            const barFill = container.querySelector('.password-strength-bar-fill');
+            const requirementsList = container.querySelector('.strength-requirements');
+            
+            if (!strengthMeter || !value) {
+                strengthMeter.style.visibility = 'hidden';
+                return;
+            } else {
+                strengthMeter.style.visibility = 'visible';
+            }
+
+            const { strength, barWidth, requirements } = checkPasswordStrength(value);
+            
+            strengthMeter.className = `password-strength strength-${strength}`;
+            barFill.style.width = `${barWidth}%`;
+            strengthText.textContent = strength.charAt(0).toUpperCase() + strength.slice(1);
+            
+            // Update requirements list
+            requirementsList.querySelector('#req-length').classList.toggle('met', requirements.length);
+            requirementsList.querySelector('#req-upper').classList.toggle('met', requirements.upper);
+            requirementsList.querySelector('#req-lower').classList.toggle('met', requirements.lower);
+            requirementsList.querySelector('#req-number').classList.toggle('met', requirements.number);
+            requirementsList.querySelector('#req-special').classList.toggle('met', requirements.special);
+        }
+
+        function validateConfirmPassword(field) {
+            const { value } = field;
+            const passwordField = document.getElementById('password');
+            const passwordValue = trimAndNormalize(passwordField.value);
+
+            if (value === '') {
+                return { error: 'Please confirm your password.' };
+            }
+            if (value !== passwordValue) {
+                return { error: 'Passwords do not match.' };
+            }
+            return { success: 'Passwords match.' };
+        }
+
+        function validatePhone(field) {
+            const { value } = field;
+            if (value === '') { // Optional field
+                return { success: '' };
+            }
+            if (!REGEX.phone.test(value)) {
+                return { error: 'Please enter a valid phone number.' };
+            }
+            return { success: 'Valid phone number.' };
+        }
+
+        // Generic field validation handler
+        const validateField = (element, isSubmit = false) => {
+            const field = getFieldData(element);
+            const validator = {
+                'fullName': validateFullName,
+                'email': validateEmail,
+                'password': validatePassword,
+                'confirmPassword': validateConfirmPassword,
+                'phone': validatePhone
+            }[field.name];
+
+            if (!validator) return { isValid: true };
+            
+            const result = validator(field);
+            clearMessages(element);
+
+            if (result.error) {
+                field.container.classList.add('error');
+                showMessage(element, result.error, 'error');
+                if (result.suggestion) {
+                    const suggestionElement = document.createElement('div');
+                    suggestionElement.className = 'form-message suggestion';
+                    suggestionElement.innerHTML = result.suggestion;
+                    field.container.appendChild(suggestionElement);
+                }
+                return { isValid: false, message: result.error };
+            } else if (result.success) {
+                if (result.success) {
+                    field.container.classList.add('success');
+                    showMessage(element, `
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="var(--success-color)" width="16px" height="16px">
+                            <path d="M0 0h24v24H0z" fill="none"/>
+                            <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+                        </svg>
+                        ${result.success}
+                    `, 'success');
+                }
+                return { isValid: true };
+            }
+            
+            // For optional fields that pass empty validation
+            return { isValid: true };
+        };
+
+        const validateForm = () => {
+            const inputs = form.querySelectorAll('.form-control');
+            let formIsValid = true;
+            const globalErrors = [];
+
+            // Clear global errors before re-validation
+            globalMessages.innerHTML = '';
+            
+            inputs.forEach(input => {
+                const { isValid, message } = validateField(input, true);
+                if (!isValid) {
+                    formIsValid = false;
+                    globalErrors.push({ name: getFieldData(input).name, message });
+                }
+            });
+
+            if (!formIsValid) {
+                showGlobalErrorSummary(globalErrors);
+            }
+            
+            return formIsValid;
+        };
+
+        function showGlobalErrorSummary(errors) {
+            const errorList = errors.map(err => `<li><a href="#${err.name}">${err.message}</a></li>`).join('');
+            globalMessages.innerHTML = `
+                <div class="error-summary" role="alert" aria-live="assertive">
+                    <p><strong>Please correct the following errors to submit:</strong></p>
+                    <ul>${errorList}</ul>
+                </div>
+            `;
+            // Focus on the first invalid field for accessibility
+            const firstErrorInput = document.getElementById(errors[0].name);
+            if (firstErrorInput) {
+                firstErrorInput.focus();
+            }
+        }
+
+        function showSuccessState() {
+            submitButton.disabled = true;
+            successModal.classList.add('is-active');
+            
+            // Set focus to the modal for accessibility
+            modalContent.focus();
+
+            // Handle closing the modal
+            setTimeout(() => {
+                successModal.classList.remove('is-active');
+                submitButton.disabled = false;
+                form.reset();
+                formGroups.forEach(group => {
+                    group.classList.remove('error', 'success');
+                    const messages = group.querySelectorAll('.form-message');
+                    messages.forEach(msg => msg.innerHTML = '');
+                });
+                globalMessages.innerHTML = '';
+                document.getElementById('passwordStrengthMessage').style.visibility = 'hidden';
+                form.querySelector('input').focus();
+            }, 3000); // Reset after 3 seconds
+        }
+
+        // Event Listeners
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            if (validateForm()) {
+                showSuccessState();
+            }
+        });
+
+        // Live and blur validation
+        formGroups.forEach(group => {
+            const input = group.querySelector('.form-control');
+            if (input) {
+                // Debounced live validation
+                const debouncedValidate = debounce(() => {
+                    // Don't validate if field is empty on live typing, unless it's a required field
+                    if (input.value.trim() === '' && input.required === false) {
+                        clearMessages(input);
+                        return;
+                    }
+                    validateField(input);
+                }, 250);
+
+                input.addEventListener('input', (e) => {
+                    debouncedValidate();
+                    // Special case for password strength meter
+                    if (e.target.id === 'password') {
+                        updatePasswordStrengthMeter(getFieldData(e.target));
+                    }
+                    // Trigger confirm password check when password changes
+                    if (e.target.id === 'password' && document.getElementById('confirmPassword').value) {
+                         validateField(document.getElementById('confirmPassword'));
+                    }
+                });
+
+                // Validate on blur (when user leaves the field)
+                input.addEventListener('blur', (e) => {
+                    validateField(e.target);
+                });
+            }
+        });
+
+        // Handle show/hide password toggle
+        document.querySelectorAll('.toggle-password').forEach(button => {
+            button.addEventListener('click', (e) => {
+                const passwordInput = e.target.closest('.password-container').querySelector('input');
+                const isPassword = passwordInput.type === 'password';
+                passwordInput.type = isPassword ? 'text' : 'password';
+                button.setAttribute('aria-label', isPassword ? 'Hide password' : 'Show password');
+                const svg = button.querySelector('svg');
+                // Simple SVG toggle for eye open/closed. Could be more robust.
+                svg.innerHTML = isPassword 
+                    ? `<path d="M12 4.5c-4.42 0-8 3.58-8 8s3.58 8 8 8 8-3.58 8-8-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6s2.69-6 6-6 6 2.69 6 6-2.69 6-6 6zm0-10c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm0 6c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/>`
+                    : `<path d="M12 4.5c-4.42 0-8 3.58-8 8s3.58 8 8 8 8-3.58 8-8-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6s2.69-6 6-6 6 2.69 6 6-2.69 6-6 6zm0-10c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm0 6c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/>`; // Placeholder
+            });
+        });
+
+        // Handle suggestions
+        document.addEventListener('click', (e) => {
+            if (e.target.matches('.suggestion a')) {
+                e.preventDefault();
+                const suggestion = e.target.dataset.value;
+                const emailInput = document.getElementById('email');
+                emailInput.value = suggestion;
+                validateField(emailInput);
+                emailInput.focus();
+            }
+        });
+
+        // Initial setup for password strength meter
+        document.getElementById('passwordStrengthMessage').style.visibility = 'hidden';
+
+        // --- Self-Checks for core functionality (for development/testing) ---
+        console.log('--- Running Self-Checks ---');
+
+        // Email Validator
+        console.assert(validateEmail({value: 'test@example.com'}).success, '✅ Email: valid email passed.');
+        console.assert(validateEmail({value: 'invalid-email'}).error, '❌ Email: invalid email failed.');
+        console.assert(validateEmail({value: 'user@gnail.com'}).suggestion, '✅ Email: typo suggestion generated.');
+
+        // Password Strength
+        const weakPass = checkPasswordStrength('abcde');
+        console.assert(weakPass.strength === 'weak' && weakPass.barWidth > 0, '✅ Password Strength: weak password detected.');
+        const mediumPass = checkPasswordStrength('Pass123!');
+        console.assert(mediumPass.strength === 'medium' && mediumPass.barWidth > 0, '✅ Password Strength: medium password detected.');
+        const strongPass = checkPasswordStrength('MySecurePassw0rd!');
+        console.assert(strongPass.strength === 'strong', '✅ Password Strength: strong password detected.');
+        console.assert(validatePassword({value: 'password'}).error, '✅ Password: weak blacklist password detected.');
+        
+        console.log('--- Self-Checks Complete ---');
+    });
+</script>
+
+</body>
+</html>

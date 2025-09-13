@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stopwatch</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0A0A0A;
+            --primary-color: #00C4FF;
+            --secondary-color: #F0F0F0;
+            --accent-color: #FFD700;
+            --text-color: #F0F0F0;
+            --card-bg: #1C1C1C;
+            --button-start: #2ECC71;
+            --button-stop: #E74C3C;
+            --button-reset: #3498DB;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .stopwatch-container {
+            background-color: var(--card-bg);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            width: 100%;
+            max-width: 500px;
+            animation: fadeIn 1s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .stopwatch-display {
+            font-size: clamp(2.5rem, 8vw, 4rem);
+            font-weight: 700;
+            margin-bottom: 30px;
+            color: var(--primary-color);
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .buttons-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .button {
+            font-size: 1rem;
+            font-weight: 700;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            flex-grow: 1;
+            min-width: 120px;
+        }
+
+        .button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .button:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        #startBtn {
+            background-color: var(--button-start);
+            color: white;
+        }
+
+        #stopBtn {
+            background-color: var(--button-stop);
+            color: white;
+        }
+
+        #resetBtn {
+            background-color: var(--button-reset);
+            color: white;
+        }
+
+        .button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        @media (max-width: 480px) {
+            .stopwatch-container {
+                padding: 30px 20px;
+            }
+            .button {
+                flex-basis: calc(50% - 15px);
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="stopwatch-container">
+        <div class="stopwatch-display" id="display">00:00:00</div>
+        <div class="buttons-container">
+            <button class="button" id="startBtn">Start</button>
+            <button class="button" id="stopBtn" disabled>Stop</button>
+            <button class="button" id="resetBtn" disabled>Reset</button>
+        </div>
+    </div>
+
+    <script>
+        // DOM element references
+        const display = document.getElementById('display');
+        const startBtn = document.getElementById('startBtn');
+        const stopBtn = document.getElementById('stopBtn');
+        const resetBtn = document.getElementById('resetBtn');
+
+        // State variables for time
+        let [milliseconds, seconds, minutes] = [0, 0, 0];
+        let timer = null; // Variable to hold the setInterval reference
+
+        // Function to update the stopwatch time and display
+        function updateStopwatch() {
+            milliseconds += 10;
+            if (milliseconds === 1000) {
+                milliseconds = 0;
+                seconds++;
+                if (seconds === 60) {
+                    seconds = 0;
+                    minutes++;
+                }
+            }
+            // Format time with leading zeros
+            const m = String(minutes).padStart(2, '0');
+            const s = String(seconds).padStart(2, '0');
+            const ms = String(Math.floor(milliseconds / 10)).padStart(2, '0');
+
+            display.textContent = `${m}:${s}:${ms}`;
+        }
+
+        // Start button logic
+        function startTimer() {
+            if (timer !== null) {
+                clearInterval(timer);
+            }
+            // Set an interval to run `updateStopwatch` every 10 milliseconds
+            timer = setInterval(updateStopwatch, 10);
+            startBtn.disabled = true;
+            stopBtn.disabled = false;
+            resetBtn.disabled = false;
+        }
+
+        // Stop button logic
+        function stopTimer() {
+            clearInterval(timer);
+            startBtn.disabled = false;
+            stopBtn.disabled = true;
+        }
+
+        // Reset button logic
+        function resetTimer() {
+            clearInterval(timer);
+            [milliseconds, seconds, minutes] = [0, 0, 0];
+            display.textContent = '00:00:00';
+            startBtn.disabled = false;
+            stopBtn.disabled = true;
+            resetBtn.disabled = true;
+        }
+
+        // Event listeners for the buttons
+        startBtn.addEventListener('click', startTimer);
+        stopBtn.addEventListener('click', stopTimer);
+        resetBtn.addEventListener('click', resetTimer);
+    </script>
+
+</body>
+</html>
+    
