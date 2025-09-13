@@ -101,3 +101,14 @@ header p {
     opacity: 0;
   }
 }
+
+ /* Footer Styles */
+    footer {
+      background-color: #1a2a33; /* A darker color for better contrast */
+      color: #ccc;
+      text-align: center;
+      padding: 2rem;
+      font-size: 0.85rem;
+      margin-top: 2rem;
+    }
+    
