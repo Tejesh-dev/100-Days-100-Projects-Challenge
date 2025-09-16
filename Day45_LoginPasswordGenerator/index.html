@@ -1,0 +1,386 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Password Generator + Login Form</title>
+  <style>
+    :root{
+      --bg: #0f172a;
+      --card: #0b1220;
+      --muted: #9aa4b2;
+      --accent: #7c5cff;
+      --accent-2: #ff66b3;
+      --glass: rgba(255,255,255,0.04);
+      --success: #10b981;
+      --danger: #ef4444;
+      --shadow: 0 8px 30px rgba(2,6,23,0.7);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
+    html,body{height:100%;margin:0;background:linear-gradient(180deg,#071028 0%, #081427 60%);color:#e6eef8}
+    .container{
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:32px;
+      gap:24px;
+      box-sizing:border-box;
+    }
+    .card{
+      width:760px;
+      max-width:100%;
+      background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border-radius:14px;
+      box-shadow:var(--shadow);
+      padding:20px;
+      display:grid;
+      grid-template-columns: 1fr 380px;
+      gap:18px;
+      align-items:start;
+    }
+    .panel{
+      background:var(--card);
+      border-radius:12px;
+      padding:16px;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.02);
+    }
+    h2{margin:6px 0 12px;font-size:18px}
+    p.muted{color:var(--muted);margin:0 0 12px;font-size:13px}
+    label{display:block;font-size:13px;margin-bottom:6px;color:#d9e6ff}
+    input[type=text], input[type=password], select {
+      width:100%;
+      padding:10px 12px;
+      border-radius:10px;
+      border:1px solid rgba(255,255,255,0.03);
+      background:var(--glass);
+      color:inherit;
+      outline:none;
+      box-sizing:border-box;
+      font-size:14px;
+    }
+    .row{display:flex;gap:10px}
+    .row .col{flex:1}
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:10px 12px;
+      border-radius:10px;
+      background:linear-gradient(90deg,var(--accent),var(--accent-2));
+      border:none;
+      color:white;
+      cursor:pointer;
+      font-weight:600;
+      box-shadow: 0 6px 18px rgba(124,92,255,0.18);
+    }
+    .btn.ghost{
+      background:transparent;
+      border:1px solid rgba(255,255,255,0.06);
+      color:#dbe9ff;
+      box-shadow:none;
+    }
+    .controls{display:flex;flex-direction:column;gap:10px}
+    .option-row{display:flex;gap:8px;align-items:center;}
+    .small{font-size:13px;color:var(--muted)}
+    .meter{
+      height:10px;border-radius:10px;background:rgba(255,255,255,0.04);overflow:hidden;
+      margin-top:8px;
+    }
+    .meter > i{display:block;height:100%;width:0%;background:linear-gradient(90deg,var(--accent),var(--accent-2));transition:width 200ms ease}
+    .suggestions{display:flex;flex-direction:column;gap:8px;margin-top:10px}
+    .chip{
+      display:flex;justify-content:space-between;align-items:center;padding:8px 10px;border-radius:10px;background:rgba(255,255,255,0.02);
+      border:1px solid rgba(255,255,255,0.02);font-family:monospace;font-size:14px;
+    }
+    .chip button{background:transparent;border:none;color:var(--accent);cursor:pointer;font-weight:600}
+    .note{font-size:13px;color:var(--muted);margin-top:8px}
+    .footer{grid-column:1/-1;margin-top:10px;display:flex;justify-content:space-between;align-items:center}
+    .strength-text{font-weight:700}
+    .danger{color:var(--danger)}
+    .success{color:var(--success)}
+    .login-actions{display:flex;gap:8px;margin-top:12px}
+    @media (max-width:880px){
+      .card{grid-template-columns:1fr; padding:14px}
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="card" role="main" aria-labelledby="main-title">
+      <!-- Left: Login Form -->
+      <section class="panel" aria-labelledby="login-title">
+        <h2 id="login-title">Login</h2>
+        <p class="muted">Enter credentials below. If your password is weak, use the suggestions generated at the right.</p>
+
+        <form id="loginForm" autocomplete="off" onsubmit="handleLogin(event)">
+          <label for="email">Email</label>
+          <input id="email" name="email" type="text" placeholder="you@domain.com" required>
+
+          <label for="password" style="margin-top:10px">Password</label>
+          <input id="password" name="password" type="password" placeholder="Enter password" required>
+
+          <div style="display:flex;gap:10px;margin-top:8px;align-items:center">
+            <div style="flex:1">
+              <div class="small">Strength</div>
+              <div class="meter" aria-hidden="true"><i id="meterFill"></i></div>
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px">
+                <div id="strengthText" class="strength-text small">—</div>
+                <div id="feedback" class="small muted"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="login-actions">
+            <button class="btn" type="submit">Log in</button>
+            <button class="btn ghost" type="button" onclick="autofillSuggested()">Use Suggested</button>
+            <button class="btn ghost" type="button" onclick="copyPassword()">Copy</button>
+          </div>
+          <p class="note">This demo shows client-side password suggestions/strength checks. Never rely solely on client checks for security — always validate and enforce rules server-side.</p>
+        </form>
+      </section>
+
+      <!-- Right: Password Generator -->
+      <aside class="panel" aria-labelledby="gen-title">
+        <h2 id="gen-title">Password Generator</h2>
+        <p class="muted">Choose options, generate strong passwords, and copy one to your login form.</p>
+
+        <div class="controls">
+          <label for="length">Length: <span id="lengthVal">16</span></label>
+          <input id="length" type="range" min="6" max="64" value="16" oninput="updateLength(this.value)">
+
+          <div class="option-row">
+            <input id="optUpper" type="checkbox" checked> <label for="optUpper" class="small">Include Uppercase</label>
+          </div>
+          <div class="option-row">
+            <input id="optNumbers" type="checkbox" checked> <label for="optNumbers" class="small">Include Numbers</label>
+          </div>
+          <div class="option-row">
+            <input id="optSymbols" type="checkbox" checked> <label for="optSymbols" class="small">Include Symbols</label>
+          </div>
+
+          <div style="display:flex;gap:8px;margin-top:6px">
+            <button class="btn" onclick="generateMany()">Generate</button>
+            <button class="btn ghost" onclick="shuffleSuggestions()">Shuffle</button>
+          </div>
+
+          <div class="suggestions" id="suggestions" aria-live="polite">
+            <!-- generated suggestions go here -->
+          </div>
+
+          <div class="note">Tip: use a password manager to store strong, unique passwords per site.</div>
+        </div>
+      </aside>
+
+      <div class="footer">
+        <div class="small muted">Local demo • client-side only • no network requests</div>
+        <div class="small">Made with ❤️ — Password rules: length + char variety</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // -----------------------
+    // Password Generator Demo
+    // -----------------------
+    const passwordInput = document.getElementById('password');
+    const lengthSlider = document.getElementById('length');
+    const lengthVal = document.getElementById('lengthVal');
+    const optUpper = document.getElementById('optUpper');
+    const optNumbers = document.getElementById('optNumbers');
+    const optSymbols = document.getElementById('optSymbols');
+    const suggestionsEl = document.getElementById('suggestions');
+    const meterFill = document.getElementById('meterFill');
+    const strengthText = document.getElementById('strengthText');
+    const feedback = document.getElementById('feedback');
+
+    const SYMBOLS = '!@#$%^&*()_-+=[]{}|;:,.<>?/~`';
+    const LOWER = 'abcdefghijklmnopqrstuvwxyz';
+    const UPPER = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    const NUM = '0123456789';
+
+    // Initialize
+    updateLength(lengthSlider.value);
+    generateMany();
+
+    // Update displayed length
+    function updateLength(v){
+      lengthVal.textContent = v;
+    }
+
+    // Password generation logic
+    function generatePassword({length=16, upper=true, numbers=true, symbols=true} = {}) {
+      let pool = LOWER;
+      if (upper) pool += UPPER;
+      if (numbers) pool += NUM;
+      if (symbols) pool += SYMBOLS;
+
+      // Guarantee inclusion of selected character classes
+      const required = [];
+      if (upper) required.push(pick(UPPER));
+      if (numbers) required.push(pick(NUM));
+      if (symbols) required.push(pick(SYMBOLS));
+      // Always include one lowercase
+      required.push(pick(LOWER));
+
+      let result = required.join('');
+      for (let i = result.length; i < length; i++) {
+        result += pick(pool);
+      }
+      // Shuffle result for randomness
+      return shuffle(result.split('')).join('');
+    }
+
+    function pick(str){ return str[Math.floor(Math.random() * str.length)]; }
+    function shuffle(arr){
+      for(let i=arr.length-1;i>0;i--){
+        const j = Math.floor(Math.random()*(i+1));
+        [arr[i],arr[j]] = [arr[j],arr[i]];
+      }
+      return arr;
+    }
+
+    function generateMany(){
+      const options = {
+        length: parseInt(lengthSlider.value, 10),
+        upper: optUpper.checked,
+        numbers: optNumbers.checked,
+        symbols: optSymbols.checked
+      };
+      suggestionsEl.innerHTML = '';
+      const list = [];
+      for(let i=0;i<5;i++){
+        const pwd = generatePassword(options);
+        list.push(pwd);
+        const chip = document.createElement('div');
+        chip.className = 'chip';
+        chip.innerHTML = `<span>${escapeHtml(pwd)}</span><div>
+          <button onclick="copyToClipboard('${encodeURIComponent(pwd)}')">Copy</button>
+          <button onclick="useSuggestion('${encodeURIComponent(pwd)}')">Use</button>
+        </div>`;
+        suggestionsEl.appendChild(chip);
+      }
+      // Also evaluate and show the first suggestion in the meter for convenience
+      evaluateAndShow(list[0]);
+    }
+
+    function shuffleSuggestions(){
+      const chips = Array.from(suggestionsEl.querySelectorAll('.chip span')).map(s => s.textContent);
+      const shuffled = shuffle(chips);
+      suggestionsEl.innerHTML = '';
+      shuffled.forEach(pwd => {
+        const chip = document.createElement('div');
+        chip.className = 'chip';
+        chip.innerHTML = `<span>${escapeHtml(pwd)}</span><div>
+          <button onclick="copyToClipboard('${encodeURIComponent(pwd)}')">Copy</button>
+          <button onclick="useSuggestion('${encodeURIComponent(pwd)}')">Use</button>
+        </div>`;
+        suggestionsEl.appendChild(chip);
+      });
+    }
+
+    // use suggestion: paste into password field & update meter
+    function useSuggestion(enc){
+      const pwd = decodeURIComponent(enc);
+      passwordInput.value = pwd;
+      evaluateAndShow(pwd);
+    }
+
+    // copy to clipboard helper
+    function copyToClipboard(enc){
+      const pwd = decodeURIComponent(enc);
+      navigator.clipboard?.writeText(pwd).then(()=> {
+        alert('Password copied to clipboard');
+      }).catch(()=> {
+        prompt('Copy this password', pwd);
+      });
+    }
+
+    // autofill first suggested
+    function autofillSuggested(){
+      const first = suggestionsEl.querySelector('.chip span');
+      if (first){
+        passwordInput.value = first.textContent;
+        evaluateAndShow(first.textContent);
+      }
+    }
+
+    function copyPassword(){
+      const pwd = passwordInput.value;
+      if(!pwd) return alert('No password to copy');
+      navigator.clipboard?.writeText(pwd).then(()=> alert('Password copied')).catch(()=> prompt('Copy this password', pwd));
+    }
+
+    // Evaluate password strength: simple heuristic (length + variety)
+    function scorePassword(pwd){
+      let score = 0;
+      if(!pwd) return {score:0, feedback:['Enter password']};
+      // length contribution (max 40)
+      score += Math.min(40, pwd.length * 2);
+      // variety
+      const hasLower = /[a-z]/.test(pwd);
+      const hasUpper = /[A-Z]/.test(pwd);
+      const hasNum = /[0-9]/.test(pwd);
+      const hasSym = /[^A-Za-z0-9]/.test(pwd);
+      const variety = [hasLower, hasUpper, hasNum, hasSym].filter(Boolean).length;
+      score += variety * 15; // up to 60
+      // penalize common patterns
+      const lowerPwd = pwd.toLowerCase();
+      const bad = ['password','1234','admin','qwerty','letmein','1111'];
+      const feedback = [];
+      if (bad.some(b => lowerPwd.includes(b))) { score = Math.max(5, score - 35); feedback.push('Avoid common words or sequences'); }
+      if (pwd.length < 8) feedback.push('Consider length >= 12 for stronger security');
+      if (!hasNum) feedback.push('Add numbers to increase strength');
+      if (!hasUpper) feedback.push('Add uppercase letters');
+      if (!hasSym) feedback.push('Add symbols like @,#,$ to increase entropy');
+      score = Math.max(0, Math.min(100, Math.round(score)));
+      return {score, feedback};
+    }
+
+    function evaluateAndShow(pwd){
+      const {score, feedback:fb} = scorePassword(pwd);
+      meterFill.style.width = score + '%';
+      if (score < 35) {
+        strengthText.textContent = 'Weak';
+        strengthText.className = 'strength-text danger';
+      } else if (score < 65) {
+        strengthText.textContent = 'Moderate';
+        strengthText.className = 'strength-text';
+      } else {
+        strengthText.textContent = 'Strong';
+        strengthText.className = 'strength-text success';
+      }
+      feedback.textContent = fb.slice(0,2).join(' • ');
+    }
+
+    // Live evaluation as user types
+    passwordInput.addEventListener('input', (e) => evaluateAndShow(e.target.value));
+
+    // Form submit handler (demo only)
+    function handleLogin(e){
+      e.preventDefault();
+      const email = document.getElementById('email').value.trim();
+      const pwd = passwordInput.value;
+      const {score} = scorePassword(pwd);
+      if(score < 35){
+        if(!confirm('Password looks weak. Are you sure you want to continue?')) return;
+      }
+      // Demo: don't actually authenticate — show the "would submit" message
+      alert('Demo: credentials validated locally\nEmail: ' + email + '\nPassword strength: ' + score + '/100\n(Do not use this demo in production without server-side checks.)');
+    }
+
+    // Utility: escape for display
+    function escapeHtml(s){
+      return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    }
+
+    // For useSuggestion and copyToClipboard compatibility in HTML attributes
+    window.useSuggestion = useSuggestion;
+    window.copyToClipboard = copyToClipboard;
+    window.generateMany = generateMany;
+    window.shuffleSuggestions = shuffleSuggestions;
+    window.autofillSuggested = autofillSuggested;
+    window.copyPassword = copyPassword;
+  </script>
+</body>
+</html>

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>White Board Online</title> 
+    <link rel="stylesheet" href="assets/style.css">
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="assets/index.js" defer></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <section class="tools-board">
+            <div class="row">
+              <label class="title">Shapes</label>
+              <ul class="options">
+                <li class="option tool" id ="rectangle">
+                    <span><ion-icon name="tablet-landscape-outline"></ion-icon>Rectangle</span>
+                </li>
+                <li class="option tool" id="circle">
+                    <span><ion-icon name="ellipse-outline"></ion-icon>Circle</span>
+                </li>
+                <li class="option tool" id="triangle">
+                    <span><ion-icon name="triangle-outline"></ion-icon>Triangle</span>
+                </li>
+                <li class="option">
+                    <input type="checkbox" id="fill-color">
+                    <lable for="">Fill color</lable>
+                </li>
+              </ul>
+            </div>
+            <div class="row">
+                <label class="title">Options</label> 
+                <ul class="options">
+                  <li class="option active tool" id="brush">
+                      <span><ion-icon name="brush-outline"></ion-icon>Brush</span>
+                  </li>
+                  <li class="option tool" id="eraser">
+                      <span><ion-icon name="ellipse-outline"></ion-icon>Eraser</span>
+                  </li>
+                  <li class="option">
+                      <input type="range" id="size-slider">
+                  </li>
+                </ul>
+              </div>
+              <div class="row colors">
+                <label class="title">Colors</label>
+                <ul class="options">
+                    <li class="option">
+                        <input type="color" id="color-picker" value="#ffffff">
+                    </li>
+                    <li class="option selected">
+                        <input type="color" id="color-picker" value="#000">
+                    </li>
+                    <li class="option">
+                        <input type="color" id="color-picker" value="#ff0000">
+                    </li>
+                    <li class="option">
+                        <input type="color" id="color-picker" value="#61b33b">
+                    </li>
+                    <li class="option">
+                    <input type="color" id="color-picker" value="#4a98f7">
+                    </li>
+                </ul>
+                </div>
+                <div class="row buttons">
+                    <button class="clear-canvas">Clear</button>
+                    <button class="save-img">Save file</button>
+              </div> 
+        </section>
+        <section class="drawing-board">
+            <canvas></canvas>
+        </section>
+    </div>
+    <script src="index.js"></script>
+</body>
+</html>
