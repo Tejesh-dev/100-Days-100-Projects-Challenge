@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Currency Converter</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        /* Modern Dark Theme CSS */
+        :root {
+            --bg-color: #121212;
+            --card-color: #1e1e1e;
+            --text-color: #e0e0e0;
+            --primary-color: #6200ea;
+            --primary-light: #9c27b0;
+            --border-color: #333;
+            --input-bg: #282828;
+            --shadow-color: rgba(0, 0, 0, 0.5);
+            --rising-color: #4caf50;
+            --falling-color: #f44336;
+            --stable-color: #ffeb3b;
+            --falling-money-color: #ffc107; /* Gold color for coins */
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden; /* Hide overflow from the animation */
+            position: relative;
+        }
+
+        .container {
+            background-color: var(--card-color);
+            padding: 2.5rem;
+            border-radius: 1rem;
+            box-shadow: 0 10px 30px var(--shadow-color);
+            width: 90%;
+            max-width: 600px; /* Increased width for a more spacious feel */
+            text-align: center;
+            z-index: 10;
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            font-weight: 600;
+            color: var(--primary-light);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            color: var(--text-color);
+        }
+
+        .input-group {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid var(--border-color);
+            border-radius: 0.5rem;
+            background-color: var(--input-bg);
+            color: var(--text-color);
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.3s;
+            appearance: none;
+            -webkit-appearance: none;
+        }
+
+        input:focus, select:focus {
+            border-color: var(--primary-color);
+        }
+
+        .select-wrapper {
+            position: relative;
+            width: 100%;
+        }
+        
+        .select-wrapper::after {
+            content: '▼';
+            font-size: 0.8rem;
+            color: var(--text-color);
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            position: absolute;
+            pointer-events: none;
+        }
+
+        .currency-select {
+            width: 100%;
+        }
+
+        .swap-icon {
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--primary-light);
+            transition: transform 0.2s ease-in-out;
+            margin: 0 0.5rem;
+        }
+
+        .swap-icon:active {
+            transform: rotate(180deg);
+        }
+
+        button {
+            width: 100%;
+            padding: 1rem;
+            border: none;
+            border-radius: 0.5rem;
+            background-color: var(--primary-color);
+            color: white;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.1s ease;
+        }
+
+        button:hover {
+            background-color: var(--primary-light);
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        #result {
+            margin-top: 2rem;
+            font-size: 1.2rem;
+            font-weight: 400;
+            background-color: var(--input-bg);
+            padding: 1rem;
+            border-radius: 0.5rem;
+            border: 1px solid var(--border-color);
+            min-height: 3rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+        
+        .description {
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+            font-weight: 600;
+        }
+
+        .increasing {
+            color: var(--rising-color);
+        }
+        .decreasing {
+            color: var(--falling-color);
+        }
+        .stable {
+            color: var(--stable-color);
+        }
+
+        /* Responsive Layout */
+        @media (max-width: 600px) {
+            .input-group {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .swap-icon {
+                margin: 0.5rem 0;
+            }
+        }
+
+        /* Money Falling Animation */
+        .falling-money {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .coin {
+            position: absolute;
+            font-size: 20px;
+            color: var(--falling-money-color); 
+            opacity: 0;
+            animation: fall linear infinite;
+        }
+
+        @keyframes fall {
+            0% {
+                transform: translateY(-100px) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.8;
+            }
+            80% {
+                opacity: 0.8;
+            }
+            100% {
+                transform: translateY(100vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+        
+        /* Create a bunch of coins with different delays and sizes */
+        .falling-money span:nth-child(1) { left: 10%; animation-delay: 0s; font-size: 22px; }
+        .falling-money span:nth-child(2) { left: 20%; animation-delay: 2s; font-size: 25px; }
+        .falling-money span:nth-child(3) { left: 30%; animation-delay: 4s; font-size: 18px; }
+        .falling-money span:nth-child(4) { left: 40%; animation-delay: 6s; font-size: 30px; }
+        .falling-money span:nth-child(5) { left: 50%; animation-delay: 8s; font-size: 20px; }
+        .falling-money span:nth-child(6) { left: 60%; animation-delay: 10s; font-size: 24px; }
+        .falling-money span:nth-child(7) { left: 70%; animation-delay: 12s; font-size: 28px; }
+        .falling-money span:nth-child(8) { left: 80%; animation-delay: 14s; font-size: 21px; }
+        .falling-money span:nth-child(9) { left: 90%; animation-delay: 16s; font-size: 26px; }
+        .falling-money span:nth-child(10) { left: 5%; animation-delay: 18s; font-size: 23px; }
+        .falling-money span:nth-child(11) { left: 15%; animation-delay: 20s; font-size: 27px; }
+        .falling-money span:nth-child(12) { left: 25%; animation-delay: 22s; font-size: 19px; }
+        .falling-money span:nth-child(13) { left: 35%; animation-delay: 24s; font-size: 32px; }
+        .falling-money span:nth-child(14) { left: 45%; animation-delay: 26s; font-size: 20px; }
+        .falling-money span:nth-child(15) { left: 55%; animation-delay: 28s; font-size: 25px; }
+        .falling-money span:nth-child(16) { left: 65%; animation-delay: 30s; font-size: 22px; }
+        .falling-money span:nth-child(17) { left: 75%; animation-delay: 32s; font-size: 29px; }
+        .falling-money span:nth-child(18) { left: 85%; animation-delay: 34s; font-size: 24px; }
+        .falling-money span:nth-child(19) { left: 95%; animation-delay: 36s; font-size: 31px; }
+        .falling-money span:nth-child(20) { left: 12%; animation-delay: 38s; font-size: 20px; }
+    </style>
+</head>
+<body>
+
+    <div class="falling-money">
+        <span class="coin">💰</span><span class="coin">💵</span><span class="coin">💸</span>
+        <span class="coin">💰</span><span class="coin">💵</span><span class="coin">💸</span>
+        <span class="coin">💰</span><span class="coin">💵</span><span class="coin">💸</span>
+        <span class="coin">💰</span><span class="coin">💵</span><span class="coin">💸</span>
+        <span class="coin">💰</span><span class="coin">💵</span><span class="coin">💸</span>
+        <span class="coin">💰</span><span class="coin">💵</span><span class="coin">💸</span>
+        <span class="coin">💰</span><span class="coin">💵</span><span class="coin">💸</span>
+    </div>
+
+    <div class="container">
+        <h1>Currency Converter</h1>
+
+        <div class="form-group">
+            <label for="amount">Enter Amount</label>
+            <input type="number" id="amount" value="1" min="1">
+        </div>
+
+        <div class="input-group">
+            <div class="form-group select-wrapper">
+                <label for="from-currency">From</label>
+                <select id="from-currency" class="currency-select"></select>
+            </div>
+            
+            <span id="swap-btn" class="swap-icon">⇅</span>
+
+            <div class="form-group select-wrapper">
+                <label for="to-currency">To</label>
+                <select id="to-currency" class="currency-select"></select>
+            </div>
+        </div>
+
+        <button id="convert-btn">Convert</button>
+
+        <div id="result">
+            Converted Amount will be displayed here.
+        </div>
+    </div>
+
+    <script>
+        // JavaScript for Currency Converter Logic
+
+        // --- 1. DOM Element Selection ---
+        const amountInput = document.getElementById('amount');
+        const fromCurrencySelect = document.getElementById('from-currency');
+        const toCurrencySelect = document.getElementById('to-currency');
+        const convertBtn = document.getElementById('convert-btn');
+        const resultDiv = document.getElementById('result');
+        const swapBtn = document.getElementById('swap-btn');
+
+        // ExchangeRate API URL
+        const API_URL = 'https://open.er-api.com/v6/latest/';
+
+        // --- 2. Hardcoded Currency Data (Code to Country Name Mapping) ---
+        // This is a simple data source to display country names instead of codes
+        const currencyData = {
+            'INR': 'India',
+            'USD': 'United States',
+            'EUR': 'Euro Zone',
+            'GBP': 'United Kingdom',
+            'JPY': 'Japan',
+            'CAD': 'Canada',
+            'AUD': 'Australia',
+            'CHF': 'Switzerland',
+            'CNY': 'China',
+            'HKD': 'Hong Kong',
+            'NZD': 'New Zealand',
+            'SEK': 'Sweden',
+            'KRW': 'South Korea',
+            'SGD': 'Singapore',
+            'RUB': 'Russia',
+            'BRL': 'Brazil',
+            'MXN': 'Mexico',
+            'ZAR': 'South Africa',
+            'PHP': 'Philippines',
+            'THB': 'Thailand',
+            'MYR': 'Malaysia',
+            'IDR': 'Indonesia',
+            'PKR': 'Pakistan',
+            'BDT': 'Bangladesh',
+            'LKR': 'Sri Lanka',
+            'SAR': 'Saudi Arabia'
+            // Add more currencies here as needed
+        };
+
+        // --- 3. Fetch and Populate Currency Dropdowns ---
+        const fetchAndPopulateCurrencies = () => {
+            // Use the hardcoded list to populate the dropdowns
+            const currencies = Object.keys(currencyData).sort(); 
+            
+            currencies.forEach(currencyCode => {
+                const option1 = document.createElement('option');
+                option1.value = currencyCode;
+                option1.textContent = currencyData[currencyCode];
+                fromCurrencySelect.appendChild(option1);
+
+                const option2 = document.createElement('option');
+                option2.value = currencyCode;
+                option2.textContent = currencyData[currencyCode];
+                toCurrencySelect.appendChild(option2);
+            });
+
+            // Set default values
+            fromCurrencySelect.value = 'USD';
+            toCurrencySelect.value = 'INR';
+        };
+
+        // --- 4. Conversion Logic ---
+        const convertCurrency = async () => {
+            const amount = parseFloat(amountInput.value);
+            const fromCurrency = fromCurrencySelect.value;
+            const toCurrency = toCurrencySelect.value;
+
+            // Basic input validation
+            if (isNaN(amount) || amount <= 0) {
+                resultDiv.innerHTML = 'Please enter a valid amount.';
+                return;
+            }
+
+            // If currencies are the same, no conversion needed
+            if (fromCurrency === toCurrency) {
+                resultDiv.innerHTML = `<span>${amount.toFixed(2)} ${fromCurrency} = ${amount.toFixed(2)} ${toCurrency}</span><span class="description stable">Stable Value</span>`;
+                return;
+            }
+
+            resultDiv.innerHTML = 'Converting...';
+
+            try {
+                // Fetch the live exchange rate with 'fromCurrency' as the base
+                const response = await fetch(`${API_URL}${fromCurrency}`);
+                if (!response.ok) {
+                    throw new Error(`API fetch failed with status: ${response.status}`);
+                }
+                const data = await response.json();
+
+                if (!data.rates || !data.rates[toCurrency]) {
+                    throw new Error('Exchange rate not available for the selected currency.');
+                }
+
+                // Get the rate and calculate the converted amount
+                const rate = data.rates[toCurrency];
+                const convertedAmount = amount * rate;
+
+                // Determine if the value is increasing, decreasing, or stable
+                let description = '';
+                let className = '';
+                if (convertedAmount > amount) {
+                    description = `(Value is Increasing)`;
+                    className = 'increasing';
+                } else if (convertedAmount < amount) {
+                    description = `(Value is Decreasing)`;
+                    className = 'decreasing';
+                } else {
+                    description = `(Value is Stable)`;
+                    className = 'stable';
+                }
+
+                // Display the result with formatting and description
+                resultDiv.innerHTML = `
+                    <span>${amount.toFixed(2)} ${currencyData[fromCurrency]} = ${convertedAmount.toFixed(2)} ${currencyData[toCurrency]}</span>
+                    <span class="description ${className}">${description}</span>
+                `;
+
+            } catch (error) {
+                console.error("Error during conversion:", error);
+                resultDiv.innerHTML = `Conversion failed. Error: ${error.message}`;
+            }
+        };
+
+        // --- 5. Event Listeners ---
+        convertBtn.addEventListener('click', convertCurrency);
+
+        // Allow conversion on 'Enter' key press in the amount field
+        amountInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                convertCurrency();
+            }
+        });
+
+        // Swap button functionality
+        swapBtn.addEventListener('click', () => {
+            const temp = fromCurrencySelect.value;
+            fromCurrencySelect.value = toCurrencySelect.value;
+            toCurrencySelect.value = temp;
+            convertCurrency(); // Re-run conversion after swap
+        });
+        
+        // Initial setup on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchAndPopulateCurrencies();
+        });
+
+    </script>
+</body>
+</html>

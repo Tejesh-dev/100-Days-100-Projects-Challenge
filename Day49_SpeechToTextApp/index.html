@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voice to Text Converter</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0c0c1e;
+            --card-color: #1a1a31;
+            --text-color: #f8fafc;
+            --primary-accent: #9333ea;
+            --primary-accent-dark: #7e22ce;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 1rem;
+        }
+
+        @keyframes pulse-wave {
+            0% { transform: scaleY(0.4); opacity: 0.5; }
+            50% { transform: scaleY(1); opacity: 1; }
+            100% { transform: scaleY(0.4); opacity: 0.5; }
+        }
+
+        .wave-bar {
+            width: 4px;
+            height: 20px;
+            background-color: var(--primary-accent);
+            animation: pulse-wave 1s infinite ease-in-out;
+            border-radius: 2px;
+        }
+        .wave-bar:nth-child(1) { animation-delay: -0.2s; }
+        .wave-bar:nth-child(2) { animation-delay: -0.4s; }
+        .wave-bar:nth-child(3) { animation-delay: -0.6s; }
+        .wave-bar:nth-child(4) { animation-delay: -0.8s; }
+        .wave-bar:nth-child(5) { animation-delay: -1.0s; }
+
+        .btn-common {
+            background-image: linear-gradient(to right, var(--primary-accent) 0%, var(--primary-accent-dark) 51%, var(--primary-accent) 100%);
+            transition: 0.5s;
+            background-size: 200% auto;
+        }
+        .btn-common:hover {
+            background-position: right center;
+        }
+    </style>
+</head>
+<body class="bg-[var(--bg-color)]">
+
+    <div class="bg-[var(--card-color)] p-8 rounded-2xl shadow-2xl w-full max-w-2xl text-center flex flex-col items-center border border-gray-700">
+        <h1 class="text-3xl font-bold mb-4 text-[var(--text-color)]">Voice to Text</h1>
+        <p id="status" class="text-[var(--primary-accent)] mb-6 transition-colors duration-200">Tap to start speaking...</p>
+        
+        <div class="flex flex-col items-center space-y-4 w-full">
+            <button id="toggleBtn" class="btn-common text-[var(--text-color)] font-semibold py-4 px-8 rounded-full transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center justify-center space-x-2 w-full">
+                <svg id="micIcon" class="w-8 h-8 transition-transform duration-300" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" d="M7 4a3 3 0 016 0v4a3 3 0 11-6 0V4zM5 8a5 5 0 0110 0v2A5 5 0 017 10v1a1 1 0 102 0v-1a3 3 0 00-6 0v2a5 5 0 0110 0v-2A5 5 0 015 8v-.25a.75.75 0 011.5 0V8a3.5 3.5 0 007 0v-1a.75.75 0 011.5 0v1a5 5 0 01-10 0v-2.25a.75.75 0 011.5 0V8z" clip-rule="evenodd" />
+                </svg>
+                <span id="btnText">Start Listening</span>
+            </button>
+
+            <div id="waveContainer" class="hidden flex justify-center items-center space-x-1 mb-4 w-full">
+                <div class="wave-bar"></div>
+                <div class="wave-bar"></div>
+                <div class="wave-bar"></div>
+                <div class="wave-bar"></div>
+                <div class="wave-bar"></div>
+            </div>
+
+            <textarea id="output" class="w-full h-64 p-4 text-lg border-2 border-gray-700 rounded-xl resize-none focus:outline-none focus:ring-2 focus:ring-[var(--primary-accent)] transition-colors duration-200 bg-[var(--card-color)] text-[var(--text-color)]" placeholder="Your spoken words will appear here..."></textarea>
+            
+            <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 w-full justify-center">
+                <button id="copyBtn" class="btn-common text-[var(--text-color)] font-semibold py-3 px-6 rounded-xl transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-105 w-full">
+                    Copy Text
+                </button>
+                <button id="clearBtn" class="btn-common text-[var(--text-color)] font-semibold py-3 px-6 rounded-xl transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-105 w-full">
+                    Clear Text
+                </button>
+            </div>
+
+            <p id="message" class="text-sm mt-4 text-center text-gray-400 opacity-0 transition-opacity duration-300"></p>
+        </div>
+    </div>
+
+    <script>
+        // Check for Web Speech API compatibility
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+        if (!SpeechRecognition) {
+            document.getElementById('status').textContent = 'Speech recognition not supported in this browser.';
+            document.getElementById('toggleBtn').disabled = true;
+        } else {
+            const recognition = new SpeechRecognition();
+            const toggleBtn = document.getElementById('toggleBtn');
+            const btnText = document.getElementById('btnText');
+            const output = document.getElementById('output');
+            const status = document.getElementById('status');
+            const copyBtn = document.getElementById('copyBtn');
+            const clearBtn = document.getElementById('clearBtn');
+            const messageEl = document.getElementById('message');
+            const micIcon = document.getElementById('micIcon');
+            const waveContainer = document.getElementById('waveContainer');
+
+            let isListening = false;
+            let finalTranscript = '';
+
+            // Set up recognition properties
+            recognition.continuous = true;
+            recognition.interimResults = true;
+            recognition.lang = 'en-US';
+
+            // Event handler for when the recognition starts
+            recognition.onstart = () => {
+                isListening = true;
+                btnText.textContent = 'Stop Listening';
+                status.textContent = 'Listening... Speak now.';
+                status.style.color = 'var(--primary-accent)';
+                micIcon.classList.add('animate-pulse');
+                waveContainer.classList.remove('hidden');
+            };
+
+            // Event handler for receiving results
+            recognition.onresult = (event) => {
+                let interimTranscript = '';
+                for (let i = event.resultIndex; i < event.results.length; i++) {
+                    const transcript = event.results[i][0].transcript;
+                    if (event.results[i].isFinal) {
+                        finalTranscript += transcript + ' ';
+                    } else {
+                        interimTranscript += transcript;
+                    }
+                }
+                output.value = finalTranscript + interimTranscript;
+            };
+
+            // Event handler for when the recognition ends
+            recognition.onend = () => {
+                isListening = false;
+                btnText.textContent = 'Start Listening';
+                status.textContent = 'Tap to start speaking...';
+                status.style.color = 'var(--primary-accent)';
+                micIcon.classList.remove('animate-pulse');
+                waveContainer.classList.add('hidden');
+            };
+
+            // Event handler for errors
+            recognition.onerror = (event) => {
+                isListening = false;
+                btnText.textContent = 'Start Listening';
+                status.style.color = 'var(--error-color)';
+                micIcon.classList.remove('animate-pulse');
+                waveContainer.classList.add('hidden');
+
+                let errorMsg = 'An error occurred during recognition.';
+                if (event.error === 'not-allowed') {
+                    errorMsg = 'Permission to use the microphone was denied. Please allow access.';
+                } else if (event.error === 'no-speech') {
+                    errorMsg = 'No speech was detected. Please try again.';
+                } else if (event.error === 'audio-capture') {
+                    errorMsg = 'Microphone is not available.';
+                }
+                status.textContent = `Error: ${errorMsg}`;
+            };
+
+            // Toggle button click handler
+            toggleBtn.onclick = () => {
+                if (isListening) {
+                    recognition.stop();
+                } else {
+                    finalTranscript = ''; // Reset transcript when starting
+                    output.value = '';
+                    recognition.start();
+                }
+            };
+
+            // Copy button click handler
+            copyBtn.onclick = () => {
+                output.select();
+                try {
+                    document.execCommand('copy');
+                    showMessage('Text copied to clipboard!');
+                } catch (err) {
+                    showMessage('Failed to copy text.');
+                }
+            };
+
+            // Clear button click handler
+            clearBtn.onclick = () => {
+                output.value = '';
+                finalTranscript = '';
+                showMessage('Text cleared!');
+            };
+
+            function showMessage(msg) {
+                messageEl.textContent = msg;
+                messageEl.classList.remove('opacity-0');
+                messageEl.classList.add('opacity-100');
+                setTimeout(() => {
+                    messageEl.classList.remove('opacity-100');
+                    messageEl.classList.add('opacity-0');
+                }, 3000);
+            }
+        }
+    </script>
+</body>
+</html>
