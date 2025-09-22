@@ -2,1538 +2,1525 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>100 Days 100 Projects | Tejesh Bhagat</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        /* ===== GLOBAL STYLES ===== */
-        :root {
-            --primary-color: #9333ea;
-            --primary-dark: #9333ea;
-            --primary-light: #a855f7;
-            --secondary-color: #000021;
-            --dark-color: #0f172a;
-            --light-color: #f8fafc;
-            --gray-color: #94a3b8;
-            --dark-gray: #334155;
-            --box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3),
-                0 4px 6px -2px rgba(0, 0, 0, 0.2);
-            --transition: all 0.3s ease;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>100 Days 100 Projects | Tejesh Bhagat</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    /* ===== GLOBAL STYLES ===== */
+    :root {
+      --primary-color: #9333ea;
+      --primary-dark: #9333ea;
+      --primary-light: #a855f7;
+      --secondary-color: #000021;
+      --dark-color: #0f172a;
+      --light-color: #f8fafc;
+      --gray-color: #94a3b8;
+      --dark-gray: #334155;
+      --box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3),
+        0 4px 6px -2px rgba(0, 0, 0, 0.2);
+      --transition: all 0.3s ease;
+    }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-        html {
-            scroll-behavior: smooth;
-        }
+    html {
+      scroll-behavior: smooth;
+    }
 
-        body {
-            font-family: "Poppins", sans-serif;
-            line-height: 1.6;
-            color: var(--light-color);
-            background-color: var(--dark-color);
-        }
+    body {
+      font-family: "Poppins", sans-serif;
+      line-height: 1.6;
+      color: var(--light-color);
+      background-color: var(--dark-color);
+    }
 
-        .container {
-            width: 100%;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
+    .container {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
 
-        section {
-            padding: 80px 0;
-        }
+    section {
+      padding: 80px 0;
+    }
 
-        h1,
-        h2,
-        h3 {
-            font-weight: 700;
-            line-height: 1.2;
-            margin-bottom: 15px;
-            color: var(--light-color);
-        }
+    h1,
+    h2,
+    h3 {
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 15px;
+      color: var(--light-color);
+    }
 
-        p {
-            margin-bottom: 15px;
-            color: var(--gray-color);
-        }
+    p {
+      margin-bottom: 15px;
+      color: var(--gray-color);
+    }
 
-        a {
-            text-decoration: none;
-            color: var(--primary-color);
-            transition: var(--transition);
-        }
+    a {
+      text-decoration: none;
+      color: var(--primary-color);
+      transition: var(--transition);
+    }
 
-        a:hover {
-            color: var(--primary-light);
-        }
+    a:hover {
+      color: var(--primary-light);
+    }
 
-        /* ===== HEADER ===== */
-        header {
-            background: var(--secondary-color);
-            padding: 80px 20px;
-            text-align: center;
-        }
+    /* ===== HEADER ===== */
+    header {
+      background: var(--secondary-color);
+      padding: 80px 20px;
+      text-align: center;
+    }
 
-        header h1 {
-            font-size: 3rem;
-            margin-bottom: 15px;
-            color: var(--primary-color);
-            font-weight: 700;
-        }
+    header h1 {
+      font-size: 3rem;
+      margin-bottom: 15px;
+      color: var(--primary-color);
+      font-weight: 700;
+    }
 
-        header .tagline {
-            font-size: 1.3rem;
-            color: var(--gray-color);
-            font-weight: 500;
-        }
+    header .tagline {
+      font-size: 1.3rem;
+      color: var(--gray-color);
+      font-weight: 500;
+    }
 
-        header .highlight {
-            color: var(--primary-light);
-            font-weight: 600;
-        }
+    header .highlight {
+      color: var(--primary-light);
+      font-weight: 600;
+    }
 
-        /* ===== PROJECTS ===== */
-        .projects {
-            padding: 80px 0;
-            background: rgba(30, 41, 59, 0.5);
-        }
+    /* ===== PROJECTS ===== */
+    .projects {
+      padding: 80px 0;
+      background: rgba(30, 41, 59, 0.5);
+    }
 
-        .section-header {
-            text-align: center;
-            margin-bottom: 50px;
-        }
+    .section-header {
+      text-align: center;
+      margin-bottom: 50px;
+    }
 
-        .section-header h2 {
-            font-size: 2.2rem;
-            color: var(--primary-color);
-        }
+    .section-header h2 {
+      font-size: 2.2rem;
+      color: var(--primary-color);
+    }
 
-        .projects-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-        }
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 30px;
+    }
 
-        .project-card {
-            background: var(--secondary-color);
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: var(--box-shadow);
-            transition: transform 0.3s ease;
-        }
+    .project-card {
+      background: var(--secondary-color);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: var(--box-shadow);
+      transition: transform 0.3s ease;
+    }
 
-        .project-card:hover {
-            transform: translateY(-8px);
-        }
+    .project-card:hover {
+      transform: translateY(-8px);
+    }
 
-        .project-image {
-            position: relative;
-            height: 200px;
-            overflow: hidden;
-        }
+    .project-image {
+      position: relative;
+      height: 200px;
+      overflow: hidden;
+    }
 
-        .project-image video {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.5s ease;
-        }
+    .project-image video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
 
-        .project-card:hover .project-image video {
-            transform: scale(1.1);
-        }
+    .project-card:hover .project-image video {
+      transform: scale(1.1);
+    }
 
-        .project-links {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            padding: 10px;
-            transform: translateY(100%);
-            background: linear-gradient(to top, rgba(15, 23, 42, 0.9), transparent);
-            transition: transform 0.3s ease;
-        }
+    .project-links {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      padding: 10px;
+      transform: translateY(100%);
+      background: linear-gradient(to top, rgba(15, 23, 42, 0.9), transparent);
+      transition: transform 0.3s ease;
+    }
 
-        .project-card:hover .project-links {
-            transform: translateY(0);
-        }
+    .project-card:hover .project-links {
+      transform: translateY(0);
+    }
 
-        .project-links a {
-            background: rgba(15, 23, 42, 0.8);
-            color: var(--light-color);
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: var(--transition);
-        }
+    .project-links a {
+      background: rgba(15, 23, 42, 0.8);
+      color: var(--light-color);
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: var(--transition);
+    }
 
-        .project-links a:hover {
-            background: var(--primary-color);
-            color: var(--dark-color);
-        }
+    .project-links a:hover {
+      background: var(--primary-color);
+      color: var(--dark-color);
+    }
 
-        .project-info {
-            padding: 20px;
-        }
+    .project-info {
+      padding: 20px;
+    }
 
-        .project-info h3 {
-            font-size: 1.3rem;
-            color: var(--primary-color);
-            margin-bottom: 10px;
-        }
+    .project-info h3 {
+      font-size: 1.3rem;
+      color: var(--primary-color);
+      margin-bottom: 10px;
+    }
 
-        .project-info p {
-            font-size: 0.95rem;
-        }
+    .project-info p {
+      font-size: 0.95rem;
+    }
 
-        .project-tags span {
-            display: inline-block;
-            background: #334155;
-            padding: 4px 8px;
-            margin: 2px;
-            border-radius: 4px;
-            font-size: 0.8rem;
-        }
+    .project-tags span {
+      display: inline-block;
+      background: #334155;
+      padding: 4px 8px;
+      margin: 2px;
+      border-radius: 4px;
+      font-size: 0.8rem;
+    }
 
-        /* ===== FOOTER ===== */
-        footer {
-            background: #000021;
-            color: #e0e0e0;
-            font-family: "Poppins", sans-serif;
-            padding: 60px 20px 30px 20px;
-        }
+    /* ===== FOOTER ===== */
+    footer {
+      background: #000021;
+      color: #e0e0e0;
+      font-family: "Poppins", sans-serif;
+      padding: 60px 20px 30px 20px;
+    }
 
-        .footer-grid {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            /* center all columns horizontally */
-            align-items: flex-start;
-            gap: 50px;
-            max-width: 1200px;
-            margin: 0 auto;
-            text-align: center;
-            /* center content inside each column */
-        }
+    .footer-grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      /* center all columns horizontally */
+      align-items: flex-start;
+      gap: 50px;
+      max-width: 1200px;
+      margin: 0 auto;
+      text-align: center;
+      /* center content inside each column */
+    }
 
-        .footer-col {
-            flex: 1 1 350px;
-        }
+    .footer-col {
+      flex: 1 1 350px;
+    }
 
-        .footer-col h2 {
-            color: var(--primary-light);
-            font-size: 1.8rem;
-            margin-bottom: 10px;
-        }
+    .footer-col h2 {
+      color: var(--primary-light);
+      font-size: 1.8rem;
+      margin-bottom: 10px;
+    }
 
-        .footer-col p {
-            font-size: 1rem;
-            line-height: 1.7;
-            margin: 0 auto;
-        }
+    .footer-col p {
+      font-size: 1rem;
+      line-height: 1.7;
+      margin: 0 auto;
+    }
 
-        .footer-desc {
-            max-width: 500px;
-            /* make description column wider */
-        }
+    .footer-desc {
+      max-width: 500px;
+      /* make description column wider */
+    }
 
-        .social-icons a {
-            margin: 0 12px;
-            font-size: 1.8rem;
-            /* bigger icons */
-            color: var(--primary-light);
-            transition: all 0.3s ease;
-        }
+    .social-icons a {
+      margin: 0 12px;
+      font-size: 1.8rem;
+      /* bigger icons */
+      color: var(--primary-light);
+      transition: all 0.3s ease;
+    }
 
-        .social-icons a:hover {
-            color: var(--primary-color);
-            transform: scale(1.2);
-        }
+    .social-icons a:hover {
+      color: var(--primary-color);
+      transform: scale(1.2);
+    }
 
-        .footer-bottom {
-            text-align: center;
-            margin-top: 40px;
-            border-top: 1px solid rgba(255, 255, 255, 0.2);
-            padding-top: 15px;
-            font-size: 0.95rem;
-        }
-    </style>
+    .footer-bottom {
+      text-align: center;
+      margin-top: 40px;
+      border-top: 1px solid rgba(255, 255, 255, 0.2);
+      padding-top: 15px;
+      font-size: 0.95rem;
+    }
+  </style>
 </head>
 
 <body>
-    <!-- ===== HEADER ===== -->
+  <!-- ===== HEADER ===== -->
 
-    <header>
-        <div class="container">
-            <h1>100 Days 100 Projects Challenge</h1>
-            <p class="tagline">🚀 Crafted with passion by <span class="highlight">Tejesh Bhagat</span> — Learn. Code.
-                Conquer. 💻</p>
+  <header>
+    <div class="container">
+      <h1>100 Days 100 Projects Challenge</h1>
+      <p class="tagline">🚀 Crafted with passion by <span class="highlight">Tejesh Bhagat</span> — Learn. Code.
+        Conquer. 💻</p>
+    </div>
+  </header>
+
+
+  <!-- ===== PROJECTS SECTION (to be filled in groups) ===== -->
+  <section id="projects" class="projects">
+    <div class="container">
+      <div class="projects-grid">
+        <!-- Project 1 -->
+        <div class="project-card">
+          <div class="project-image">
+            <video autoplay muted loop playsinline>
+              <source src="assets/p1.mp4" type="video/mp4">
+            </video>
+            <div class="project-links">
+              <a href="https://github.com/Tejesh-dev/100-Days-100-Projects-Challenge" target="_blank"><i
+                  class="fab fa-github"></i></a>
+              <a href="Day01-HTML-Tags-Showcase/index.html" target="_blank"><i class="fas fa-external-link-alt"></i></a>
+            </div>
+          </div>
+          <div class="project-info">
+            <h3>Day 1 · HTML Tags Showcase</h3>
+            <p>A beginner-friendly page displaying all major HTML tags with examples.</p>
+            <div class="project-tags">
+              <span>HTML</span><span>&lt;header&gt;</span><span>&lt;p&gt;</span><span>&lt;form&gt;</span>
+            </div>
+          </div>
         </div>
-    </header>
+
+        <!-- Project 2 -->
+        <div class="project-card">
+          <div class="project-image">
+            <video autoplay muted loop playsinline>
+              <source src="assets/p2.mp4" type="video/mp4">
+            </video>
+            <div class="project-links">
+              <a href="https://github.com/Tejesh-dev/100-Days-100-Projects-Challenge" target="_blank"><i
+                  class="fab fa-github"></i></a>
+              <a href="Day02-Wikipedia-Clone/index.html" target="_blank"><i class="fas fa-external-link-alt"></i></a>
+            </div>
+          </div>
+          <div class="project-info">
+            <h3>Day 2 · Mini Wikipedia Clone</h3>
+            <p>An educational static page created using HTML, CSS, and JS with structured sections,
+              citations, and internal navigation.</p>
+            <div class="project-tags">
+              <span>HTML</span><span>CSS</span><span>JavaScript</span><span>&lt;section&gt;</span><span>&lt;nav&gt;</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Project 3 -->
+        <div class="project-card">
+          <div class="project-image">
+            <video autoplay muted loop playsinline>
+              <source src="assets/p3.mp4" type="video/mp4">
+            </video>
+            <div class="project-links">
+              <a href="https://github.com/Tejesh-dev/100-Days-100-Projects-Challenge" target="_blank"><i
+                  class="fab fa-github"></i></a>
+              <a href="Day03-Portfolio-Page/index.html" target="_blank"><i class="fas fa-external-link-alt"></i></a>
+            </div>
+          </div>
+          <div class="project-info">
+            <h3>Day 3 · Developer Portfolio Website</h3>
+            <p>Professional portfolio page built using only HTML. Includes resume download button,
+              projects, and certificates.</p>
+            <div class="project-tags">
+              <span>HTML</span><span>&lt;header&gt;</span><span>&lt;footer&gt;</span><span>&lt;a&gt;</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Project 4 -->
+        <div class="project-card">
+          <div class="project-image">
+            <video autoplay muted loop playsinline>
+              <source src="assets/p4.mp4" type="video/mp4">
+            </video>
+            <div class="project-links">
+              <a href="https://github.com/Tejesh-dev/100-Days-100-Projects-Challenge" target="_blank"><i
+                  class="fab fa-github"></i></a>
+              <a href="Day04-AudioVerse/index.html" target="_blank"><i class="fas fa-external-link-alt"></i></a>
+            </div>
+          </div>
+          <div class="project-info">
+            <h3>Day 4 · AudioVerse - Music Website</h3>
+            <p>Music website with artist profiles, now-playing section, playlist, audio downloads, and
+              song suggestion form.</p>
+            <div class="project-tags">
+              <span>HTML</span><span>&lt;audio&gt;</span><span>&lt;form&gt;</span><span>&lt;section&gt;</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Project 5 -->
+        <div class="project-card">
+          <div class="project-image">
+            <video autoplay muted loop playsinline>
+              <source src="assets/p5.mp4" type="video/mp4">
+            </video>
+            <div class="project-links">
+              <a href="https://github.com/Tejesh-dev/100-Days-100-Projects-Challenge" target="_blank"><i
+                  class="fab fa-github"></i></a>
+              <a href="Day05- Health & Lifestyle Survey/index.html" target="_blank"><i
+                  class="fas fa-external-link-alt"></i></a>
+            </div>
+          </div>
+          <div class="project-info">
+            <h3>Day 5 · Health & Lifestyle Survey</h3>
+            <p>Survey website built using HTML & CSS. Features form fields, checkboxes, radio buttons,
+              text areas, and video background.</p>
+            <div class="project-tags">
+              <span>HTML</span><span>CSS</span><span>&lt;fieldset&gt;</span><span>&lt;input&gt;</span><span>&lt;textarea&gt;</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Project 6 -->
+        <div class="project-card">
+          <div class="project-image">
+            <video autoplay muted loop playsinline>
+              <source src="assets/p6.mp4" type="video/mp4">
+            </video>
+            <div class="project-links">
+              <a href="https://github.com/Tejesh-dev/100-Days-100-Projects-Challenge" target="_blank"><i
+                  class="fab fa-github"></i></a>
+              <a href="Day06-Semantic-Layout-Model/index.html" target="_blank"><i
+                  class="fas fa-external-link-alt"></i></a>
+            </div>
+          </div>
+          <div class="project-info">
+            <h3>Day 6 · Semantic Layout Model</h3>
+            <p>Web page using semantic HTML5 tags like &lt;header&gt;, &lt;nav&gt;, and &lt;footer&gt;
+              for a clean layout.</p>
+            <div class="project-tags">
+              <span>HTML</span><span>&lt;header&gt;</span><span>&lt;nav&gt;</span><span>&lt;footer&gt;</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Project 7 -->
+        <div class="project-card">
+          <div class="project-image">
+            <video autoplay muted loop playsinline>
+              <source src="assets/p7.mp4" type="video/mp4">
+            </video>
+            <div class="project-links">
+              <a href="https://github.com/Tejesh-dev/100-Days-100-Projects-Challenge" target="_blank"><i
+                  class="fab fa-github"></i></a>
+              <a href="Day07- CSS-Property-Showcase/index.html" target="_blank"><i
+                  class="fas fa-external-link-alt"></i></a>
+            </div>
+          </div>
+          <div class="project-info">
+            <h3>Day 7 · CSS Property Showcase</h3>
+            <p>Showcase of CSS properties: typography, box model, flexbox, grid, hover effects,
+              transitions, positioning, transformations.</p>
+            <div class="project-tags">
+              <span>CSS</span><span>Flexbox</span><span>Grid</span><span>Transitions</span><span>Animations</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Project 8 -->
+        <div class="project-card">
+          <div class="project-image">
+            <video autoplay muted loop playsinline>
+              <source src="assets/p8.mp4" type="video/mp4">
+            </video>
+            <div class="project-links">
+              <a href="https://github.com/Tejesh-dev/100-Days-100-Projects-Challenge" target="_blank"><i
+                  class="fab fa-github"></i></a>
+              <a href="08_Responsive_Grid_Gallery/index.html" target="_blank"><i
+                  class="fas fa-external-link-alt"></i></a>
+            </div>
+          </div>
+          <div class="project-info">
+            <h3>Day 8 · Responsive Grid Gallery</h3>
+            <p>Responsive image gallery built with CSS Grid, smooth hover animations, and adaptive
+              layout for all screen sizes.</p>
+            <div class="project-tags">
+              <span>CSS</span><span>Grid</span><span>Responsive</span><span>Hover Effects</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Project 9 -->
+        <div class="project-card">
+          <div class="project-image">
+            <video autoplay muted loop playsinline>
+              <source src="assets/p9.mp4" type="video/mp4">
+            </video>
+            <div class="project-links">
+              <a href="https://github.com/Tejesh-dev/100-Days-100-Projects-Challenge" target="_blank"><i
+                  class="fab fa-github"></i></a>
+              <a href="Day09-Ultimate-Button-Showcase/index.html" target="_blank"><i
+                  class="fas fa-external-link-alt"></i></a>
+            </div>
+          </div>
+          <div class="project-info">
+            <h3>Day 9 · Ultimate Button Showcase</h3>
+            <p>Creative button designs with animated text, hover effects, 3D styles, glow & neon
+              effects, gradient backgrounds.</p>
+            <div class="project-tags">
+              <span>CSS</span><span>Hover
+                Effects</span><span>3D</span><span>Gradient</span><span>Animation</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Project 10 -->
+        <div class="project-card">
+          <div class="project-image">
+            <video autoplay muted loop playsinline>
+              <source src="assets/p10.mp4" type="video/mp4">
+            </video>
+            <div class="project-links">
+              <a href="https://github.com/Tejesh-dev/100-Days-100-Projects-Challenge" target="_blank"><i
+                  class="fab fa-github"></i></a>
+              <a href="10_Navbar_Styles_Showcase/index.html" target="_blank"><i
+                  class="fas fa-external-link-alt"></i></a>
+            </div>
+          </div>
+          <div class="project-info">
+            <h3>Day 10 · Navbar Styles Showcase</h3>
+            <p>10+ navigation bar designs with responsive layouts, hover effects, and brand-specific
+              patterns recreated in HTML & CSS.</p>
+            <div class="project-tags">
+              <span>HTML</span><span>CSS</span><span>Responsive</span><span>Flexbox</span><span>Hover
+                Effects</span>
+            </div>
+          </div>
+        </div>
+        <!-- Project 11 -->
+        <div class="project-card">
+          <div class="project-image">
+            <video autoplay muted loop playsinline>
+              <source src="assets/p11.mp4" type="video/mp4">
+            </video>
+            <div class="project-links">
+              <a href="https://github.com/Tejesh-dev/100-Days-100-Projects-Challenge" target="_blank"><i
+                  class="fab fa-github"></i></a>
+              <a href="Day11_Footer_Showcase/index.html" target="_blank"><i class="fas fa-external-link-alt"></i></a>
+            </div>
+          </div>
+          <div class="project-info">
+            <h3>Day 11 · Footer Showcase</h3>
+            <p>Curated collection of stylish and responsive footer designs with multi-column layouts,
+              social media integration, newsletter signup forms, and creative copyright sections.</p>
+            <div class="project-tags">
+              <span>HTML</span><span>CSS</span><span>Footer</span><span>Responsive</span><span>Design</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Project 12 -->
+        <div class="project-card">
+          <div class="project-image">
+            <video autoplay muted loop playsinline>
+              <source src="assets/p12.mp4" type="video/mp4">
+            </video>
+            <div class="project-links">
+              <a href="https://github.com/Tejesh-dev/100-Days-100-Projects-Challenge" target="_blank"><i
+                  class="fab fa-github"></i></a>
+              <a href="Day12_Forms_Showcase/index.html" target="_blank"><i class="fas fa-external-link-alt"></i></a>
+            </div>
+          </div>
+          <div class="project-info">
+            <h3>Day 12 · Forms Showcase</h3>
+            <p>Collection of beautifully designed, fully responsive forms including contact forms, login
+              & registration pages, feedback forms, with custom input styling and smooth focus/hover
+              effects.</p>
+            <div class="project-tags">
+              <span>HTML</span><span>CSS</span><span>Forms</span><span>Responsive</span><span>UI</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Project 13 -->
+        <div class="project-card">
+          <div class="project-image">
+            <video autoplay muted loop playsinline>
+              <source src="assets/p13.mp4" type="video/mp4">
+            </video>
+            <div class="project-links">
+              <a href="https://github.com/Tejesh-dev/100-Days-100-Projects-Challenge" target="_blank"><i
+                  class="fab fa-github"></i></a>
+              <a href="Day13_Login_and_Signup_Form/index.html" target="_blank"><i
+                  class="fas fa-external-link-alt"></i></a>
+            </div>
+          </div>
+          <div class="project-info">
+            <h3>Day 13 · Login & Signup Form</h3>
+            <p>Responsive authentication interface with separate login/signup forms, smooth animations,
+              modern input styling, and a clean, user-friendly layout for seamless user experience.
+            </p>
+            <div class="project-tags">
+              <span>HTML</span><span>CSS</span><span>Forms</span><span>UI</span><span>Authentication</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Project 14 -->
+        <div class="project-card">
+          <div class="project-image">
+            <video autoplay muted loop playsinline>
+              <source src="assets/p14.mp4" type="video/mp4">
+            </video>
+            <div class="project-links">
+              <a href="https://github.com/Tejesh-dev/100-Days-100-Projects-Challenge" target="_blank"><i
+                  class="fab fa-github"></i></a>
+              <a href="Day14_Pricing_Cards_Collection/index.html" target="_blank"><i
+                  class="fas fa-external-link-alt"></i></a>
+            </div>
+          </div>
+          <div class="project-info">
+            <h3>Day 14 · Pricing Cards Collection</h3>
+            <p>Curated collection of 15 pricing card designs inspired by Indian products & services with
+              gradients, hover animations, responsive layouts, and reusable UI components.</p>
+            <div class="project-tags">
+              <span>HTML</span><span>CSS</span><span>UI</span><span>Responsive</span><span>Cards</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Project 15 -->
+        <div class="project-card">
+          <div class="project-image">
+            <video autoplay muted loop playsinline>
+              <source src="assets/p15.mp4" type="video/mp4">
+            </video>
+            <div class="project-links">
+              <a href="https://github.com/Tejesh-dev/100-Days-100-Projects-Challenge" target="_blank"><i
+                  class="fab fa-github"></i></a>
+              <a href="Day15_India_Independence_Day_Tribute/index.html" target="_blank"><i
+                  class="fas fa-external-link-alt"></i></a>
+            </div>
+          </div>
+          <div class="project-info">
+            <h3>Day 15 · India Independence Day Tribute</h3>
+            <p>Festive tribute website showcasing historical and cultural content with responsive HTML &
+              CSS design celebrating India’s Independence Day.</p>
+            <div class="project-tags">
+              <span>HTML</span><span>CSS</span><span>Responsive</span><span>Tribute</span><span>Design</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Project 16 -->
+        <div class="project-card">
+          <div class="project-image">
+            <video autoplay muted loop playsinline>
+              <source src="assets/p16.mp4" type="video/mp4">
+            </video>
+            <div class="project-links">
+              <a href="https://github.com/Tejesh-dev/100-Days-100-Projects-Challenge" target="_blank"><i
+                  class="fab fa-github"></i></a>
+              <a href="Day16_Netflix_Clone/index.html" target="_blank"><i class="fas fa-external-link-alt"></i></a>
+            </div>
+          </div>
+          <div class="project-info">
+            <h3>Day 16 · Netflix Clone</h3>
+            <p>Responsive Netflix homepage clone focusing on sleek dark theme, hero banner with CTAs,
+              and movie/show rows with hover effects using HTML & CSS.</p>
+            <div class="project-tags">
+              <span>HTML</span><span>CSS</span><span>UI</span><span>Responsive</span><span>Clone</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Project 17 -->
+        <div class="project-card">
+          <div class="project-image">
+            <video autoplay muted loop playsinline>
+              <source src="assets/p17.mp4" type="video/mp4">
+            </video>
+            <div class="project-links">
+              <a href="https://github.com/Tejesh-dev/100-Days-100-Projects-Challenge" target="_blank"><i
+                  class="fab fa-github"></i></a>
+              <a href="Day17_KFC_Clone/index.html" target="_blank"><i class="fas fa-external-link-alt"></i></a>
+            </div>
+          </div>
+          <div class="project-info">
+            <h3>Day 17 · KFC Clone</h3>
+            <p>Responsive KFC homepage clone demonstrating navigation bar, hero section, and fully
+              responsive layout built for educational purposes.</p>
+            <div class="project-tags">
+              <span>HTML</span><span>CSS</span><span>UI</span><span>Responsive</span><span>Clone</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Project 18 -->
+        <div class="project-card">
+          <div class="project-image">
+            <video autoplay muted loop playsinline>
+              <source src="assets/p18.mp4" type="video/mp4">
+            </video>
+            <div class="project-links">
+              <a href="https://github.com/Tejesh-dev/100-Days-100-Projects-Challenge" target="_blank"><i
+                  class="fab fa-github"></i></a>
+              <a href="Day18_Recipe_Collection/index.html" target="_blank"><i class="fas fa-external-link-alt"></i></a>
+            </div>
+          </div>
+          <div class="project-info">
+            <h3>Day 18 · Recipe Collection Website</h3>
+            <p>Responsive recipe collection featuring Indian dishes with CSS-only filtering, grid-based
+              layouts, hover animations, and detailed recipe views — no JavaScript used.</p>
+            <div class="project-tags">
+              <span>HTML</span><span>CSS</span><span>UI</span><span>Recipes</span><span>Responsive</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Project 19 -->
+        <div class="project-card">
+          <div class="project-image">
+            <video autoplay muted loop playsinline>
+              <source src="assets/p19.mp4" type="video/mp4">
+            </video>
+            <div class="project-links">
+              <a href="https://github.com/Tejesh-dev/100-Days-100-Projects-Challenge" target="_blank"><i
+                  class="fab fa-github"></i></a>
+              <a href="Day19_Portfolio_HeaderNav/index.html" target="_blank"><i
+                  class="fas fa-external-link-alt"></i></a>
+            </div>
+          </div>
+          <div class="project-info">
+            <h3>Day 19 · Portfolio – Header & Navigation</h3>
+            <p>Clean, responsive portfolio header with smooth navigation, built with Tailwind CSS and
+              custom fade-in animations for all screen sizes.</p>
+            <div class="project-tags">
+              <span>HTML</span><span>CSS</span><span>Tailwind</span><span>UI</span><span>Portfolio</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Project 20 -->
+        <div class="project-card">
+          <div class="project-image">
+            <video autoplay muted loop playsinline>
+              <source src="assets/p20.mp4" type="video/mp4">
+            </video>
+            <div class="project-links">
+              <a href="https://github.com/Tejesh-dev/100-Days-100-Projects-Challenge" target="_blank"><i
+                  class="fab fa-github"></i></a>
+              <a href="Day20_Portfolio_Hero/index.html" target="_blank"><i class="fas fa-external-link-alt"></i></a>
+            </div>
+          </div>
+          <div class="project-info">
+            <h3>Day 20 · Personal Portfolio Hero Section</h3>
+            <p>Modern hero section for portfolio with headline, short intro, call-to-action buttons, and
+              fully responsive layout built using HTML & CSS.</p>
+            <div class="project-tags">
+              <span>HTML</span><span>CSS</span><span>UI</span><span>Hero</span><span>Portfolio</span>
+            </div>
+          </div>
+        </div>
+        <!-- Project 21 -->
+        <div class="project-card">
+          <div class="project-image">
+            <video autoplay muted loop playsinline>
+              <source src="assets/p21.mp4" type="video/mp4">
+            </video>
+            <div class="project-links">
+              <a href="https://github.com/Tejesh-dev/100-Days-100-Projects-Challenge" target="_blank"><i
+                  class="fab fa-github"></i></a>
+              <a href="Day21_Portfolio_About/index.html" target="_blank"><i class="fas fa-external-link-alt"></i></a>
+            </div>
+          </div>
+          <div class="project-info">
+            <h3>Day 21 · Portfolio About Section</h3>
+            <p>Responsive and well-structured "About Me" section showcasing personal introduction, skills
+              overview, and a clean layout for quick visitor insights.</p>
+            <div class="project-tags">
+              <span>HTML</span><span>CSS</span><span>Portfolio</span><span>About</span><span>Responsive</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Project 22 -->
+        <div class="project-card">
+          <div class="project-image">
+            <video autoplay muted loop playsinline>
+              <source src="assets/p22.mp4" type="video/mp4">
+            </video>
+            <div class="project-links">
+              <a href="https://github.com/Tejesh-dev/100-Days-100-Projects-Challenge" target="_blank"><i
+                  class="fab fa-github"></i></a>
+              <a href="Day22_Portfolio_Education/index.html" target="_blank"><i
+                  class="fas fa-external-link-alt"></i></a>
+            </div>
+          </div>
+          <div class="project-info">
+            <h3>Day 22 · Portfolio Education Section</h3>
+            <p>Responsive education section highlighting academic background and achievements with a clean
+              layout for portfolio visitors.</p>
+            <div class="project-tags">
+              <span>HTML</span><span>CSS</span><span>Portfolio</span><span>Education</span><span>Responsive</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Project 23 -->
+        <div class="project-card">
+          <div class="project-image">
+            <video autoplay muted loop playsinline>
+              <source src="assets/p23.mp4" type="video/mp4">
+            </video>
+            <div class="project-links">
+              <a href="https://github.com/Tejesh-dev/100-Days-100-Projects-Challenge" target="_blank"><i
+                  class="fab fa-github"></i></a>
+              <a href="Day23_Portfolio_Experience/index.html" target="_blank"><i
+                  class="fas fa-external-link-alt"></i></a>
+            </div>
+          </div>
+          <div class="project-info">
+            <h3>Day 23 · Portfolio Experience Section</h3>
+            <p>Responsive Experience section showcasing roles, responsibilities, and achievements in a
+              clean, scannable layout.</p>
+            <div class="project-tags">
+              <span>HTML</span><span>CSS</span><span>Portfolio</span><span>Experience</span><span>Responsive</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Project 24 -->
+        <div class="project-card">
+          <div class="project-image">
+            <video autoplay muted loop playsinline>
+              <source src="assets/p24.mp4" type="video/mp4">
+            </video>
+            <div class="project-links">
+              <a href="https://github.com/Tejesh-dev/100-Days-100-Projects-Challenge" target="_blank"><i
+                  class="fab fa-github"></i></a>
+              <a href="Day24_Portfolio_Skills/index.html" target="_blank"><i class="fas fa-external-link-alt"></i></a>
+            </div>
+          </div>
+          <div class="project-info">
+            <h3>Day 24 · Portfolio Skills Section</h3>
+            <p>Responsive Skills section highlighting technical expertise and core competencies with a
+              modern layout.</p>
+            <div class="project-tags">
+              <span>HTML</span><span>CSS</span><span>Portfolio</span><span>Skills</span><span>Responsive</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Project 25 -->
+        <div class="project-card">
+          <div class="project-image">
+            <video autoplay muted loop playsinline>
+              <source src="assets/p25.mp4" type="video/mp4">
+            </video>
+            <div class="project-links">
+              <a href="https://github.com/Tejesh-dev/100-Days-100-Projects-Challenge" target="_blank"><i
+                  class="fab fa-github"></i></a>
+              <a href="Day25_Portfolio_Projects/index.html" target="_blank"><i class="fas fa-external-link-alt"></i></a>
+            </div>
+          </div>
+          <div class="project-info">
+            <h3>Day 25 · Portfolio Projects Section</h3>
+            <p>Responsive Projects section showcasing work samples and portfolio projects in a clean,
+              grid-based layout.</p>
+            <div class="project-tags">
+              <span>HTML</span><span>CSS</span><span>Portfolio</span><span>Projects</span><span>Responsive</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Project 26 -->
+        <div class="project-card">
+          <div class="project-image">
+            <video autoplay muted loop playsinline>
+              <source src="assets/p26.mp4" type="video/mp4">
+            </video>
+            <div class="project-links">
+              <a href="https://github.com/Tejesh-dev/100-Days-100-Projects-Challenge" target="_blank"><i
+                  class="fab fa-github"></i></a>
+              <a href="Day26_Portfolio_Resume/index.html" target="_blank"><i class="fas fa-external-link-alt"></i></a>
+            </div>
+          </div>
+          <div class="project-info">
+            <h3>Day 26 · Portfolio Resume Section</h3>
+            <p>Clean and responsive Resume section showcasing professional background with an option to view
+              or download the resume.</p>
+            <div class="project-tags">
+              <span>HTML</span><span>CSS</span><span>Portfolio</span><span>Resume</span><span>Responsive</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Project 27 -->
+        <div class="project-card">
+          <div class="project-image">
+            <video autoplay muted loop playsinline>
+              <source src="assets/p27.mp4" type="video/mp4">
+            </video>
+            <div class="project-links">
+              <a href="https://github.com/Tejesh-dev/100-Days-100-Projects-Challenge" target="_blank"><i
+                  class="fab fa-github"></i></a>
+              <a href="Day27_GaneshChaturthi/index.html" target="_blank"><i class="fas fa-external-link-alt"></i></a>
+            </div>
+          </div>
+          <div class="project-info">
+            <h3>Day 27 · Ganesh Chaturthi Special Website</h3>
+            <p>Festive tribute website showcasing cultural content with responsive HTML & CSS design
+              celebrating Ganesh Chaturthi.</p>
+            <div class="project-tags">
+              <span>HTML</span><span>CSS</span><span>Festival</span><span>Responsive</span><span>UI</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Project 28 -->
+        <div class="project-card">
+          <div class="project-image">
+            <video autoplay muted loop playsinline>
+              <source src="assets/p28.mp4" type="video/mp4">
+            </video>
+            <div class="project-links">
+              <a href="https://github.com/Tejesh-dev/100-Days-100-Projects-Challenge" target="_blank"><i
+                  class="fab fa-github"></i></a>
+              <a href="Day28_Portfolio_Contact/index.html" target="_blank"><i class="fas fa-external-link-alt"></i></a>
+            </div>
+          </div>
+          <div class="project-info">
+            <h3>Day 28 · Portfolio Contact Section</h3>
+            <p>Responsive Contact section with user-friendly form, social links, and modern footer for easy
+              connectivity.</p>
+            <div class="project-tags">
+              <span>HTML</span><span>CSS</span><span>JS</span><span>Portfolio</span><span>Contact</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Project 29 -->
+        <div class="project-card">
+          <div class="project-image">
+            <video autoplay muted loop playsinline>
+              <source src="assets/p29.mp4" type="video/mp4">
+            </video>
+            <div class="project-links">
+              <a href="https://github.com/Tejesh-dev/100-Days-100-Projects-Challenge" target="_blank"><i
+                  class="fab fa-github"></i></a>
+              <a href="Day29_Portfolio_Footer/index.html" target="_blank"><i class="fas fa-external-link-alt"></i></a>
+            </div>
+          </div>
+          <div class="project-info">
+            <h3>Day 29 · Portfolio Footer Section</h3>
+            <p>Professional Footer section with About Me intro, quick navigation links, social media icons,
+              and contact details for better UX.</p>
+            <div class="project-tags">
+              <span>HTML</span><span>CSS</span><span>Portfolio</span><span>Footer</span><span>Responsive</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Project 30 -->
+        <div class="project-card">
+          <div class="project-image">
+            <video autoplay muted loop playsinline>
+              <source src="assets/p30.mp4" type="video/mp4">
+            </video>
+            <div class="project-links">
+              <a href="https://github.com/Tejesh-dev/100-Days-100-Projects-Challenge" target="_blank"><i
+                  class="fab fa-github"></i></a>
+              <a href="Day30_Portfolio_Complete/index.html" target="_blank"><i class="fas fa-external-link-alt"></i></a>
+            </div>
+          </div>
+          <div class="project-info">
+            <h3>Day 30 · Complete Portfolio Website</h3>
+            <p>Complete Personal Portfolio with Hero, About, Education, Skills, Resume, Projects, Contact,
+              and Footer — fully responsive with modern design and interactivity.</p>
+            <div class="project-tags">
+              <span>HTML</span><span>CSS</span><span>JS</span><span>Portfolio</span><span>Responsive</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Project 31 -->
+        <div class="project-card">
+          <div class="project-image">
+            <video autoplay muted loop playsinline>
+              <source src="assets/p31.mp4" type="video/mp4">
+            </video>
+            <div class="project-links">
+              <a href="https://github.com/Tejesh-dev/100-Days-100-Projects-Challenge" target="_blank"><i
+                  class="fab fa-github"></i></a>
+              <a href="Day31_Theme_Switcher/index.html" target="_blank"><i class="fas fa-external-link-alt"></i></a>
+            </div>
+          </div>
+          <div class="project-info">
+            <h3>Day 31 · Light & Dark Mode Switch</h3>
+            <p>Modern theme switcher allowing users to toggle Light & Dark modes dynamically to improve
+              accessibility and UI polish.</p>
+            <div class="project-tags">
+              <span>HTML</span><span>CSS</span><span>JS</span><span>UI</span><span>Theme</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Project 32 -->
+        <div class="project-card">
+          <div class="project-image">
+            <video autoplay muted loop playsinline>
+              <source src="assets/p32.mp4" type="video/mp4">
+            </video>
+            <div class="project-links">
+              <a href="https://github.com/Tejesh-dev/100-Days-100-Projects-Challenge" target="_blank"><i
+                  class="fab fa-github"></i></a>
+              <a href="Day32_Counter_App/index.html" target="_blank"><i class="fas fa-external-link-alt"></i></a>
+            </div>
+          </div>
+          <div class="project-info">
+            <h3>Day 32 · Counter App</h3>
+            <p>Simple Counter App with increment, decrement, and reset functionality — perfect for
+              practicing DOM manipulation and event handling.</p>
+            <div class="project-tags">
+              <span>HTML</span><span>CSS</span><span>JS</span><span>App</span><span>UI</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Project 33 -->
+        <div class="project-card">
+          <div class="project-image">
+            <video autoplay muted loop playsinline>
+              <source src="assets/p33.mp4" type="video/mp4">
+            </video>
+            <div class="project-links">
+              <a href="https://github.com/Tejesh-dev/100-Days-100-Projects-Challenge" target="_blank"><i
+                  class="fab fa-github"></i></a>
+              <a href="Day33_Digital_Clock/index.html" target="_blank"><i class="fas fa-external-link-alt"></i></a>
+            </div>
+          </div>
+          <div class="project-info">
+            <h3>Day 33 · Digital Clock</h3>
+            <p>Real-time Digital Clock updating hours, minutes, and seconds using the Date object — great
+              practice for DOM manipulation.</p>
+            <div class="project-tags">
+              <span>HTML</span><span>CSS</span><span>JS</span><span>Clock</span><span>UI</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Project 34 -->
+        <div class="project-card">
+          <div class="project-image">
+            <video autoplay muted loop playsinline>
+              <source src="assets/p34.mp4" type="video/mp4">
+            </video>
+            <div class="project-links">
+              <a href="https://github.com/Tejesh-dev/100-Days-100-Projects-Challenge" target="_blank"><i
+                  class="fab fa-github"></i></a>
+              <a href="Day34_Random_Quote_Generator/index.html" target="_blank"><i
+                  class="fas fa-external-link-alt"></i></a>
+            </div>
+          </div>
+          <div class="project-info">
+            <h3>Day 34 · Random Quote Generator</h3>
+            <p>Displays motivational quotes dynamically at the click of a button — practices arrays, DOM
+              manipulation, and interactivity.</p>
+            <div class="project-tags">
+              <span>HTML</span><span>CSS</span><span>JS</span><span>UI</span><span>Generator</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Project 35 -->
+        <div class="project-card">
+          <div class="project-image">
+            <video autoplay muted loop playsinline>
+              <source src="assets/p35.mp4" type="video/mp4">
+            </video>
+            <div class="project-links">
+              <a href="https://github.com/Tejesh-dev/100-Days-100-Projects-Challenge" target="_blank"><i
+                  class="fab fa-github"></i></a>
+              <a href="Day35_ColorCraftPro/index.html" target="_blank"><i class="fas fa-external-link-alt"></i></a>
+            </div>
+          </div>
+          <div class="project-info">
+            <h3>Day 35 · ColorCraft Pro</h3>
+            <p>Color Tool App featuring Color Harmony, format conversion, accessibility checks, random
+              generator, and export options — showcases advanced JS skills.</p>
+            <div class="project-tags">
+              <span>HTML</span><span>CSS</span><span>JS</span><span>Tool</span><span>UI</span>
+            </div>
+          </div>
+        </div>
+        <!-- Project 36 -->
+        <div class="project-card">
+          <div class="project-image">
+            <video autoplay muted loop playsinline>
+              <source src="assets/p36.mp4" type="video/mp4">
+            </video>
+            <div class="project-links">
+              <a href="https://github.com/Tejesh-dev/100-Days-100-Projects-Challenge" target="_blank"><i
+                  class="fab fa-github"></i></a>
+              <a href="Day36_Smart_Calculator/index.html" target="_blank"><i class="fas fa-external-link-alt"></i></a>
+            </div>
+          </div>
+          <div class="project-info">
+            <h3>Day 36 · Smart Calculator</h3>
+            <p>A modern multi-functional calculator web app combining standard arithmetic, scientific
+              functions, unit converters, and a date calculator. Features a clean, responsive design for
+              desktop and mobile.</p>
+            <div class="project-tags">
+              <span>HTML</span><span>CSS</span><span>JS</span><span>Calculator</span><span>Converter</span>
+            </div>
+          </div>
+        </div>
 
 
-    <!-- ===== PROJECTS SECTION (to be filled in groups) ===== -->
-    <section id="projects" class="projects">
-        <div class="container">
-            <div class="projects-grid">
-                <!-- Project 1 -->
-                <div class="project-card">
-                    <div class="project-image">
-                        <video autoplay muted loop playsinline>
-                            <source src="Day01-HTML-Tags-Showcase/demo.mp4" type="video/mp4">
-                        </video>
-                        <div class="project-links">
-                            <a href="https://github.com/Tejesh-dev/100-Days-100-Projects-Challenge" target="_blank"><i
-                                    class="fab fa-github"></i></a>
-                            <a href="Day01-HTML-Tags-Showcase/index.html" target="_blank"><i
-                                    class="fas fa-external-link-alt"></i></a>
-                        </div>
-                    </div>
-                    <div class="project-info">
-                        <h3>Day 1 · HTML Tags Showcase</h3>
-                        <p>A beginner-friendly page displaying all major HTML tags with examples.</p>
-                        <div class="project-tags">
-                            <span>HTML</span><span>&lt;header&gt;</span><span>&lt;p&gt;</span><span>&lt;form&gt;</span>
-                        </div>
-                    </div>
-                </div>
+        <!-- Project 37 -->
+        <div class="project-card">
+          <div class="project-image">
+            <video autoplay muted loop playsinline>
+              <source src="assets/p37.mp4" type="video/mp4">
+            </video>
+            <div class="project-links">
+              <a href="https://github.com/Tejesh-dev/100-Days-100-Projects-Challenge" target="_blank"><i
+                  class="fab fa-github"></i></a>
+              <a href="Day37_TaskFlow_Pro/index.html" target="_blank"><i class="fas fa-external-link-alt"></i></a>
+            </div>
+          </div>
+          <div class="project-info">
+            <h3>Day 37 · TaskFlow Pro</h3>
+            <p>Advanced Task Management System with smart task creation, due date tracking, category
+              filters, localStorage persistence, and progress tracking. Futuristic UI built with JS.</p>
+            <div class="project-tags">
+              <span>HTML</span><span>CSS</span><span>JS</span><span>Tasks</span><span>UI</span>
+            </div>
+          </div>
+        </div>
+        <!-- Project 38 -->
+        <div class="project-card">
+          <div class="project-image">
+            <video autoplay muted loop playsinline>
+              <source src="assets/p38.mp4" type="video/mp4">
+            </video>
+            <div class="project-links">
+              <a href="https://github.com/Tejesh-dev/100-Days-100-Projects-Challenge" target="_blank"><i
+                  class="fab fa-github"></i></a>
+              <a href="Day38_Form_Validator/index.html" target="_blank"><i class="fas fa-external-link-alt"></i></a>
+            </div>
+          </div>
+          <div class="project-info">
+            <h3>Day 38 · Form Validator</h3>
+            <p>Showcases input validation for emails, passwords, and other fields using Regex, DOM
+              manipulation, and dynamic error handling for a user-friendly experience.</p>
+            <div class="project-tags">
+              <span>HTML</span><span>CSS</span><span>JS</span><span>Validation</span>
+            </div>
+          </div>
+        </div>
 
-                <!-- Project 2 -->
-                <div class="project-card">
-                    <div class="project-image">
-                        <video autoplay muted loop playsinline>
-                            <source src="Day02-Wikipedia-Clone/demo.mp4" type="video/mp4">
-                        </video>
-                        <div class="project-links">
-                            <a href="https://github.com/Tejesh-dev/100-Days-100-Projects-Challenge" target="_blank"><i
-                                    class="fab fa-github"></i></a>
-                            <a href="Day02-Wikipedia-Clone/index.html" target="_blank"><i
-                                    class="fas fa-external-link-alt"></i></a>
-                        </div>
-                    </div>
-                    <div class="project-info">
-                        <h3>Day 2 · Mini Wikipedia Clone</h3>
-                        <p>An educational static page created using HTML, CSS, and JS with structured sections,
-                            citations, and internal navigation.</p>
-                        <div class="project-tags">
-                            <span>HTML</span><span>CSS</span><span>JavaScript</span><span>&lt;section&gt;</span><span>&lt;nav&gt;</span>
-                        </div>
-                    </div>
-                </div>
+        <!-- Project 39 -->
+        <div class="project-card">
+          <div class="project-image">
+            <video autoplay muted loop playsinline>
+              <source src="assets/p39.mp4" type="video/mp4">
+            </video>
+            <div class="project-links">
+              <a href="https://github.com/Tejesh-dev/100-Days-100-Projects-Challenge" target="_blank"><i
+                  class="fab fa-github"></i></a>
+              <a href="Day39_Image_Slider/index.html" target="_blank"><i class="fas fa-external-link-alt"></i></a>
+            </div>
+          </div>
+          <div class="project-info">
+            <h3>Day 39 · Image Slider / Carousel</h3>
+            <p>Auto-slide image carousel with next/previous buttons, dot indicators, and smooth transitions.
+              Great for practicing DOM and UI interactivity.</p>
+            <div class="project-tags"><span>HTML</span><span>CSS</span><span>JS</span><span>Carousel</span>
+            </div>
+          </div>
+        </div>
 
-                <!-- Project 3 -->
-                <div class="project-card">
-                    <div class="project-image">
-                        <video autoplay muted loop playsinline>
-                            <source src="Day03-Portfolio-Page/demo.mp4" type="video/mp4">
-                        </video>
-                        <div class="project-links">
-                           <a href="https://github.com/Tejesh-dev/100-Days-100-Projects-Challenge" target="_blank"><i
-                                    class="fab fa-github"></i></a>
-                            <a href="Day03-Portfolio-Page/index.html" target="_blank"><i
-                                    class="fas fa-external-link-alt"></i></a>
-                        </div>
-                    </div>
-                    <div class="project-info">
-                        <h3>Day 3 · Developer Portfolio Website</h3>
-                        <p>Professional portfolio page built using only HTML. Includes resume download button,
-                            projects, and certificates.</p>
-                        <div class="project-tags">
-                            <span>HTML</span><span>&lt;header&gt;</span><span>&lt;footer&gt;</span><span>&lt;a&gt;</span>
-                        </div>
-                    </div>
-                </div>
+        <!-- Project 40 -->
+        <div class="project-card">
+          <div class="project-image">
+            <video autoplay muted loop playsinline>
+              <source src="assets/p40.mp4" type="video/mp4">
+            </video>
+            <div class="project-links">
+              <a href="https://github.com/Tejesh-dev/100-Days-100-Projects-Challenge" target="_blank"><i
+                  class="fab fa-github"></i></a>
+              <a href="Day40_Number_Guessing_Game/index.html" target="_blank"><i
+                  class="fas fa-external-link-alt"></i></a>
+            </div>
+          </div>
+          <div class="project-info">
+            <h3>Day 40 · Number Guessing Game</h3>
+            <p>Classic game where the player guesses a number between 1-100. Includes hints, attempt
+              tracking, and success messages using DOM and JS logic.</p>
+            <div class="project-tags"><span>HTML</span><span>CSS</span><span>JS</span><span>Game</span>
+            </div>
+          </div>
+        </div>
 
-                <!-- Project 4 -->
-                <div class="project-card">
-                    <div class="project-image">
-                        <video autoplay muted loop playsinline>
-                            <source src="Day04-AudioVerse/demo.mp4" type="video/mp4">
-                        </video>
-                        <div class="project-links">
-                           <a href="https://github.com/Tejesh-dev/100-Days-100-Projects-Challenge" target="_blank"><i
-                                    class="fab fa-github"></i></a>
-                            <a href="Day04-AudioVerse/index.html" target="_blank"><i
-                                    class="fas fa-external-link-alt"></i></a>
-                        </div>
-                    </div>
-                    <div class="project-info">
-                        <h3>Day 4 · AudioVerse - Music Website</h3>
-                        <p>Music website with artist profiles, now-playing section, playlist, audio downloads, and
-                            song suggestion form.</p>
-                        <div class="project-tags">
-                            <span>HTML</span><span>&lt;audio&gt;</span><span>&lt;form&gt;</span><span>&lt;section&gt;</span>
-                        </div>
-                    </div>
-                </div>
+        <!-- Project 41 -->
+        <div class="project-card">
+          <div class="project-image">
+            <video autoplay muted loop playsinline>
+              <source src="assets/p41.mp4" type="video/mp4">
+            </video>
+            <div class="project-links">
+              <a href="https://github.com/Tejesh-dev/100-Days-100-Projects-Challenge" target="_blank"><i
+                  class="fab fa-github"></i></a>
+              <a href="Day41_BMI_Calculator/index.html" target="_blank"><i class="fas fa-external-link-alt"></i></a>
+            </div>
+          </div>
+          <div class="project-info">
+            <h3>Day 41 · BMI Calculator</h3>
+            <p>Calculate BMI based on height and weight. Shows category (Underweight, Normal, Overweight,
+              Obese) using JS DOM manipulation and conditional logic.</p>
+            <div class="project-tags">
+              <span>HTML</span><span>CSS</span><span>JS</span><span>Calculator</span>
+            </div>
+          </div>
+        </div>
 
-                <!-- Project 5 -->
-                <div class="project-card">
-                    <div class="project-image">
-                        <video autoplay muted loop playsinline>
-                            <source src="Day05-Health-Lifestyle-Survey/demo.mp4" type="video/mp4">
-                        </video>
-                        <div class="project-links">
-                           <a href="https://github.com/Tejesh-dev/100-Days-100-Projects-Challenge" target="_blank"><i
-                                    class="fab fa-github"></i></a>
-                            <a href="Day05-Health-Lifestyle-Survey/index.html" target="_blank"><i
-                                    class="fas fa-external-link-alt"></i></a>
-                        </div>
-                    </div>
-                    <div class="project-info">
-                        <h3>Day 5 · Health & Lifestyle Survey</h3>
-                        <p>Survey website built using HTML & CSS. Features form fields, checkboxes, radio buttons,
-                            text areas, and video background.</p>
-                        <div class="project-tags">
-                            <span>HTML</span><span>CSS</span><span>&lt;fieldset&gt;</span><span>&lt;input&gt;</span><span>&lt;textarea&gt;</span>
-                        </div>
-                    </div>
-                </div>
+        <!-- Project 42 -->
+        <div class="project-card">
+          <div class="project-image">
+            <video autoplay muted loop playsinline>
+              <source src="assets/p42.mp4" type="video/mp4">
+            </video>
+            <div class="project-links">
+              <a href="https://github.com/Tejesh-dev/100-Days-100-Projects-Challenge" target="_blank"><i
+                  class="fab fa-github"></i></a>
+              <a href="Day42_Character_Counter/index.html" target="_blank"><i class="fas fa-external-link-alt"></i></a>
+            </div>
+          </div>
+          <div class="project-info">
+            <h3>Day 42 · Character Counter</h3>
+            <p>Live character counter with limit and dynamic feedback. Strengthens DOM manipulation, event
+              handling, and conditional styling in JS.</p>
+            <div class="project-tags"><span>HTML</span><span>CSS</span><span>JS</span><span>Utility</span>
+            </div>
+          </div>
+        </div>
 
-                <!-- Project 6 -->
-                <div class="project-card">
-                    <div class="project-image">
-                        <video autoplay muted loop playsinline>
-                            <source src="Day06-Semantic-Layout-Model/demo.mp4" type="video/mp4">
-                        </video>
-                        <div class="project-links">
-                            <a href="https://github.com/Tejesh-dev/100-Days-100-Projects-Challenge" target="_blank"><i
-                                    class="fab fa-github"></i></a>
-                            <a href="Day06-Semantic-Layout-Model/index.html" target="_blank"><i
-                                    class="fas fa-external-link-alt"></i></a>
-                        </div>
-                    </div>
-                    <div class="project-info">
-                        <h3>Day 6 · Semantic Layout Model</h3>
-                        <p>Web page using semantic HTML5 tags like &lt;header&gt;, &lt;nav&gt;, and &lt;footer&gt;
-                            for a clean layout.</p>
-                        <div class="project-tags">
-                            <span>HTML</span><span>&lt;header&gt;</span><span>&lt;nav&gt;</span><span>&lt;footer&gt;</span>
-                        </div>
-                    </div>
-                </div>
+        <!-- Project 43 -->
+        <div class="project-card">
+          <div class="project-image">
+            <video autoplay muted loop playsinline>
+              <source src="assets/p43.mp4" type="video/mp4">
+            </video>
+            <div class="project-links">
+              <a href="https://github.com/Tejesh-dev/100-Days-100-Projects-Challenge" target="_blank"><i
+                  class="fab fa-github"></i></a>
+              <a href="Day43_Stopwatch/index.html" target="_blank"><i class="fas fa-external-link-alt"></i></a>
+            </div>
+          </div>
+          <div class="project-info">
+            <h3>Day 43 · Stopwatch</h3>
+            <p>Real-time stopwatch with Start, Stop, Reset buttons. Demonstrates JS setInterval,
+              clearInterval, DOM manipulation, and state management.</p>
+            <div class="project-tags"><span>HTML</span><span>CSS</span><span>JS</span><span>Timer</span>
+            </div>
+          </div>
+        </div>
 
-                <!-- Project 7 -->
-                <div class="project-card">
-                    <div class="project-image">
-                        <video autoplay muted loop playsinline>
-                            <source src="Day07-CSS-Property-Showcase/demo.mp4" type="video/mp4">
-                        </video>
-                        <div class="project-links">
-                           <a href="https://github.com/Tejesh-dev/100-Days-100-Projects-Challenge" target="_blank"><i
-                                    class="fab fa-github"></i></a>
-                            <a href="Day07-CSS-Property-Showcase/index.html" target="_blank"><i
-                                    class="fas fa-external-link-alt"></i></a>
-                        </div>
-                    </div>
-                    <div class="project-info">
-                        <h3>Day 7 · CSS Property Showcase</h3>
-                        <p>Showcase of CSS properties: typography, box model, flexbox, grid, hover effects,
-                            transitions, positioning, transformations.</p>
-                        <div class="project-tags">
-                            <span>CSS</span><span>Flexbox</span><span>Grid</span><span>Transitions</span><span>Animations</span>
-                        </div>
-                    </div>
-                </div>
+        <!-- Project 44 -->
+        <div class="project-card">
+          <div class="project-image">
+            <video autoplay muted loop playsinline>
+              <source src="assets/p44.mp4" type="video/mp4">
+            </video>
+            <div class="project-links">
+              <a href="https://github.com/Tejesh-dev/100-Days-100-Projects-Challenge" target="_blank"><i
+                  class="fab fa-github"></i></a>
+              <a href="Day44_Whiteboard/index.html" target="_blank"><i class="fas fa-external-link-alt"></i></a>
+            </div>
+          </div>
+          <div class="project-info">
+            <h3>Day 44 · Whiteboard App</h3>
+            <p>Paint-like whiteboard: draw shapes, use brushes, undo/redo, and save as PNG. Built with HTML,
+              CSS & JS.</p>
+            <div class="project-tags"><span>HTML</span><span>CSS</span><span>JS</span><span>Drawing</span>
+            </div>
+          </div>
+        </div>
 
-                <!-- Project 8 -->
-                <div class="project-card">
-                    <div class="project-image">
-                        <video autoplay muted loop playsinline>
-                            <source src="08_Responsive_Grid_Gallery/demo.mp4" type="video/mp4">
-                        </video>
-                        <div class="project-links">
-                           <a href="https://github.com/Tejesh-dev/100-Days-100-Projects-Challenge" target="_blank"><i
-                                    class="fab fa-github"></i></a>
-                            <a href="08_Responsive_Grid_Gallery/index.html" target="_blank"><i
-                                    class="fas fa-external-link-alt"></i></a>
-                        </div>
-                    </div>
-                    <div class="project-info">
-                        <h3>Day 8 · Responsive Grid Gallery</h3>
-                        <p>Responsive image gallery built with CSS Grid, smooth hover animations, and adaptive
-                            layout for all screen sizes.</p>
-                        <div class="project-tags">
-                            <span>CSS</span><span>Grid</span><span>Responsive</span><span>Hover Effects</span>
-                        </div>
-                    </div>
-                </div>
+        <!-- Project 45 -->
+        <div class="project-card">
+          <div class="project-image">
+            <video autoplay muted loop playsinline>
+              <source src="assets/p45.mp4" type="video/mp4">
+            </video>
+            <div class="project-links">
+              <a href="https://github.com/Tejesh-dev/100-Days-100-Projects-Challenge" target="_blank"><i
+                  class="fab fa-github"></i></a>
+              <a href="Day45_LoginPasswordGenerator/index.html" target="_blank"><i
+                  class="fas fa-external-link-alt"></i></a>
+            </div>
+          </div>
+          <div class="project-info">
+            <h3>Day 45 · Login Form with Password Generator</h3>
+            <p>Generate strong passwords and integrate with login form. Secure, user-friendly, built with
+              HTML, CSS & JS.</p>
+            <div class="project-tags"><span>HTML</span><span>CSS</span><span>JS</span><span>Security</span>
+            </div>
+          </div>
+        </div>
 
-                <!-- Project 9 -->
-                <div class="project-card">
-                    <div class="project-image">
-                        <video autoplay muted loop playsinline>
-                            <source src="Day09-Ultimate-Button-Showcase/demo.mp4" type="video/mp4">
-                        </video>
-                        <div class="project-links">
-                            <a href="https://github.com/Tejesh-dev/100-Days-100-Projects-Challenge" target="_blank"><i
-                                    class="fab fa-github"></i></a>
-                            <a href="Day09-Ultimate-Button-Showcase/index.html" target="_blank"><i
-                                    class="fas fa-external-link-alt"></i></a>
-                        </div>
-                    </div>
-                    <div class="project-info">
-                        <h3>Day 9 · Ultimate Button Showcase</h3>
-                        <p>Creative button designs with animated text, hover effects, 3D styles, glow & neon
-                            effects, gradient backgrounds.</p>
-                        <div class="project-tags">
-                            <span>CSS</span><span>Hover
-                                Effects</span><span>3D</span><span>Gradient</span><span>Animation</span>
-                        </div>
-                    </div>
-                </div>
+        <!-- Project 46 -->
+        <div class="project-card">
+          <div class="project-image">
+            <video autoplay muted loop playsinline>
+              <source src="assets/p46.mp4" type="video/mp4">
+            </video>
+            <div class="project-links">
+              <a href="https://github.com/Tejesh-dev/100-Days-100-Projects-Challenge" target="_blank"><i
+                  class="fab fa-github"></i></a>
+              <a href="Day46_QRCodeGenerator/index.html" target="_blank"><i class="fas fa-external-link-alt"></i></a>
+            </div>
+          </div>
+          <div class="project-info">
+            <h3>Day 46 · QR Code Generator</h3>
+            <p>Create QR codes instantly for any text/link, download or copy easily. Built with HTML, CSS &
+              JS (QRCode.js).</p>
+            <div class="project-tags"><span>HTML</span><span>CSS</span><span>JS</span><span>Utility</span>
+            </div>
+          </div>
+        </div>
 
-                <!-- Project 10 -->
-                <div class="project-card">
-                    <div class="project-image">
-                        <video autoplay muted loop playsinline>
-                            <source src="10_Navbar_Styles_Showcase/demo.mp4" type="video/mp4">
-                        </video>
-                        <div class="project-links">
-                           <a href="https://github.com/Tejesh-dev/100-Days-100-Projects-Challenge" target="_blank"><i
-                                    class="fab fa-github"></i></a>
-                            <a href="10_Navbar_Styles_Showcase/index.html" target="_blank"><i
-                                    class="fas fa-external-link-alt"></i></a>
-                        </div>
-                    </div>
-                    <div class="project-info">
-                        <h3>Day 10 · Navbar Styles Showcase</h3>
-                        <p>10+ navigation bar designs with responsive layouts, hover effects, and brand-specific
-                            patterns recreated in HTML & CSS.</p>
-                        <div class="project-tags">
-                            <span>HTML</span><span>CSS</span><span>Responsive</span><span>Flexbox</span><span>Hover
-                                Effects</span>
-                        </div>
-                    </div>
-                </div>
-                <!-- Project 11 -->
-                <div class="project-card">
-                    <div class="project-image">
-                        <video autoplay muted loop playsinline>
-                            <source src="assets/p11.mp4" type="video/mp4">
-                        </video>
-                        <div class="project-links">
-                           <a href="https://github.com/Tejesh-dev/100-Days-100-Projects-Challenge" target="_blank"><i
-                                    class="fab fa-github"></i></a>
-                            <a href="Day11_Footer_Showcase/index.html" target="_blank"><i
-                                    class="fas fa-external-link-alt"></i></a>
-                        </div>
-                    </div>
-                    <div class="project-info">
-                        <h3>Day 11 · Footer Showcase</h3>
-                        <p>Curated collection of stylish and responsive footer designs with multi-column layouts,
-                            social media integration, newsletter signup forms, and creative copyright sections.</p>
-                        <div class="project-tags">
-                            <span>HTML</span><span>CSS</span><span>Footer</span><span>Responsive</span><span>Design</span>
-                        </div>
-                    </div>
-                </div>
+        <!-- Project 47 -->
+        <div class="project-card">
+          <div class="project-image">
+            <video autoplay muted loop playsinline>
+              <source src="assets/p47.mp4" type="video/mp4">
+            </video>
+            <div class="project-links">
+              <a href="https://github.com/Tejesh-dev/100-Days-100-Projects-Challenge" target="_blank"><i
+                  class="fab fa-github"></i></a>
+              <a href="Day47_TypingSpeedTest/index.html" target="_blank"><i class="fas fa-external-link-alt"></i></a>
+            </div>
+          </div>
+          <div class="project-info">
+            <h3>Day 47 · Typing Speed Test</h3>
+            <p>Practice typing with random texts, track WPM, accuracy, and errors in real-time. Dark-themed
+              UI built with HTML, CSS & JS.</p>
+            <div class="project-tags"><span>HTML</span><span>CSS</span><span>JS</span><span>Utility</span>
+            </div>
+          </div>
+        </div>
 
-                <!-- Project 12 -->
-                <div class="project-card">
-                    <div class="project-image">
-                        <video autoplay muted loop playsinline>
-                            <source src="assets/p12.mp4" type="video/mp4">
-                        </video>
-                        <div class="project-links">
-                           <a href="https://github.com/Tejesh-dev/100-Days-100-Projects-Challenge" target="_blank"><i
-                                    class="fab fa-github"></i></a>
-                            <a href="Day12_Forms_Showcase/index.html" target="_blank"><i
-                                    class="fas fa-external-link-alt"></i></a>
-                        </div>
-                    </div>
-                    <div class="project-info">
-                        <h3>Day 12 · Forms Showcase</h3>
-                        <p>Collection of beautifully designed, fully responsive forms including contact forms, login
-                            & registration pages, feedback forms, with custom input styling and smooth focus/hover
-                            effects.</p>
-                        <div class="project-tags">
-                            <span>HTML</span><span>CSS</span><span>Forms</span><span>Responsive</span><span>UI</span>
-                        </div>
-                    </div>
-                </div>
+        <!-- Project 48 -->
+        <div class="project-card">
+          <div class="project-image">
+            <video autoplay muted loop playsinline>
+              <source src="assets/p48.mp4" type="video/mp4">
+            </video>
+            <div class="project-links">
+              <a href="https://github.com/Tejesh-dev/100-Days-100-Projects-Challenge" target="_blank"><i
+                  class="fab fa-github"></i></a>
+              <a href="Day48_CurrencyConverter/index.html" target="_blank"><i class="fas fa-external-link-alt"></i></a>
+            </div>
+          </div>
+          <div class="project-info">
+            <h3>Day 48 · Currency Converter</h3>
+            <p>Convert between world currencies with live exchange rates. Dark-themed UI with modern
+              animation built with HTML, CSS & JS.</p>
+            <div class="project-tags"><span>HTML</span><span>CSS</span><span>JS</span><span>Converter</span>
+            </div>
+          </div>
+        </div>
 
-                <!-- Project 13 -->
-                <div class="project-card">
-                    <div class="project-image">
-                        <video autoplay muted loop playsinline>
-                            <source src="assets/p13.mp4" type="video/mp4">
-                        </video>
-                        <div class="project-links">
-                           <a href="https://github.com/Tejesh-dev/100-Days-100-Projects-Challenge" target="_blank"><i
-                                    class="fab fa-github"></i></a>
-                            <a href="Day13_Login_and_Signup_Form/index.html" target="_blank"><i
-                                    class="fas fa-external-link-alt"></i></a>
-                        </div>
-                    </div>
-                    <div class="project-info">
-                        <h3>Day 13 · Login & Signup Form</h3>
-                        <p>Responsive authentication interface with separate login/signup forms, smooth animations,
-                            modern input styling, and a clean, user-friendly layout for seamless user experience.
-                        </p>
-                        <div class="project-tags">
-                            <span>HTML</span><span>CSS</span><span>Forms</span><span>UI</span><span>Authentication</span>
-                        </div>
-                    </div>
-                </div>
+        <!-- Project 49 -->
+        <div class="project-card">
+          <div class="project-image">
+            <video autoplay muted loop playsinline>
+              <source src="assets/p49.mp4" type="video/mp4">
+            </video>
+            <div class="project-links">
+              <a href="https://github.com/Tejesh-dev/100-Days-100-Projects-Challenge" target="_blank"><i
+                  class="fab fa-github"></i></a>
+              <a href="Day49_SpeechToTextApp/index.html" target="_blank"><i class="fas fa-external-link-alt"></i></a>
+            </div>
+          </div>
+          <div class="project-info">
+            <h3>Day 49 · Speech-to-Text App</h3>
+            <p>Real-time speech recognition with animated mic waves, dark theme UI, and utility buttons.
+              Built with HTML, CSS & JS using Web Speech API.</p>
+            <div class="project-tags"><span>HTML</span><span>CSS</span><span>JS</span><span>Speech</span>
+            </div>
+          </div>
+        </div>
 
-                <!-- Project 14 -->
-                <div class="project-card">
-                    <div class="project-image">
-                        <video autoplay muted loop playsinline>
-                            <source src="assets/p14.mp4" type="video/mp4">
-                        </video>
-                        <div class="project-links">
-                          <a href="https://github.com/Tejesh-dev/100-Days-100-Projects-Challenge" target="_blank"><i
-                                    class="fab fa-github"></i></a>
-                            <a href="Day14_Pricing_Cards_Collection/index.html" target="_blank"><i
-                                    class="fas fa-external-link-alt"></i></a>
-                        </div>
-                    </div>
-                    <div class="project-info">
-                        <h3>Day 14 · Pricing Cards Collection</h3>
-                        <p>Curated collection of 15 pricing card designs inspired by Indian products & services with
-                            gradients, hover animations, responsive layouts, and reusable UI components.</p>
-                        <div class="project-tags">
-                            <span>HTML</span><span>CSS</span><span>UI</span><span>Responsive</span><span>Cards</span>
-                        </div>
-                    </div>
-                </div>
+        <!-- Project 50 -->
+        <div class="project-card">
+          <div class="project-image">
+            <video autoplay muted loop playsinline>
+              <source src="assets/p50.mp4" type="video/mp4">
+            </video>
+            <div class="project-links">
+              <a href="https://github.com/Tejesh-dev/100-Days-100-Projects-Challenge" target="_blank"><i
+                  class="fab fa-github"></i></a>
+              <a href="Day50_VoiceForge/index.html" target="_blank"><i class="fas fa-external-link-alt"></i></a>
+            </div>
+          </div>
+          <div class="project-info">
+            <h3>Day 50 · VoiceForge — Text-to-Voice Generator</h3>
+            <p>Professional Text-to-Voice app using Gemini API. Supports multiple voices, pitch/rate
+              control, downloadable .wav, built with HTML, CSS & JS.</p>
+            <div class="project-tags">
+              <span>HTML</span><span>CSS</span><span>JS</span><span>Text-to-Speech</span>
+            </div>
+          </div>
+        </div>
 
-                <!-- Project 15 -->
-                <div class="project-card">
-                    <div class="project-image">
-                        <video autoplay muted loop playsinline>
-                            <source src="assets/p15.mp4" type="video/mp4">
-                        </video>
-                        <div class="project-links">
-                          <a href="https://github.com/Tejesh-dev/100-Days-100-Projects-Challenge" target="_blank"><i
-                                    class="fab fa-github"></i></a>
-                            <a href="Day15_India_Independence_Day_Tribute/index.html" target="_blank"><i
-                                    class="fas fa-external-link-alt"></i></a>
-                        </div>
-                    </div>
-                    <div class="project-info">
-                        <h3>Day 15 · India Independence Day Tribute</h3>
-                        <p>Festive tribute website showcasing historical and cultural content with responsive HTML &
-                            CSS design celebrating India’s Independence Day.</p>
-                        <div class="project-tags">
-                            <span>HTML</span><span>CSS</span><span>Responsive</span><span>Tribute</span><span>Design</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Project 16 -->
-                <div class="project-card">
-                    <div class="project-image">
-                        <video autoplay muted loop playsinline>
-                            <source src="assets/p16.mp4" type="video/mp4">
-                        </video>
-                        <div class="project-links">
-                           <a href="https://github.com/Tejesh-dev/100-Days-100-Projects-Challenge" target="_blank"><i
-                                    class="fab fa-github"></i></a>
-                            <a href="Day16_Netflix_Clone/index.html" target="_blank"><i
-                                    class="fas fa-external-link-alt"></i></a>
-                        </div>
-                    </div>
-                    <div class="project-info">
-                        <h3>Day 16 · Netflix Clone</h3>
-                        <p>Responsive Netflix homepage clone focusing on sleek dark theme, hero banner with CTAs,
-                            and movie/show rows with hover effects using HTML & CSS.</p>
-                        <div class="project-tags">
-                            <span>HTML</span><span>CSS</span><span>UI</span><span>Responsive</span><span>Clone</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Project 17 -->
-                <div class="project-card">
-                    <div class="project-image">
-                        <video autoplay muted loop playsinline>
-                            <source src="assets/p17.mp4" type="video/mp4">
-                        </video>
-                        <div class="project-links">
-                            <a href="https://github.com/Tejesh-dev/100-Days-100-Projects-Challenge" target="_blank"><i
-                                    class="fab fa-github"></i></a>
-                            <a href="Day17_KFC_Clone/index.html" target="_blank"><i
-                                    class="fas fa-external-link-alt"></i></a>
-                        </div>
-                    </div>
-                    <div class="project-info">
-                        <h3>Day 17 · KFC Clone</h3>
-                        <p>Responsive KFC homepage clone demonstrating navigation bar, hero section, and fully
-                            responsive layout built for educational purposes.</p>
-                        <div class="project-tags">
-                            <span>HTML</span><span>CSS</span><span>UI</span><span>Responsive</span><span>Clone</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Project 18 -->
-                <div class="project-card">
-                    <div class="project-image">
-                        <video autoplay muted loop playsinline>
-                            <source src="assets/p18.mp4" type="video/mp4">
-                        </video>
-                        <div class="project-links">
-                           <a href="https://github.com/Tejesh-dev/100-Days-100-Projects-Challenge" target="_blank"><i
-                                    class="fab fa-github"></i></a>
-                            <a href="Day18_Recipe_Collection/index.html" target="_blank"><i
-                                    class="fas fa-external-link-alt"></i></a>
-                        </div>
-                    </div>
-                    <div class="project-info">
-                        <h3>Day 18 · Recipe Collection Website</h3>
-                        <p>Responsive recipe collection featuring Indian dishes with CSS-only filtering, grid-based
-                            layouts, hover animations, and detailed recipe views — no JavaScript used.</p>
-                        <div class="project-tags">
-                            <span>HTML</span><span>CSS</span><span>UI</span><span>Recipes</span><span>Responsive</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Project 19 -->
-                <div class="project-card">
-                    <div class="project-image">
-                        <video autoplay muted loop playsinline>
-                            <source src="assets/p19.mp4" type="video/mp4">
-                        </video>
-                        <div class="project-links">
-                           <a href="https://github.com/Tejesh-dev/100-Days-100-Projects-Challenge" target="_blank"><i
-                                    class="fab fa-github"></i></a>
-                            <a href="Day19_Portfolio_HeaderNav/index.html" target="_blank"><i
-                                    class="fas fa-external-link-alt"></i></a>
-                        </div>
-                    </div>
-                    <div class="project-info">
-                        <h3>Day 19 · Portfolio – Header & Navigation</h3>
-                        <p>Clean, responsive portfolio header with smooth navigation, built with Tailwind CSS and
-                            custom fade-in animations for all screen sizes.</p>
-                        <div class="project-tags">
-                            <span>HTML</span><span>CSS</span><span>Tailwind</span><span>UI</span><span>Portfolio</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Project 20 -->
-                <div class="project-card">
-                    <div class="project-image">
-                        <video autoplay muted loop playsinline>
-                            <source src="assets/p20.mp4" type="video/mp4">
-                        </video>
-                        <div class="project-links">
-                          <a href="https://github.com/Tejesh-dev/100-Days-100-Projects-Challenge" target="_blank"><i
-                                    class="fab fa-github"></i></a>
-                            <a href="Day20_Portfolio_Hero/index.html" target="_blank"><i
-                                    class="fas fa-external-link-alt"></i></a>
-                        </div>
-                    </div>
-                    <div class="project-info">
-                        <h3>Day 20 · Personal Portfolio Hero Section</h3>
-                        <p>Modern hero section for portfolio with headline, short intro, call-to-action buttons, and
-                            fully responsive layout built using HTML & CSS.</p>
-                        <div class="project-tags">
-                            <span>HTML</span><span>CSS</span><span>UI</span><span>Hero</span><span>Portfolio</span>
-                        </div>
-                    </div>
-                </div>
-                <!-- Project 21 -->
-                <div class="project-card">
-                    <div class="project-image">
-                        <video autoplay muted loop playsinline>
-                            <source src="assets/p21.mp4" type="video/mp4">
-                        </video>
-                        <div class="project-links">
-                           <a href="https://github.com/Tejesh-dev/100-Days-100-Projects-Challenge" target="_blank"><i
-                                    class="fab fa-github"></i></a>
-                            <a href="Day21_Portfolio_About/index.html" target="_blank"><i
-                                    class="fas fa-external-link-alt"></i></a>
-                        </div>
-                    </div>
-                    <div class="project-info">
-                        <h3>Day 21 · Portfolio About Section</h3>
-                        <p>Responsive and well-structured "About Me" section showcasing personal introduction, skills
-                            overview, and a clean layout for quick visitor insights.</p>
-                        <div class="project-tags">
-                            <span>HTML</span><span>CSS</span><span>Portfolio</span><span>About</span><span>Responsive</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Project 22 -->
-                <div class="project-card">
-                    <div class="project-image">
-                        <video autoplay muted loop playsinline>
-                            <source src="assets/p22.mp4" type="video/mp4">
-                        </video>
-                        <div class="project-links">
-                            <a href="https://github.com/Tejesh-dev/100-Days-100-Projects-Challenge" target="_blank"><i
-                                    class="fab fa-github"></i></a>
-                            <a href="Day22_Portfolio_Education/index.html" target="_blank"><i
-                                    class="fas fa-external-link-alt"></i></a>
-                        </div>
-                    </div>
-                    <div class="project-info">
-                        <h3>Day 22 · Portfolio Education Section</h3>
-                        <p>Responsive education section highlighting academic background and achievements with a clean
-                            layout for portfolio visitors.</p>
-                        <div class="project-tags">
-                            <span>HTML</span><span>CSS</span><span>Portfolio</span><span>Education</span><span>Responsive</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Project 23 -->
-                <div class="project-card">
-                    <div class="project-image">
-                        <video autoplay muted loop playsinline>
-                            <source src="assets/p23.mp4" type="video/mp4">
-                        </video>
-                        <div class="project-links">
-                           <a href="https://github.com/Tejesh-dev/100-Days-100-Projects-Challenge" target="_blank"><i
-                                    class="fab fa-github"></i></a>
-                            <a href="Day23_Portfolio_Experience/index.html" target="_blank"><i
-                                    class="fas fa-external-link-alt"></i></a>
-                        </div>
-                    </div>
-                    <div class="project-info">
-                        <h3>Day 23 · Portfolio Experience Section</h3>
-                        <p>Responsive Experience section showcasing roles, responsibilities, and achievements in a
-                            clean, scannable layout.</p>
-                        <div class="project-tags">
-                            <span>HTML</span><span>CSS</span><span>Portfolio</span><span>Experience</span><span>Responsive</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Project 24 -->
-                <div class="project-card">
-                    <div class="project-image">
-                        <video autoplay muted loop playsinline>
-                            <source src="assets/p24.mp4" type="video/mp4">
-                        </video>
-                        <div class="project-links">
-                            <a href="https://github.com/Tejesh-dev/100-Days-100-Projects-Challenge" target="_blank"><i
-                                    class="fab fa-github"></i></a>
-                            <a href="Day24_Portfolio_Skills/index.html" target="_blank"><i
-                                    class="fas fa-external-link-alt"></i></a>
-                        </div>
-                    </div>
-                    <div class="project-info">
-                        <h3>Day 24 · Portfolio Skills Section</h3>
-                        <p>Responsive Skills section highlighting technical expertise and core competencies with a
-                            modern layout.</p>
-                        <div class="project-tags">
-                            <span>HTML</span><span>CSS</span><span>Portfolio</span><span>Skills</span><span>Responsive</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Project 25 -->
-                <div class="project-card">
-                    <div class="project-image">
-                        <video autoplay muted loop playsinline>
-                            <source src="assets/p25.mp4" type="video/mp4">
-                        </video>
-                        <div class="project-links">
-                            <a href="https://github.com/Tejesh-dev/100-Days-100-Projects-Challenge" target="_blank"><i
-                                    class="fab fa-github"></i></a>
-                            <a href="Day25_Portfolio_Projects/index.html" target="_blank"><i
-                                    class="fas fa-external-link-alt"></i></a>
-                        </div>
-                    </div>
-                    <div class="project-info">
-                        <h3>Day 25 · Portfolio Projects Section</h3>
-                        <p>Responsive Projects section showcasing work samples and portfolio projects in a clean,
-                            grid-based layout.</p>
-                        <div class="project-tags">
-                            <span>HTML</span><span>CSS</span><span>Portfolio</span><span>Projects</span><span>Responsive</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Project 26 -->
-                <div class="project-card">
-                    <div class="project-image">
-                        <video autoplay muted loop playsinline>
-                            <source src="assets/p26.mp4" type="video/mp4">
-                        </video>
-                        <div class="project-links">
-                          <a href="https://github.com/Tejesh-dev/100-Days-100-Projects-Challenge" target="_blank"><i
-                                    class="fab fa-github"></i></a>
-                            <a href="Day26_Portfolio_Resume/index.html" target="_blank"><i
-                                    class="fas fa-external-link-alt"></i></a>
-                        </div>
-                    </div>
-                    <div class="project-info">
-                        <h3>Day 26 · Portfolio Resume Section</h3>
-                        <p>Clean and responsive Resume section showcasing professional background with an option to view
-                            or download the resume.</p>
-                        <div class="project-tags">
-                            <span>HTML</span><span>CSS</span><span>Portfolio</span><span>Resume</span><span>Responsive</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Project 27 -->
-                <div class="project-card">
-                    <div class="project-image">
-                        <video autoplay muted loop playsinline>
-                            <source src="assets/p27.mp4" type="video/mp4">
-                        </video>
-                        <div class="project-links">
-                          <a href="https://github.com/Tejesh-dev/100-Days-100-Projects-Challenge" target="_blank"><i
-                                    class="fab fa-github"></i></a>
-                            <a href="Day27_GaneshChaturthi/index.html" target="_blank"><i
-                                    class="fas fa-external-link-alt"></i></a>
-                        </div>
-                    </div>
-                    <div class="project-info">
-                        <h3>Day 27 · Ganesh Chaturthi Special Website</h3>
-                        <p>Festive tribute website showcasing cultural content with responsive HTML & CSS design
-                            celebrating Ganesh Chaturthi.</p>
-                        <div class="project-tags">
-                            <span>HTML</span><span>CSS</span><span>Festival</span><span>Responsive</span><span>UI</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Project 28 -->
-                <div class="project-card">
-                    <div class="project-image">
-                        <video autoplay muted loop playsinline>
-                            <source src="assets/p28.mp4" type="video/mp4">
-                        </video>
-                        <div class="project-links">
-                           <a href="https://github.com/Tejesh-dev/100-Days-100-Projects-Challenge" target="_blank"><i
-                                    class="fab fa-github"></i></a>
-                            <a href="Day28_Portfolio_Contact/index.html" target="_blank"><i
-                                    class="fas fa-external-link-alt"></i></a>
-                        </div>
-                    </div>
-                    <div class="project-info">
-                        <h3>Day 28 · Portfolio Contact Section</h3>
-                        <p>Responsive Contact section with user-friendly form, social links, and modern footer for easy
-                            connectivity.</p>
-                        <div class="project-tags">
-                            <span>HTML</span><span>CSS</span><span>JS</span><span>Portfolio</span><span>Contact</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Project 29 -->
-                <div class="project-card">
-                    <div class="project-image">
-                        <video autoplay muted loop playsinline>
-                            <source src="assets/p29.mp4" type="video/mp4">
-                        </video>
-                        <div class="project-links">
-                          <a href="https://github.com/Tejesh-dev/100-Days-100-Projects-Challenge" target="_blank"><i
-                                    class="fab fa-github"></i></a>
-                            <a href="Day29_Portfolio_Footer/index.html" target="_blank"><i
-                                    class="fas fa-external-link-alt"></i></a>
-                        </div>
-                    </div>
-                    <div class="project-info">
-                        <h3>Day 29 · Portfolio Footer Section</h3>
-                        <p>Professional Footer section with About Me intro, quick navigation links, social media icons,
-                            and contact details for better UX.</p>
-                        <div class="project-tags">
-                            <span>HTML</span><span>CSS</span><span>Portfolio</span><span>Footer</span><span>Responsive</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Project 30 -->
-                <div class="project-card">
-                    <div class="project-image">
-                        <video autoplay muted loop playsinline>
-                            <source src="assets/p30.mp4" type="video/mp4">
-                        </video>
-                        <div class="project-links">
-                           <a href="https://github.com/Tejesh-dev/100-Days-100-Projects-Challenge" target="_blank"><i
-                                    class="fab fa-github"></i></a>
-                            <a href="Day30_Portfolio_Complete/index.html" target="_blank"><i
-                                    class="fas fa-external-link-alt"></i></a>
-                        </div>
-                    </div>
-                    <div class="project-info">
-                        <h3>Day 30 · Complete Portfolio Website</h3>
-                        <p>Complete Personal Portfolio with Hero, About, Education, Skills, Resume, Projects, Contact,
-                            and Footer — fully responsive with modern design and interactivity.</p>
-                        <div class="project-tags">
-                            <span>HTML</span><span>CSS</span><span>JS</span><span>Portfolio</span><span>Responsive</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Project 31 -->
-                <div class="project-card">
-                    <div class="project-image">
-                        <video autoplay muted loop playsinline>
-                            <source src="assets/p31.mp4" type="video/mp4">
-                        </video>
-                        <div class="project-links">
-                            <a href="https://github.com/Tejesh-dev/100-Days-100-Projects-Challenge" target="_blank"><i
-                                    class="fab fa-github"></i></a>
-                            <a href="Day31_Theme_Switcher/index.html" target="_blank"><i
-                                    class="fas fa-external-link-alt"></i></a>
-                        </div>
-                    </div>
-                    <div class="project-info">
-                        <h3>Day 31 · Light & Dark Mode Switch</h3>
-                        <p>Modern theme switcher allowing users to toggle Light & Dark modes dynamically to improve
-                            accessibility and UI polish.</p>
-                        <div class="project-tags">
-                            <span>HTML</span><span>CSS</span><span>JS</span><span>UI</span><span>Theme</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Project 32 -->
-                <div class="project-card">
-                    <div class="project-image">
-                        <video autoplay muted loop playsinline>
-                            <source src="assets/p32.mp4" type="video/mp4">
-                        </video>
-                        <div class="project-links">
-                           <a href="https://github.com/Tejesh-dev/100-Days-100-Projects-Challenge" target="_blank"><i
-                                    class="fab fa-github"></i></a>
-                            <a href="Day32_Counter_App/index.html" target="_blank"><i
-                                    class="fas fa-external-link-alt"></i></a>
-                        </div>
-                    </div>
-                    <div class="project-info">
-                        <h3>Day 32 · Counter App</h3>
-                        <p>Simple Counter App with increment, decrement, and reset functionality — perfect for
-                            practicing DOM manipulation and event handling.</p>
-                        <div class="project-tags">
-                            <span>HTML</span><span>CSS</span><span>JS</span><span>App</span><span>UI</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Project 33 -->
-                <div class="project-card">
-                    <div class="project-image">
-                        <video autoplay muted loop playsinline>
-                            <source src="assets/p33.mp4" type="video/mp4">
-                        </video>
-                        <div class="project-links">
-                           <a href="https://github.com/Tejesh-dev/100-Days-100-Projects-Challenge" target="_blank"><i
-                                    class="fab fa-github"></i></a>
-                            <a href="Day33_Digital_Clock/index.html" target="_blank"><i
-                                    class="fas fa-external-link-alt"></i></a>
-                        </div>
-                    </div>
-                    <div class="project-info">
-                        <h3>Day 33 · Digital Clock</h3>
-                        <p>Real-time Digital Clock updating hours, minutes, and seconds using the Date object — great
-                            practice for DOM manipulation.</p>
-                        <div class="project-tags">
-                            <span>HTML</span><span>CSS</span><span>JS</span><span>Clock</span><span>UI</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Project 34 -->
-                <div class="project-card">
-                    <div class="project-image">
-                        <video autoplay muted loop playsinline>
-                            <source src="assets/p34.mp4" type="video/mp4">
-                        </video>
-                        <div class="project-links">
-                            <a href="https://github.com/Tejesh-dev/100-Days-100-Projects-Challenge" target="_blank"><i
-                                    class="fab fa-github"></i></a>
-                            <a href="Day34_Random_Quote_Generator/index.html" target="_blank"><i
-                                    class="fas fa-external-link-alt"></i></a>
-                        </div>
-                    </div>
-                    <div class="project-info">
-                        <h3>Day 34 · Random Quote Generator</h3>
-                        <p>Displays motivational quotes dynamically at the click of a button — practices arrays, DOM
-                            manipulation, and interactivity.</p>
-                        <div class="project-tags">
-                            <span>HTML</span><span>CSS</span><span>JS</span><span>UI</span><span>Generator</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Project 35 -->
-                <div class="project-card">
-                    <div class="project-image">
-                        <video autoplay muted loop playsinline>
-                            <source src="assets/p35.mp4" type="video/mp4">
-                        </video>
-                        <div class="project-links">
-                            <a href="https://github.com/Tejesh-dev/100-Days-100-Projects-Challenge" target="_blank"><i
-                                    class="fab fa-github"></i></a>
-                            <a href="Day35_ColorCraftPro/index.html" target="_blank"><i
-                                    class="fas fa-external-link-alt"></i></a>
-                        </div>
-                    </div>
-                    <div class="project-info">
-                        <h3>Day 35 · ColorCraft Pro</h3>
-                        <p>Color Tool App featuring Color Harmony, format conversion, accessibility checks, random
-                            generator, and export options — showcases advanced JS skills.</p>
-                        <div class="project-tags">
-                            <span>HTML</span><span>CSS</span><span>JS</span><span>Tool</span><span>UI</span>
-                        </div>
-                    </div>
-                </div>
-                <!-- Project 36 -->
-                <div class="project-card">
-                    <div class="project-image">
-                        <video autoplay muted loop playsinline>
-                            <source src="assets/p36.mp4" type="video/mp4">
-                        </video>
-                        <div class="project-links">
-                           <a href="https://github.com/Tejesh-dev/100-Days-100-Projects-Challenge" target="_blank"><i
-                                    class="fab fa-github"></i></a>
-                            <a href="Day36_Smart_Calculator/index.html" target="_blank"><i
-                                    class="fas fa-external-link-alt"></i></a>
-                        </div>
-                    </div>
-                    <div class="project-info">
-                        <h3>Day 36 · Smart Calculator</h3>
-                        <p>A modern multi-functional calculator web app combining standard arithmetic, scientific
-                            functions, unit converters, and a date calculator. Features a clean, responsive design for
-                            desktop and mobile.</p>
-                        <div class="project-tags">
-                            <span>HTML</span><span>CSS</span><span>JS</span><span>Calculator</span><span>Converter</span>
-                        </div>
-                    </div>
-                </div>
-
-
-                <!-- Project 37 -->
-                <div class="project-card">
-                    <div class="project-image">
-                        <video autoplay muted loop playsinline>
-                            <source src="assets/p37.mp4" type="video/mp4">
-                        </video>
-                        <div class="project-links">
-                           <a href="https://github.com/Tejesh-dev/100-Days-100-Projects-Challenge" target="_blank"><i
-                                    class="fab fa-github"></i></a>
-                            <a href="Day37_TaskFlow_Pro/index.html" target="_blank"><i
-                                    class="fas fa-external-link-alt"></i></a>
-                        </div>
-                    </div>
-                    <div class="project-info">
-                        <h3>Day 37 · TaskFlow Pro</h3>
-                        <p>Advanced Task Management System with smart task creation, due date tracking, category
-                            filters, localStorage persistence, and progress tracking. Futuristic UI built with JS.</p>
-                        <div class="project-tags">
-                            <span>HTML</span><span>CSS</span><span>JS</span><span>Tasks</span><span>UI</span>
-                        </div>
-                    </div>
-                </div>
-                <!-- Project 38 -->
-                <div class="project-card">
-                    <div class="project-image">
-                        <video autoplay muted loop playsinline>
-                            <source src="assets/p38.mp4" type="video/mp4">
-                        </video>
-                        <div class="project-links">
-                            <a href="https://github.com/Tejesh-dev/100-Days-100-Projects-Challenge" target="_blank"><i
-                                    class="fab fa-github"></i></a>
-                            <a href="Day38_Form_Validator/index.html" target="_blank"><i
-                                    class="fas fa-external-link-alt"></i></a>
-                        </div>
-                    </div>
-                    <div class="project-info">
-                        <h3>Day 38 · Form Validator</h3>
-                        <p>Showcases input validation for emails, passwords, and other fields using Regex, DOM
-                            manipulation, and dynamic error handling for a user-friendly experience.</p>
-                        <div class="project-tags">
-                            <span>HTML</span><span>CSS</span><span>JS</span><span>Validation</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Project 39 -->
-                <div class="project-card">
-                    <div class="project-image">
-                        <video autoplay muted loop playsinline>
-                            <source src="assets/p39.mp4" type="video/mp4">
-                        </video>
-                        <div class="project-links">
-                            <a href="https://github.com/Tejesh-dev/100-Days-100-Projects-Challenge" target="_blank"><i
-                                    class="fab fa-github"></i></a>
-                            <a href="Day39_Image_Slider/index.html" target="_blank"><i
-                                    class="fas fa-external-link-alt"></i></a>
-                        </div>
-                    </div>
-                    <div class="project-info">
-                        <h3>Day 39 · Image Slider / Carousel</h3>
-                        <p>Auto-slide image carousel with next/previous buttons, dot indicators, and smooth transitions.
-                            Great for practicing DOM and UI interactivity.</p>
-                        <div class="project-tags"><span>HTML</span><span>CSS</span><span>JS</span><span>Carousel</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Project 40 -->
-                <div class="project-card">
-                    <div class="project-image">
-                        <video autoplay muted loop playsinline>
-                            <source src="assets/p40.mp4" type="video/mp4">
-                        </video>
-                        <div class="project-links">
-                           <a href="https://github.com/Tejesh-dev/100-Days-100-Projects-Challenge" target="_blank"><i
-                                    class="fab fa-github"></i></a>
-                            <a href="Day40_Number_Guessing_Game/index.html" target="_blank"><i
-                                    class="fas fa-external-link-alt"></i></a>
-                        </div>
-                    </div>
-                    <div class="project-info">
-                        <h3>Day 40 · Number Guessing Game</h3>
-                        <p>Classic game where the player guesses a number between 1-100. Includes hints, attempt
-                            tracking, and success messages using DOM and JS logic.</p>
-                        <div class="project-tags"><span>HTML</span><span>CSS</span><span>JS</span><span>Game</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Project 41 -->
-                <div class="project-card">
-                    <div class="project-image">
-                        <video autoplay muted loop playsinline>
-                            <source src="assets/p41.mp4" type="video/mp4">
-                        </video>
-                        <div class="project-links">
-                          <a href="https://github.com/Tejesh-dev/100-Days-100-Projects-Challenge" target="_blank"><i
-                                    class="fab fa-github"></i></a>
-                            <a href="Day41_BMI_Calculator/index.html" target="_blank"><i
-                                    class="fas fa-external-link-alt"></i></a>
-                        </div>
-                    </div>
-                    <div class="project-info">
-                        <h3>Day 41 · BMI Calculator</h3>
-                        <p>Calculate BMI based on height and weight. Shows category (Underweight, Normal, Overweight,
-                            Obese) using JS DOM manipulation and conditional logic.</p>
-                        <div class="project-tags">
-                            <span>HTML</span><span>CSS</span><span>JS</span><span>Calculator</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Project 42 -->
-                <div class="project-card">
-                    <div class="project-image">
-                        <video autoplay muted loop playsinline>
-                            <source src="assets/p42.mp4" type="video/mp4">
-                        </video>
-                        <div class="project-links">
-                           <a href="https://github.com/Tejesh-dev/100-Days-100-Projects-Challenge" target="_blank"><i
-                                    class="fab fa-github"></i></a>
-                            <a href="Day42_Character_Counter/index.html" target="_blank"><i
-                                    class="fas fa-external-link-alt"></i></a>
-                        </div>
-                    </div>
-                    <div class="project-info">
-                        <h3>Day 42 · Character Counter</h3>
-                        <p>Live character counter with limit and dynamic feedback. Strengthens DOM manipulation, event
-                            handling, and conditional styling in JS.</p>
-                        <div class="project-tags"><span>HTML</span><span>CSS</span><span>JS</span><span>Utility</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Project 43 -->
-                <div class="project-card">
-                    <div class="project-image">
-                        <video autoplay muted loop playsinline>
-                            <source src="assets/p43.mp4" type="video/mp4">
-                        </video>
-                        <div class="project-links">
-                            <a href="https://github.com/Tejesh-dev/100-Days-100-Projects-Challenge" target="_blank"><i
-                                    class="fab fa-github"></i></a>
-                            <a href="Day43_Stopwatch/index.html" target="_blank"><i
-                                    class="fas fa-external-link-alt"></i></a>
-                        </div>
-                    </div>
-                    <div class="project-info">
-                        <h3>Day 43 · Stopwatch</h3>
-                        <p>Real-time stopwatch with Start, Stop, Reset buttons. Demonstrates JS setInterval,
-                            clearInterval, DOM manipulation, and state management.</p>
-                        <div class="project-tags"><span>HTML</span><span>CSS</span><span>JS</span><span>Timer</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Project 44 -->
-                <div class="project-card">
-                    <div class="project-image">
-                        <video autoplay muted loop playsinline>
-                            <source src="assets/p44.mp4" type="video/mp4">
-                        </video>
-                        <div class="project-links">
-                            <a href="https://github.com/Tejesh-dev/100-Days-100-Projects-Challenge" target="_blank"><i
-                                    class="fab fa-github"></i></a>
-                            <a href="Day44_Whiteboard/index.html" target="_blank"><i
-                                    class="fas fa-external-link-alt"></i></a>
-                        </div>
-                    </div>
-                    <div class="project-info">
-                        <h3>Day 44 · Whiteboard App</h3>
-                        <p>Paint-like whiteboard: draw shapes, use brushes, undo/redo, and save as PNG. Built with HTML,
-                            CSS & JS.</p>
-                        <div class="project-tags"><span>HTML</span><span>CSS</span><span>JS</span><span>Drawing</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Project 45 -->
-                <div class="project-card">
-                    <div class="project-image">
-                        <video autoplay muted loop playsinline>
-                            <source src="assets/p45.mp4" type="video/mp4">
-                        </video>
-                        <div class="project-links">
-                           <a href="https://github.com/Tejesh-dev/100-Days-100-Projects-Challenge" target="_blank"><i
-                                    class="fab fa-github"></i></a>
-                            <a href="Day45_LoginPasswordGenerator/index.html" target="_blank"><i
-                                    class="fas fa-external-link-alt"></i></a>
-                        </div>
-                    </div>
-                    <div class="project-info">
-                        <h3>Day 45 · Login Form with Password Generator</h3>
-                        <p>Generate strong passwords and integrate with login form. Secure, user-friendly, built with
-                            HTML, CSS & JS.</p>
-                        <div class="project-tags"><span>HTML</span><span>CSS</span><span>JS</span><span>Security</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Project 46 -->
-                <div class="project-card">
-                    <div class="project-image">
-                        <video autoplay muted loop playsinline>
-                            <source src="assets/p46.mp4" type="video/mp4">
-                        </video>
-                        <div class="project-links">
-                           <a href="https://github.com/Tejesh-dev/100-Days-100-Projects-Challenge" target="_blank"><i
-                                    class="fab fa-github"></i></a>
-                            <a href="Day46_QRCodeGenerator/index.html" target="_blank"><i
-                                    class="fas fa-external-link-alt"></i></a>
-                        </div>
-                    </div>
-                    <div class="project-info">
-                        <h3>Day 46 · QR Code Generator</h3>
-                        <p>Create QR codes instantly for any text/link, download or copy easily. Built with HTML, CSS &
-                            JS (QRCode.js).</p>
-                        <div class="project-tags"><span>HTML</span><span>CSS</span><span>JS</span><span>Utility</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Project 47 -->
-                <div class="project-card">
-                    <div class="project-image">
-                        <video autoplay muted loop playsinline>
-                            <source src="assets/p47.mp4" type="video/mp4">
-                        </video>
-                        <div class="project-links">
-                            <a href="https://github.com/Tejesh-dev/100-Days-100-Projects-Challenge" target="_blank"><i
-                                    class="fab fa-github"></i></a>
-                            <a href="Day47_TypingSpeedTest/index.html" target="_blank"><i
-                                    class="fas fa-external-link-alt"></i></a>
-                        </div>
-                    </div>
-                    <div class="project-info">
-                        <h3>Day 47 · Typing Speed Test</h3>
-                        <p>Practice typing with random texts, track WPM, accuracy, and errors in real-time. Dark-themed
-                            UI built with HTML, CSS & JS.</p>
-                        <div class="project-tags"><span>HTML</span><span>CSS</span><span>JS</span><span>Utility</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Project 48 -->
-                <div class="project-card">
-                    <div class="project-image">
-                        <video autoplay muted loop playsinline>
-                            <source src="assets/p48.mp4" type="video/mp4">
-                        </video>
-                        <div class="project-links">
-                            <a href="https://github.com/Tejesh-dev/100-Days-100-Projects-Challenge" target="_blank"><i
-                                    class="fab fa-github"></i></a>
-                            <a href="Day48_CurrencyConverter/index.html" target="_blank"><i
-                                    class="fas fa-external-link-alt"></i></a>
-                        </div>
-                    </div>
-                    <div class="project-info">
-                        <h3>Day 48 · Currency Converter</h3>
-                        <p>Convert between world currencies with live exchange rates. Dark-themed UI with modern
-                            animation built with HTML, CSS & JS.</p>
-                        <div class="project-tags"><span>HTML</span><span>CSS</span><span>JS</span><span>Converter</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Project 49 -->
-                <div class="project-card">
-                    <div class="project-image">
-                        <video autoplay muted loop playsinline>
-                            <source src="assets/p49.mp4" type="video/mp4">
-                        </video>
-                        <div class="project-links">
-                           <a href="https://github.com/Tejesh-dev/100-Days-100-Projects-Challenge" target="_blank"><i
-                                    class="fab fa-github"></i></a>
-                            <a href="Day49_SpeechToTextApp/index.html" target="_blank"><i
-                                    class="fas fa-external-link-alt"></i></a>
-                        </div>
-                    </div>
-                    <div class="project-info">
-                        <h3>Day 49 · Speech-to-Text App</h3>
-                        <p>Real-time speech recognition with animated mic waves, dark theme UI, and utility buttons.
-                            Built with HTML, CSS & JS using Web Speech API.</p>
-                        <div class="project-tags"><span>HTML</span><span>CSS</span><span>JS</span><span>Speech</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Project 50 -->
-                <div class="project-card">
-                    <div class="project-image">
-                        <video autoplay muted loop playsinline>
-                            <source src="assets/p50.mp4" type="video/mp4">
-                        </video>
-                        <div class="project-links">
-                           <a href="https://github.com/Tejesh-dev/100-Days-100-Projects-Challenge" target="_blank"><i
-                                    class="fab fa-github"></i></a>
-                            <a href="Day50_VoiceForge/index.html" target="_blank"><i
-                                    class="fas fa-external-link-alt"></i></a>
-                        </div>
-                    </div>
-                    <div class="project-info">
-                        <h3>Day 50 · VoiceForge — Text-to-Voice Generator</h3>
-                        <p>Professional Text-to-Voice app using Gemini API. Supports multiple voices, pitch/rate
-                            control, downloadable .wav, built with HTML, CSS & JS.</p>
-                        <div class="project-tags">
-                            <span>HTML</span><span>CSS</span><span>JS</span><span>Text-to-Speech</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Project 51 -->
-                <div class="project-card">
-                    <div class="project-image">
-                        <video autoplay muted loop playsinline>
-                            <source src="assets/p51.mp4" type="video/mp4">
-                        </video>
-                        <div class="project-links">
-                           <a href="https://github.com/Tejesh-dev/100-Days-100-Projects-Challenge" target="_blank"><i
-                                    class="fab fa-github"></i></a>
-                            <a href="Day51_InteractiveModals/index.html" target="_blank"><i
-                                    class="fas fa-external-link-alt"></i></a>
-                        </div>
-                    </div>
-                    <div class="project-info">
-                        <h3>Day 51 · Interactive Modals & Alerts</h3>
-                        <p>Showcases 6 different interactive popups (warning, success, info, image, audio/video,
-                            confirmation) with smooth animations, responsive design, and modular structure. Built with
-                            HTML, CSS & JS.</p>
-                        <div class="project-tags"><span>HTML</span><span>CSS</span><span>JS</span><span>UI/UX</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Project 52 -->
-<div class="project-card">
-    <div class="project-image">
-        <video autoplay muted loop playsinline>
-            <source src="assets/p52.mp4" type="video/mp4">
-        </video>
-        <div class="project-links">
-            <a href="https://github.com/Tejesh-dev/100-Days-100-Projects-Challenge" target="_blank">
+        <!-- Project 51 -->
+        <div class="project-card">
+          <div class="project-image">
+            <video autoplay muted loop playsinline>
+              <source src="assets/p51.mp4" type="video/mp4">
+            </video>
+            <div class="project-links">
+              <a href="https://github.com/Tejesh-dev/100-Days-100-Projects-Challenge" target="_blank"><i
+                  class="fab fa-github"></i></a>
+              <a href="Day51_InteractiveModals/index.html" target="_blank"><i class="fas fa-external-link-alt"></i></a>
+            </div>
+          </div>
+          <div class="project-info">
+            <h3>Day 51 · Interactive Modals & Alerts</h3>
+            <p>Showcases 6 different interactive popups (warning, success, info, image, audio/video,
+              confirmation) with smooth animations, responsive design, and modular structure. Built with
+              HTML, CSS & JS.</p>
+            <div class="project-tags"><span>HTML</span><span>CSS</span><span>JS</span><span>UI/UX</span>
+            </div>
+          </div>
+        </div>
+        <!-- Project 52 -->
+        <div class="project-card">
+          <div class="project-image">
+            <video autoplay muted loop playsinline>
+              <source src="assets/p52.mp4" type="video/mp4">
+            </video>
+            <div class="project-links">
+              <a href="https://github.com/Tejesh-dev/100-Days-100-Projects-Challenge" target="_blank">
                 <i class="fab fa-github"></i>
-            </a>
-            <a href="Day52_TranslatorApp/index.html" target="_blank">
+              </a>
+              <a href="Day52_TranslatorApp/index.html" target="_blank">
                 <i class="fas fa-external-link-alt"></i>
-            </a>
+              </a>
+            </div>
+          </div>
+          <div class="project-info">
+            <h3>Day 52 · Translator App</h3>
+            <p>
+              A versatile Translator App built with HTML, CSS & JavaScript — supports text input, .txt file uploads,
+              and image uploads using Tesseract.js for OCR. Features language swap, copy to clipboard, responsive
+              dark-themed UI, and interactive tabs for a modern user experience.
+            </p>
+            <div class="project-tags">
+              <span>HTML</span><span>CSS</span><span>JS</span><span>OCR</span><span>UI/UX</span>
+            </div>
+          </div>
         </div>
+        <!-- Project 53 -->
+        <div class="project-card">
+          <div class="project-image">
+            <video autoplay muted loop playsinline>
+              <source src="assets/p53.mp4" type="video/mp4">
+            </video>
+            <div class="project-links">
+              <a href="https://github.com/Tejesh-dev/100-Days-100-Projects-Challenge" target="_blank">
+                <i class="fab fa-github"></i>
+              </a>
+              <a href="Day53_NPLChatBoat/index.html" target="_blank">
+                <i class="fas fa-external-link-alt"></i>
+              </a>
+            </div>
+          </div>
+          <div class="project-info">
+            <h3>Day 53 · NLP Chatbot (Snehal’s Foods)</h3>
+            <p>
+              An interactive restaurant chatbot built with HTML, CSS & JavaScript — featuring intent recognition,
+              keyword extraction, contextual responses, typing simulation, and a responsive dark UI.
+            </p>
+            <div class="project-tags">
+              <span>HTML</span><span>CSS</span><span>JS</span><span>NLP</span><span>Chatbot</span>
+            </div>
+          </div>
+        </div>
+
+
+
+
+
+
+
+
+
+
+
+        <!-- 🔥 Project cards will go here -->
+      </div>
     </div>
-    <div class="project-info">
-        <h3>Day 52 · Translator App</h3>
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+  <footer>
+    <div class="container footer-grid">
+      <!-- Column 1: Heading -->
+      <div class="footer-col">
+        <h2>100 Days 100 Projects Challenge</h2>
+        <p>by Tejesh Bhagat</p>
+      </div>
+
+      <!-- Column 2: Description -->
+      <div class="footer-col footer-desc">
         <p>
-            A versatile Translator App built with HTML, CSS & JavaScript — supports text input, .txt file uploads,
-            and image uploads using Tesseract.js for OCR. Features language swap, copy to clipboard, responsive
-            dark-themed UI, and interactive tabs for a modern user experience.
+          This collection showcases my full-stack development journey through 100 educational projects.
+          All designs and implementations are for learning purposes and are not affiliated with any brands or
+          organizations.
         </p>
-        <div class="project-tags">
-            <span>HTML</span><span>CSS</span><span>JS</span><span>OCR</span><span>UI/UX</span>
-        </div>
+
+      </div>
+
+      <!-- Column 3: Social Icons -->
+      <div class="footer-col social-icons">
+        <a href="https://github.com/Tejesh-dev" target="_blank"><i class="fab fa-github"></i></a>
+        <a href="https://www.linkedin.com/in/tejesh-bhagat-a4845223a/" target="_blank"><i
+            class="fab fa-linkedin"></i></a>
+        <a href="https://tejeshportfolio-woad.vercel.app/portfolio.html" target="_blank"><i
+            class="fas fa-external-link-alt"></i></a>
+      </div>
     </div>
-</div>
 
-                
-
-
-
-
-
-
-
-
-
-                <!-- 🔥 Project cards will go here -->
-            </div>
-        </div>
-    </section>
-
-    <!-- ===== FOOTER ===== -->
-    <footer>
-        <div class="container footer-grid">
-            <!-- Column 1: Heading -->
-            <div class="footer-col">
-                <h2>100 Days 100 Projects Challenge</h2>
-                <p>by Tejesh Bhagat</p>
-            </div>
-
-            <!-- Column 2: Description -->
-            <div class="footer-col footer-desc">
-                <p>
-                    This collection showcases my full-stack development journey through 100 educational projects.
-                    All designs and implementations are for learning purposes and are not affiliated with any brands or
-                    organizations.
-                </p>
-
-            </div>
-
-            <!-- Column 3: Social Icons -->
-            <div class="footer-col social-icons">
-                <a href="https://github.com/Tejesh-dev" target="_blank"><i class="fab fa-github"></i></a>
-                <a href="https://www.linkedin.com/in/tejesh-bhagat-a4845223a/" target="_blank"><i class="fab fa-linkedin"></i></a>
-                <a href="https://tejeshportfolio.netlify.app/portfolio" target="_blank"><i class="fas fa-external-link-alt"></i></a>
-            </div>
-        </div>
-
-        <!-- Footer bottom -->
-        <div class="footer-bottom">
-            <p>© 2025 Tejesh Bhagat · All rights reserved</p>
-        </div>
-    </footer>
+    <!-- Footer bottom -->
+    <div class="footer-bottom">
+      <p>© 2025 Tejesh Bhagat · All rights reserved</p>
+    </div>
+  </footer>
 
 
 </body>
 
 </html>
-
-
-
-
