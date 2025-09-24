@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'inter': ['Inter', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #1a202c;
+            color: #e2e8f0;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .container-card {
+            background-color: #2d3748;
+            border-radius: 1rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease-in-out;
+        }
+        .container-card:hover {
+            transform: translateY(-5px);
+        }
+        .weather-card {
+            background-color: #4a5568;
+            border-radius: 0.75rem;
+            padding: 1rem;
+        }
+        .toggle-container {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+        .toggle-input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        .toggle-input:checked + .toggle-slider {
+            background-color: #4CAF50;
+        }
+        .toggle-input:checked + .toggle-slider:before {
+            transform: translateX(26px);
+        }
+        .weather-icon {
+            animation: fadeIn 1s ease-in-out;
+        }
+        .data-fade-in {
+            animation: dataFadeIn 0.5s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        @keyframes dataFadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-200 min-h-screen flex items-center justify-center p-4">
+
+    <div class="container mx-auto p-6 max-w-4xl">
+        <div class="text-center mb-8">
+            <h1 class="text-4xl sm:text-5xl font-bold mb-2">Weather Dashboard</h1>
+            <p class="text-lg text-gray-400">Powered by OpenWeatherMap API</p>
+        </div>
+
+        <!-- Search Bar and Toggle -->
+        <div class="flex flex-col sm:flex-row items-center justify-center mb-8 space-y-4 sm:space-y-0 sm:space-x-4">
+            <div class="flex-grow w-full sm:w-auto">
+                <input type="text" id="city-input" placeholder="Enter city name..."
+                       class="w-full p-3 rounded-lg bg-gray-700 text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </div>
+            <button id="search-button"
+                    class="w-full sm:w-auto p-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg shadow-lg transform transition-transform duration-200 hover:scale-105">
+                Search
+            </button>
+            <div class="flex items-center space-x-2">
+                <label class="toggle-container">
+                    <input type="checkbox" id="temp-toggle" class="toggle-input">
+                    <span class="toggle-slider"></span>
+                </label>
+                <span class="text-sm font-medium">°F / °C</span>
+            </div>
+        </div>
+
+        <!-- Loading & Error Message -->
+        <div id="loading" class="hidden flex justify-center items-center py-8">
+            <div class="loader"></div>
+        </div>
+        <div id="error-message" class="hidden text-center bg-red-800 p-4 rounded-lg font-medium"></div>
+
+        <!-- Main Weather Display -->
+        <div id="weather-display" class="hidden container-card p-6 flex flex-col items-center justify-center">
+            <!-- Current Weather Card -->
+            <div class="text-center w-full mb-8">
+                <h2 id="current-city" class="text-3xl sm:text-4xl font-bold mb-2 data-fade-in"></h2>
+                <p id="current-date" class="text-sm text-gray-400 mb-4 data-fade-in"></p>
+                <div class="flex items-center justify-center mb-4">
+                    <img id="current-icon" class="weather-icon w-20 h-20 sm:w-28 sm:h-28" alt="Weather Icon">
+                    <div class="flex flex-col items-start ml-4 data-fade-in">
+                        <p id="current-temp" class="text-5xl sm:text-6xl font-bold"></p>
+                        <p id="current-condition" class="text-lg sm:text-xl font-semibold capitalize"></p>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 w-full">
+                    <div class="weather-card flex flex-col items-center justify-center data-fade-in">
+                        <p class="text-sm font-semibold text-gray-400">Humidity</p>
+                        <p id="current-humidity" class="text-lg font-bold mt-1"></p>
+                    </div>
+                    <div class="weather-card flex flex-col items-center justify-center data-fade-in">
+                        <p class="text-sm font-semibold text-gray-400">Wind Speed</p>
+                        <p id="current-wind" class="text-lg font-bold mt-1"></p>
+                    </div>
+                    <div class="weather-card flex flex-col items-center justify-center data-fade-in">
+                        <p class="text-sm font-semibold text-gray-400">Feels Like</p>
+                        <p id="current-feels-like" class="text-lg font-bold mt-1"></p>
+                    </div>
+                    <div class="weather-card flex flex-col items-center justify-center data-fade-in">
+                        <p class="text-sm font-semibold text-gray-400">Pressure</p>
+                        <p id="current-pressure" class="text-lg font-bold mt-1"></p>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const API_KEY = "cf29467ab9e39f1f5cd8b637e18ca11f"; // Replace with your actual API key
+            const cityInput = document.getElementById('city-input');
+            const searchButton = document.getElementById('search-button');
+            const tempToggle = document.getElementById('temp-toggle');
+            const weatherDisplay = document.getElementById('weather-display');
+            const errorMessage = document.getElementById('error-message');
+            const loadingIndicator = document.getElementById('loading');
+            
+            let isCelsius = false;
+
+            // DOM elements for current weather
+            const currentCity = document.getElementById('current-city');
+            const currentDate = document.getElementById('current-date');
+            const currentIcon = document.getElementById('current-icon');
+            const currentTemp = document.getElementById('current-temp');
+            const currentCondition = document.getElementById('current-condition');
+            const currentHumidity = document.getElementById('current-humidity');
+            const currentWind = document.getElementById('current-wind');
+            const currentFeelsLike = document.getElementById('current-feels-like');
+            const currentPressure = document.getElementById('current-pressure');
+            
+            // Function to show/hide loading indicator and weather display
+            const toggleLoading = (show) => {
+                loadingIndicator.classList.toggle('hidden', !show);
+                weatherDisplay.classList.add('hidden');
+                errorMessage.classList.add('hidden');
+            };
+
+            const displayError = (message) => {
+                errorMessage.textContent = message;
+                errorMessage.classList.remove('hidden');
+                weatherDisplay.classList.add('hidden');
+                loadingIndicator.classList.add('hidden');
+            };
+
+            // Function to fetch weather data from API
+            const getWeatherData = async (query) => {
+                toggleLoading(true);
+                let url;
+                if (query.isCity) {
+                    url = `https://api.openweathermap.org/data/2.5/weather?q=${query.value}&appid=${API_KEY}&units=metric`;
+                } else {
+                    url = `https://api.openweathermap.org/data/2.5/weather?lat=${query.value.lat}&lon=${query.value.lon}&appid=${API_KEY}&units=metric`;
+                }
+                
+                try {
+                    const response = await fetch(url);
+                    if (!response.ok) {
+                        if (response.status === 404) {
+                            displayError('City not found. Please try again.');
+                        } else {
+                            displayError('An error occurred. Please try again later.');
+                        }
+                        return null;
+                    }
+                    const data = await response.json();
+                    return data;
+                } catch (error) {
+                    console.error("Error fetching weather data:", error);
+                    displayError('Failed to fetch data. Check your connection.');
+                    return null;
+                } finally {
+                    toggleLoading(false);
+                }
+            };
+
+            // Function to update the UI with weather data
+            const updateUI = (data) => {
+                if (!data) return;
+
+                const temp = isCelsius ? data.main.temp : (data.main.temp * 9/5) + 32;
+                const feelsLike = isCelsius ? data.main.feels_like : (data.main.feels_like * 9/5) + 32;
+                const tempUnit = isCelsius ? '°C' : '°F';
+                const windUnit = 'm/s';
+
+                const date = new Date(data.dt * 1000);
+                const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+
+                currentCity.textContent = data.name;
+                currentDate.textContent = date.toLocaleDateString('en-US', options);
+                currentTemp.textContent = `${Math.round(temp)}${tempUnit}`;
+                currentCondition.textContent = data.weather[0].description;
+                currentIcon.src = `https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`;
+                currentHumidity.textContent = `${data.main.humidity}%`;
+                currentWind.textContent = `${data.wind.speed}${windUnit}`;
+                currentFeelsLike.textContent = `${Math.round(feelsLike)}${tempUnit}`;
+                currentPressure.textContent = `${data.main.pressure} hPa`;
+
+                weatherDisplay.classList.remove('hidden');
+                
+                // Save last city to local storage
+                localStorage.setItem('lastCity', data.name);
+            };
+
+            // Function to handle Celsius/Fahrenheit toggle
+            const handleTempToggle = () => {
+                isCelsius = !isCelsius;
+                const currentData = JSON.parse(localStorage.getItem('weatherData'));
+                if (currentData) {
+                    updateUI(currentData);
+                }
+            };
+            tempToggle.addEventListener('change', handleTempToggle);
+
+            // Function to handle search
+            const handleSearch = async () => {
+                const city = cityInput.value.trim();
+                if (city) {
+                    const weatherData = await getWeatherData({ value: city, isCity: true });
+                    if (weatherData) {
+                        localStorage.setItem('weatherData', JSON.stringify(weatherData));
+                        updateUI(weatherData);
+                    }
+                } else {
+                    displayError('Please enter a city name.');
+                }
+            };
+            searchButton.addEventListener('click', handleSearch);
+            cityInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    handleSearch();
+                }
+            });
+
+            // Geolocation and initial load
+            const init = async () => {
+                const lastCity = localStorage.getItem('lastCity');
+                if (lastCity) {
+                    const weatherData = await getWeatherData({ value: lastCity, isCity: true });
+                    if (weatherData) {
+                         localStorage.setItem('weatherData', JSON.stringify(weatherData));
+                        updateUI(weatherData);
+                    }
+                } else {
+                    if (navigator.geolocation) {
+                        toggleLoading(true);
+                        navigator.geolocation.getCurrentPosition(async (position) => {
+                            const { latitude, longitude } = position.coords;
+                            const weatherData = await getWeatherData({ value: { lat: latitude, lon: longitude }, isCity: false });
+                            if (weatherData) {
+                                localStorage.setItem('weatherData', JSON.stringify(weatherData));
+                                updateUI(weatherData);
+                            }
+                        }, (error) => {
+                            console.error("Geolocation error:", error);
+                            displayError('Could not get your location. Please enter a city manually.');
+                            toggleLoading(false);
+                        });
+                    } else {
+                        displayError('Geolocation is not supported by your browser. Please enter a city manually.');
+                    }
+                }
+            };
+            
+            init();
+        });
+    </script>
+
+</body>
+</html>
