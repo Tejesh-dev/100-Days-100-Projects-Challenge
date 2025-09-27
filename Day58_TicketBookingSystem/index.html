@@ -1,0 +1,996 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BookMyShow Clone: Ticket-Wicket - Revamped UI</title>
+    
+    <style>
+        /* New Color Palette and UI Overrides */
+        :root {
+            --bms-red: #E74C3C; /* Brighter, more distinct red */
+            --primary-text: #2A3F54; /* Dark blue-gray for main text */
+            --secondary-text: #607D8B; /* Slightly lighter gray-blue for secondary text */
+            --bg-color: #F2F5F8; /* Light blue-gray background */
+            --card-bg: #FFFFFF; /* Pure white for cards */
+            --available-color: #28A745; /* Standard green */
+            --selected-color: #FFC107; /* Amber for selected */
+            --booked-color: #ADB5BD; /* Light gray for sold */
+            --border-color: #E0E0E0; /* Light gray for subtle borders */
+        }
+
+        /* Base Styles */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Arial, sans-serif; /* A bit more modern font */
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--primary-text);
+            min-height: 100vh;
+        }
+
+        /* --- Header Navigation --- */
+        .header-nav {
+            background-color: var(--primary-text); /* Darker header */
+            color: white;
+            padding: 12px 25px; /* Slightly more padding */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo {
+            font-size: 26px; /* Larger logo */
+            font-weight: bold;
+            color: var(--bms-red);
+            cursor: pointer;
+            letter-spacing: 0.5px;
+        }
+
+        .header-links a, .header-links button {
+            color: white;
+            text-decoration: none;
+            margin-left: 20px; /* More spacing */
+            padding: 10px 15px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            border-radius: 6px; /* Softer edges */
+            transition: background-color 0.2s, transform 0.1s;
+            font-size: 15px;
+        }
+
+        .header-links a:hover, .header-links button:hover {
+            background-color: rgba(255, 255, 255, 0.15); /* Stronger hover */
+            transform: translateY(-2px);
+        }
+
+        .login-btn {
+            background-color: var(--bms-red) !important;
+            padding: 10px 18px !important;
+            font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        .login-btn:hover {
+             background-color: #c0392b !important;
+        }
+        
+        /* --- General Content Styling --- */
+        .content-container {
+            padding: 30px; /* More padding */
+            max-width: 1280px; /* Wider content area */
+            margin: 0 auto;
+        }
+
+        .page-section {
+            display: none; /* Controlled by JS */
+            padding-bottom: 60px; /* More space at bottom */
+        }
+
+        .page-section.active {
+            display: block;
+        }
+
+        h2 {
+            font-size: 28px; /* Larger headings */
+            color: var(--primary-text);
+            margin-bottom: 25px;
+            border-left: 6px solid var(--bms-red); /* Thicker border */
+            padding-left: 15px;
+            font-weight: 600;
+        }
+
+        /* --- Homepage Styles --- */
+        .hero-carousel {
+            height: 350px; /* Taller hero */
+            background: linear-gradient(to right, #2A3F54, #4CAF50); /* Gradient for hero */
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            margin-bottom: 40px;
+            border-radius: 10px; /* More rounded */
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+        }
+        
+        .movie-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Larger cards */
+            gap: 25px; /* More gap */
+        }
+
+        .movie-card {
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            box-shadow: 0 5px 12px rgba(0, 0, 0, 0.1); /* Stronger shadow */
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .movie-card:hover {
+            transform: translateY(-8px); /* More pronounced lift */
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .movie-card img {
+            width: 100%;
+            height: 280px; /* Taller images */
+            object-fit: cover;
+        }
+
+        .movie-card-info {
+            padding: 15px;
+        }
+
+        .movie-card-info h4 {
+            font-size: 18px;
+            margin-bottom: 8px;
+            color: var(--primary-text);
+            font-weight: 600;
+        }
+
+        .movie-card-info p {
+            font-size: 13px;
+            color: var(--secondary-text);
+        }
+
+        /* --- Detail Page Styles --- */
+        .detail-header {
+            display: flex;
+            gap: 40px; /* More spacing */
+            margin-bottom: 40px;
+            background-color: var(--card-bg);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            align-items: flex-start; /* Align poster to top */
+        }
+
+        .detail-poster {
+            width: 300px; /* Larger poster */
+            height: 420px;
+            object-fit: cover;
+            border-radius: 8px;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);
+        }
+
+        .detail-info h1 {
+            font-size: 38px;
+            margin-bottom: 12px;
+            color: var(--primary-text);
+            font-weight: 700;
+        }
+
+        .detail-info p {
+            margin-bottom: 18px;
+            line-height: 1.7;
+            font-size: 15px;
+            color: var(--secondary-text);
+        }
+
+        .book-btn {
+            background-color: var(--bms-red);
+            color: white;
+            padding: 12px 30px; /* Larger button */
+            border: none;
+            border-radius: 6px;
+            font-size: 17px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.2s, transform 0.1s;
+        }
+        .book-btn:hover {
+            background-color: #c0392b;
+            transform: translateY(-2px);
+        }
+        .detail-info p:last-of-type { /* Next Showings text */
+            margin-top: 15px; 
+            font-size: 14px; 
+            color: #777;
+        }
+
+
+        /* --- Seat Selection Overrides (BMS style from previous response) --- */
+
+        .bms-header {
+            position: sticky;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 70px; /* Taller header */
+            background-color: var(--card-bg);
+            box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 25px;
+            z-index: 100;
+        }
+        .bms-header .back-arrow { font-size: 28px; text-decoration: none; color: var(--secondary-text); margin-right: 20px; }
+        .bms-header .header-details h2 { font-size: 18px; font-weight: 700; margin: 0; color: var(--primary-text); }
+        .bms-header .header-details p { font-size: 13px; color: var(--secondary-text); margin: 0; }
+        .ticket-count-badge { background-color: var(--bms-red); color: white; padding: 6px 12px; border-radius: 6px; font-size: 13px; font-weight: bold; }
+        
+        .showtime-tabs { background-color: var(--card-bg); display: flex; justify-content: center; padding: 15px 0 25px 0; border-bottom: 1px solid var(--border-color); }
+        .showtime-btn { 
+            padding: 10px 20px; margin: 0 12px; border: 1px solid var(--available-color); border-radius: 6px; 
+            background-color: white; color: var(--available-color); font-size: 15px; cursor: pointer;
+            transition: all 0.2s;
+        }
+        .showtime-btn.active { background-color: var(--available-color); color: white; }
+        .showtime-btn:hover:not(.active) { background-color: #e6ffe6; }
+
+        .seat-selection-area { display: flex; justify-content: center; padding: 30px 15px; max-width: 1100px; margin: 0 auto; }
+        .row-labels { display: flex; flex-direction: column; align-items: center; margin-right: 15px; padding-top: 60px; }
+        .row-label { height: 22px; width: 22px; margin: 5px 0; font-size: 13px; color: var(--secondary-text); text-align: center; line-height: 22px; font-weight: bold; }
+        .seating-chart-wrapper { text-align: center; flex-grow: 1; }
+        .seat-section { margin-bottom: 30px; }
+        .section-price { font-size: 15px; font-weight: bold; color: var(--secondary-text); margin-bottom: 12px; }
+        .seat-map { display: inline-block; }
+        .row { display: flex; justify-content: center; }
+
+        .seat {
+            height: 22px; width: 22px; margin: 5px; border-radius: 5px; transition: transform 0.2s, background-color 0.2s; cursor: pointer; 
+            font-size: 11px; text-align: center; line-height: 22px; color: var(--primary-text); border: 1px solid var(--booked-color);
+        }
+        .seat.available { background-color: var(--card-bg); border: 1px solid var(--available-color); color: var(--available-color); }
+        .seat.selected { background-color: var(--selected-color); border-color: var(--selected-color); color: white; }
+        .seat.sold { background-color: var(--booked-color); border-color: var(--booked-color); cursor: not-allowed; pointer-events: none; color: white; }
+        .seat.available::before { content: attr(data-seat-number); }
+        .seat:not(.sold):hover { transform: scale(1.15); } /* Stronger hover scale */
+
+
+        .screen-indicator { padding-top: 25px; }
+        .screen { background-color: #B0BEC5; /* Gray-blue for screen */ height: 12px; width: 250px; margin: 15px auto; border-radius: 50% / 100% 100% 0 0; box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); }
+        .screen-indicator small { color: var(--secondary-text); font-size: 13px; }
+
+        .bms-footer {
+            position: fixed; bottom: 0; left: 0; width: 100%; height: 75px; /* Taller footer */
+            background-color: var(--card-bg); box-shadow: 0 -1px 5px rgba(0, 0, 0, 0.1); 
+            display: flex; justify-content: space-between; align-items: center; padding: 0 25px; z-index: 100;
+        }
+        .legend { display: flex; gap: 20px; font-size: 13px; color: var(--secondary-text); }
+        .legend-item { display: flex; align-items: center; }
+        .legend-item .seat { width: 12px; height: 12px; margin: 0 6px 0 0; border-radius: 4px; border: 1px solid var(--booked-color); }
+        .legend-item .seat.available { background-color: white; border-color: var(--available-color); }
+        .legend-item .seat.selected { background-color: var(--selected-color); border-color: var(--selected-color); }
+        .legend-item .seat.sold { background-color: var(--booked-color); border-color: var(--booked-color); }
+        .price-action p { font-size: 15px; font-weight: bold; color: var(--primary-text); margin-right: 20px; }
+        .price-action p #count, .price-action p #total { color: var(--bms-red); } /* Highlight total price */
+
+        .confirm-btn { 
+            background-color: var(--bms-red); color: white; border: none; padding: 12px 25px; border-radius: 6px; 
+            font-size: 16px; cursor: pointer; font-weight: 600; transition: background-color 0.2s, transform 0.1s;
+        }
+        .confirm-btn:hover { background-color: #c0392b; transform: translateY(-2px); }
+        
+        /* --- Payment/Confirmation Styles --- */
+        .checkout-summary {
+            background-color: var(--card-bg);
+            padding: 40px; /* More padding */
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            max-width: 550px; /* Wider summary */
+            margin: 50px auto;
+            text-align: center;
+        }
+
+        .checkout-summary h2, .checkout-summary h3 {
+            border-left: none; /* Remove border from internal headings */
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        .checkout-summary p {
+            font-size: 16px;
+            margin-bottom: 12px;
+            color: var(--secondary-text);
+        }
+        .checkout-summary strong {
+            color: var(--primary-text);
+        }
+
+        .confirmation-code {
+            font-size: 40px; /* Larger code */
+            font-weight: bold;
+            color: var(--bms-red);
+            margin: 25px 0;
+            letter-spacing: 1px;
+        }
+
+        .payment-option {
+            border: 1px solid var(--border-color);
+            padding: 18px; /* More padding */
+            margin-bottom: 15px;
+            border-radius: 6px;
+            text-align: left;
+            cursor: pointer;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            font-size: 15px;
+            color: var(--primary-text);
+            font-weight: 500;
+        }
+
+        .payment-option:hover {
+            border-color: var(--bms-red);
+            box-shadow: 0 2px 8px rgba(var(--bms-red-rgb), 0.1); /* Subtle shadow on hover */
+        }
+        
+        /* --- Profile/Other Pages --- */
+        .profile-card, .offer-card, .support-content {
+            background-color: var(--card-bg);
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+        }
+        
+        .booking-item {
+            border-bottom: 1px solid var(--border-color);
+            padding: 15px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 15px;
+            color: var(--primary-text);
+        }
+        .booking-item:last-child {
+            border-bottom: none;
+        }
+        .booking-item small {
+            color: var(--secondary-text);
+            font-size: 13px;
+        }
+        .booking-item button, .booking-item span {
+            font-weight: 600;
+        }
+        .booking-item button {
+            color: var(--bms-red); border: none; background: none; cursor: pointer;
+            padding: 5px 10px; border-radius: 4px; transition: background-color 0.2s;
+        }
+        .booking-item button:hover {
+            background-color: rgba(var(--bms-red-rgb), 0.1);
+        }
+
+        .offer-card {
+            border-left-width: 8px; /* Thicker accent border */
+            font-size: 15px;
+        }
+        .offer-card h3 {
+            font-size: 20px; margin-bottom: 10px; color: var(--primary-text);
+            border-left: none; padding-left: 0;
+        }
+        .offer-card p {
+            color: var(--secondary-text); line-height: 1.6;
+        }
+        
+        .support-content p {
+            font-size: 15px; line-height: 1.7; color: var(--secondary-text);
+        }
+        .support-content strong {
+            color: var(--primary-text);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .header-nav {
+                padding: 10px 15px;
+            }
+            .logo {
+                font-size: 22px;
+            }
+            .header-links a, .header-links button {
+                margin-left: 10px;
+                padding: 6px 10px;
+                font-size: 14px;
+            }
+            .content-container {
+                padding: 15px;
+            }
+            .hero-carousel {
+                height: 200px;
+                font-size: 24px;
+                margin-bottom: 25px;
+            }
+            .movie-grid {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+                gap: 15px;
+            }
+            .movie-card img {
+                height: 200px;
+            }
+            .detail-header {
+                flex-direction: column;
+                align-items: center;
+                gap: 20px;
+                padding: 20px;
+            }
+            .detail-poster {
+                width: 200px;
+                height: 280px;
+            }
+            .detail-info h1 {
+                font-size: 28px;
+                text-align: center;
+            }
+            .detail-info p {
+                text-align: center;
+            }
+            .book-btn {
+                width: 100%;
+                padding: 10px;
+            }
+            .bms-header {
+                height: 60px;
+                padding: 0 15px;
+            }
+            .bms-header .header-details h2 {
+                font-size: 15px;
+            }
+            .bms-header .header-details p {
+                font-size: 11px;
+            }
+            .ticket-count-badge {
+                padding: 4px 8px;
+                font-size: 11px;
+            }
+            .showtime-tabs {
+                padding: 10px 0 15px 0;
+            }
+            .showtime-btn {
+                padding: 8px 12px;
+                margin: 0 5px;
+                font-size: 13px;
+            }
+            .seat-selection-area {
+                flex-direction: column;
+                padding: 20px 5px;
+            }
+            .row-labels {
+                flex-direction: row;
+                justify-content: center;
+                margin-right: 0;
+                margin-bottom: 10px;
+                padding-top: 0;
+            }
+            .row-label {
+                margin: 0 2px;
+                height: 18px;
+                width: 18px;
+                line-height: 18px;
+                font-size: 10px;
+            }
+            .seat {
+                height: 18px;
+                width: 18px;
+                margin: 3px;
+                font-size: 9px;
+                line-height: 18px;
+            }
+            .screen {
+                width: 180px;
+            }
+            .bms-footer {
+                height: 65px;
+                padding: 0 15px;
+                flex-direction: column;
+                justify-content: center;
+                gap: 5px;
+            }
+            .legend {
+                gap: 10px;
+                font-size: 11px;
+            }
+            .price-action p {
+                font-size: 13px;
+                margin-right: 10px;
+            }
+            .confirm-btn {
+                padding: 8px 15px;
+                font-size: 14px;
+            }
+            .checkout-summary {
+                padding: 25px;
+                margin: 30px auto;
+            }
+            .confirmation-code {
+                font-size: 32px;
+            }
+            .payment-option {
+                padding: 12px;
+                font-size: 14px;
+            }
+        }
+
+    </style>
+</head>
+<body>
+
+    <nav class="header-nav">
+        <div class="logo" onclick="showPage('homepage')">Ticket-Wicket</div>
+        <div class="header-links">
+            <a href="#" onclick="showPage('homepage')">Movies</a>
+            <a href="#" onclick="showPage('offers')">Offers</a>
+            <a href="#" onclick="showPage('support')">Support</a>
+            <a href="#" onclick="showPage('profile')">Profile</a>
+            <button class="login-btn">Sign In</button>
+        </div>
+    </nav>
+    
+    <div class="content-container">
+
+        <section id="homepage" class="page-section active">
+            <div class="hero-carousel">Featured Banner: Movies & Events</div>
+            
+            <h2 style="margin-top: 20px;">Recommended Movies</h2>
+            <div class="movie-grid">
+                <div class="movie-card" onclick="showDetail('Gadar 3', 'INOX Seasons', 'https://imageio.forbes.com/specials-images/imageserve/5d97a69a67dd830006a2ba5c/0x0.jpg?format=jpg&crop=1582,720,x145,y0,safe&height=900&width=1600&fit=bounds')">
+                    <img src="https://imageio.forbes.com/specials-images/imageserve/5d97a69a67dd830006a2ba5c/0x0.jpg?format=jpg&crop=1582,720,x145,y0,safe&height=900&width=1600&fit=bounds" alt="Movie Poster">
+                    <div class="movie-card-info">
+                        <h4>Gadar 3: The Climax</h4>
+                        <p>Action | Hindi | 2.5 Hrs</p>
+                    </div>
+                </div>
+                <div class="movie-card" onclick="showDetail('Tiger vs Pathaan', 'PVR Phoenix', 'https://m.media-amazon.com/images/M/MV5BN2RjYThmZmUtOWFhNy00OWMyLWFhYjQtY2Y2M2Q1NzU1ZTk1XkEyXkFqcGdeQXVyODIyOTEyMzY@._V1_.jpg')">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTkv99mmcL-KeZdD1uMQRIPaaES5uzbKHDXag&s" alt="Tiger vs Pathaan Poster">
+                    <div class="movie-card-info">
+                        <h4>Tiger vs Pathaan</h4>
+                        <p>Thriller | Hindi | 2.2 Hrs</p>
+                    </div>
+                </div>
+                <div class="movie-card" onclick="showDetail('Arijit Live', 'Balewadi Stadium', 'https://pbs.twimg.com/media/F3h6_W3X0AA2DkG?format=jpg&name=large')">
+                    <img src="https://m.media-amazon.com/images/M/MV5BZWY0MDYxMzYtZTAwZi00NmZjLTkwODMtZGFiOGY5MWE5Zjc1XkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg" alt="Arijit Singh Poster">
+                    <div class="movie-card-info">
+                        <h4>Arijit Singh Live</h4>
+                        <p>Concert | Event | 4.0 Hrs</p>
+                    </div>
+                </div>
+                <div class="movie-card" onclick="showDetail('Kantara 2', 'Cinepolis', 'https://stat1.bollywoodhungama.in/wp-content/uploads/2023/11/Kantara-A-Legend-Chapter-1-306x393.jpg')">
+                    <img src="https://stat1.bollywoodhungama.in/wp-content/uploads/2023/11/Kantara-A-Legend-Chapter-1-306x393.jpg" alt="Kantara 2 Poster">
+                    <div class="movie-card-info">
+                        <h4>Kantara 2: The Origin</h4>
+                        <p>Horror | Kannada | 2.8 Hrs</p>
+                    </div>
+                </div>
+                </div>
+        </section>
+
+        <section id="detail-page" class="page-section">
+            <div class="detail-header">
+                <img id="detail-poster" class="detail-poster" src="" alt="Movie Poster">
+                <div class="detail-info">
+                    <h1 id="detail-title"></h1>
+                    <p id="detail-subtitle" style="color: var(--bms-red); font-weight: bold;"></p>
+                    <p><strong>Duration:</strong> 2 hrs 40 mins | <strong>Director:</strong> Rajamouli | <strong>Cast:</strong> Ram Charan, Jr. NTR</p>
+                    <p id="detail-description">A high-octane action spectacle that pits two cinematic titans against each other in a thrilling story of loyalty, betrayal, and massive visual effects. Book your tickets now for the grand release!</p>
+                    <button class="book-btn" onclick="showBookingPage()">Book Tickets for 10:00 AM</button>
+                    <p>Next Showings: 1:00 PM, 5:30 PM, 9:00 PM</p>
+                </div>
+            </div>
+
+            <h2 style="margin-top: 20px;">Gallery & Trailers</h2>
+            <div class="movie-grid">
+                <img class="movie-card" src="https://picsum.photos/200/100?random=10" alt="Scene 1">
+                <img class="movie-card" src="https://picsum.photos/200/100?random=11" alt="Scene 2">
+                <img class="movie-card" src="https://picsum.photos/200/100?random=12" alt="Scene 3">
+            </div>
+        </section>
+
+        <section id="seat-booking-page" class="page-section">
+            
+            <header class="bms-header">
+                <a href="#" class="back-arrow" onclick="showDetail(currentMovie, currentTheatre, currentPosterUrl)">&#x2190;</a>
+                <div class="header-details">
+                    <h2 id="booking-movie-title">Movie Name</h2>
+                    <p id="booking-theatre-details">Theatre Name | Today, 12:30 PM</p>
+                </div>
+                <div class="ticket-count-badge" id="ticket-limit">8 Tickets</div>
+            </header>
+
+            <div class="showtime-tabs">
+                <button class="showtime-btn active">12:30 PM</button>
+                <button class="showtime-btn">09:30 PM</button>
+            </div>
+
+            <div class="seat-selection-area">
+                <div class="row-labels" id="row-labels"></div>
+
+                <div class="seating-chart-wrapper">
+                    <div class="seat-section dress-circle">
+                        <p class="section-price">₹160 DRESS CIRCLE</p>
+                        <div class="seat-map" id="seat-map-dress-circle"></div>
+                    </div>
+
+                    <div class="seat-section special">
+                        <p class="section-price">₹160 SPECIAL</p>
+                        <div class="seat-map" id="seat-map-special"></div>
+                    </div>
+
+                    <div class="screen-indicator">
+                        <div class="screen"></div>
+                        <small>All eyes this way please</small>
+                    </div>
+                </div>
+            </div>
+            
+            <footer class="bms-footer">
+                <div class="legend">
+                    <div class="legend-item"><div class="seat available"></div> Available</div>
+                    <div class="legend-item"><div class="seat selected"></div> Selected</div>
+                    <div class="legend-item"><div class="seat sold"></div> Sold</div>
+                </div>
+                
+                <div class="price-action">
+                    <p>
+                        <span id="count">0</span> Seats Selected | Total: ₹<span id="total">0</span>
+                    </p>
+                    <button id="proceed-payment-btn" class="confirm-btn">Proceed to Pay</button>
+                </div>
+            </footer>
+        </section>
+
+        <section id="checkout-page" class="page-section">
+            <div class="checkout-summary">
+                <h2 style="border-left: none; text-align: center; color: var(--primary-text);">Order Summary</h2>
+                <p>Movie: <strong id="checkout-movie"></strong></p>
+                <p>Theatre: <strong id="checkout-theatre"></strong></p>
+                <p>Seats: <strong id="checkout-seats"></strong></p>
+                <p>Total Amount: <strong style="color: var(--bms-red);">₹<span id="checkout-total">0</span></strong></p>
+
+                <h3 style="margin-top: 30px; margin-bottom: 15px; font-size: 18px; text-align: left; border-left: none; color: var(--primary-text);">Select Payment Option</h3>
+                <div class="payment-option">UPI / Wallet (GPay, PhonePe, Paytm)</div>
+                <div class="payment-option">Credit / Debit Card</div>
+                <div class="payment-option">Net Banking</div>
+
+                <button class="book-btn" style="width: 100%; margin-top: 20px;" onclick="confirmBooking()">Complete Payment</button>
+            </div>
+        </section>
+
+        <section id="confirmation-page" class="page-section">
+            <div class="checkout-summary">
+                <h2 style="color: var(--available-color); border-left: none; text-align: center;">✅ Booking Confirmed!</h2>
+                <p>Thank you for booking with Ticket-Wicket.</p>
+                <p>Your Confirmation Code:</p>
+                <p class="confirmation-code">TW-9834-XYZ</p>
+                <p>Show your QR code at the entrance.</p>
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=TW-9834-XYZ" alt="QR Code" style="margin: 20px auto;">
+                <p><a href="#" onclick="showPage('profile')" style="color: var(--bms-red); text-decoration: none; font-weight: bold;">View in My Bookings</a></p>
+            </div>
+        </section>
+
+        <section id="profile-page" class="page-section">
+            <h2>My Past Bookings</h2>
+            <div class="profile-card">
+                <div class="booking-item">
+                    <div>
+                        <strong>Gadar 3: The Climax</strong><br>
+                        <small>PVR Phoenix | 28 Sep, 12:30 PM | Seats: C-5, C-6</small>
+                    </div>
+                    <button>Cancel</button>
+                </div>
+                <div class="booking-item">
+                    <div>
+                        <strong>Tiger vs Pathaan</strong><br>
+                        <small>INOX Amanora | 15 Aug, 9:00 PM | Seats: A-10</small>
+                    </div>
+                    <span style="color: var(--available-color); font-weight: bold;">Completed</span>
+                </div>
+            </div>
+            
+            <h2>My Account</h2>
+            <div class="profile-card">
+                <p>Email: user@example.com</p>
+                <p>Phone: +91 98765 43210</p>
+            </div>
+        </section>
+
+        <section id="offers-page" class="page-section">
+            <h2>Current Offers & Promotions</h2>
+            <div class="offer-card" style="border-left-color: #FFD700;">
+                <h3>🎉 Gold Card Offer</h3>
+                <p>Get 20% off on your next two movie tickets using code: <strong>TWENTYGOLD</strong></p>
+            </div>
+            <div class="offer-card" style="border-left-color: #007bff;">
+                <h3>💳 Bank Partner Deal</h3>
+                <p>Flat ₹100 cashback on payments made via UPI for first-time users.</p>
+            </div>
+        </section>
+
+        <section id="support-page" class="page-section">
+            <h2>Frequently Asked Questions (FAQ)</h2>
+            <div class="support-content">
+                <p><strong>Q: Can I cancel my ticket?</strong></p>
+                <p>A: Yes, cancellation is available up to 2 hours before the showtime, subject to the theater's policy.</p>
+                
+                <p style="margin-top: 15px;"><strong>Q: What are the charges for Balcony seats?</strong></p>
+                <p>A: Prices vary by theatre, but Dress Circle (Balcony) is usually ₹160 and Special is ₹160 for the G7 Multiplex show.</p>
+            </div>
+            
+            <h2>Contact Us</h2>
+            <div class="support-content">
+                <p>Email: support@ticketwicket.in</p>
+                <p>Helpline: 1800-123-4567</p>
+            </div>
+        </section>
+
+    </div> 
+    
+    <script>
+        // --- SPA NAVIGATION LOGIC ---
+        const pageSections = document.querySelectorAll('.page-section');
+        let currentMovie = '';
+        let currentTheatre = '';
+        let currentPosterUrl = ''; // Added to pass poster URL back to detail page
+        const TICKET_PRICE = 160; // Hardcoded price for the seat booking page
+
+        function showPage(pageId) {
+            pageSections.forEach(section => {
+                section.classList.remove('active');
+            });
+            document.getElementById(pageId).classList.add('active');
+            
+            // Special case for seat booking page to hide its fixed footer when navigating away
+            const footer = document.querySelector('.bms-footer');
+            if (pageId === 'seat-booking-page') {
+                footer.style.display = 'flex';
+            } else {
+                footer.style.display = 'none';
+            }
+        }
+
+        function showDetail(movie, theatre, posterUrl) {
+            currentMovie = movie;
+            currentTheatre = theatre;
+            currentPosterUrl = posterUrl; // Save for back navigation
+            
+            document.getElementById('detail-title').innerText = movie;
+            document.getElementById('detail-subtitle').innerText = theatre + " | Available Showtimes";
+            document.getElementById('detail-poster').src = posterUrl; // Set specific image
+            
+            showPage('detail-page');
+        }
+
+        function showBookingPage() {
+            document.getElementById('booking-movie-title').innerText = currentMovie;
+            document.getElementById('booking-theatre-details').innerText = `${currentTheatre} | Today, 12:30 PM`;
+            
+            generateSeatMap();
+            restoreUIState();
+            
+            document.getElementById('proceed-payment-btn').onclick = function() {
+                const selectedSeats = document.querySelectorAll('.seat.selected');
+                if (selectedSeats.length === 0) {
+                     alert("Please select seats before proceeding.");
+                     return;
+                }
+                prepareCheckout(selectedSeats);
+                showPage('checkout-page');
+            };
+
+            showPage('seat-booking-page');
+        }
+
+        function prepareCheckout(selectedSeats) {
+            const seatLabels = getSelectedSeatLabels(selectedSeats);
+            const totalAmount = document.getElementById('total').innerText;
+
+            document.getElementById('checkout-movie').innerText = currentMovie;
+            document.getElementById('checkout-theatre').innerText = currentTheatre;
+            document.getElementById('checkout-seats').innerText = seatLabels;
+            document.getElementById('checkout-total').innerText = totalAmount;
+        }
+
+        function confirmBooking() {
+            const selectedSeats = document.querySelectorAll('.seat.selected');
+            const selectedSeatIndexes = [...selectedSeats].map(seat => +seat.dataset.seatIndex);
+            
+            saveBookedData(selectedSeatIndexes);
+            showPage('confirmation-page');
+        }
+
+
+        // --- SEAT BOOKING CORE LOGIC (Adapted from previous example) ---
+
+        const seatMapDressCircle = document.getElementById('seat-map-dress-circle');
+        const seatMapSpecial = document.getElementById('seat-map-special');
+        const count = document.getElementById('count');
+        const total = document.getElementById('total');
+        const rowLabelsContainer = document.getElementById('row-labels');
+        
+        const SECTIONS = {
+            DRESS_CIRCLE: { rows: 2, seatsPerRow: 10, startRow: 'A', price: TICKET_PRICE },
+            SPECIAL: { rows: 8, seatsPerRow: 12, startRow: 'C', price: TICKET_PRICE } 
+        };
+
+        function getGlobalIndex(sectionKey, rowIndex, colIndex) {
+            let baseOffset = 0;
+            if (sectionKey === 'SPECIAL') {
+                baseOffset = SECTIONS.DRESS_CIRCLE.rows * SECTIONS.DRESS_CIRCLE.seatsPerRow;
+            }
+            const seatsPerRow = SECTIONS[sectionKey].seatsPerRow;
+            return baseOffset + (rowIndex * seatsPerRow) + colIndex;
+        }
+
+        function indexToLetter(index) {
+            return String.fromCharCode('A'.charCodeAt(0) + index);
+        }
+
+        function getSelectedSeatLabels(selectedSeats) {
+            return [...selectedSeats].map(s => {
+                const index = +s.dataset.seatIndex;
+                const isDressCircle = index < (SECTIONS.DRESS_CIRCLE.rows * SECTIONS.DRESS_CIRCLE.seatsPerRow);
+                
+                let rowChar;
+                let seatNum = (+s.dataset.seatNumber);
+
+                if (isDressCircle) {
+                    const rowIndex = Math.floor(index / SECTIONS.DRESS_CIRCLE.seatsPerRow);
+                    rowChar = indexToLetter(rowIndex);
+                } else {
+                    const specialOffsetIndex = index - (SECTIONS.DRESS_CIRCLE.rows * SECTIONS.DRESS_CIRCLE.seatsPerRow);
+                    const rowIndex = Math.floor(specialOffsetIndex / SECTIONS.SPECIAL.seatsPerRow);
+                    const startCharIndex = SECTIONS.SPECIAL.startRow.charCodeAt(0) - 'A'.charCodeAt(0);
+                    rowChar = indexToLetter(startCharIndex + rowIndex);
+                }
+                return `${rowChar}-${seatNum}`;
+            }).join(', ');
+        }
+        
+        function generateRowLabels() {
+            rowLabelsContainer.innerHTML = '';
+            
+            const allRowLetters = [];
+            
+            for (let i = 0; i < SECTIONS.DRESS_CIRCLE.rows; i++) {
+                allRowLetters.push(indexToLetter(i));
+            }
+
+            const specialStartIndex = SECTIONS.SPECIAL.startRow.charCodeAt(0) - 'A'.charCodeAt(0);
+            for (let i = 0; i < SECTIONS.SPECIAL.rows; i++) {
+                allRowLetters.push(indexToLetter(specialStartIndex + i));
+            }
+            
+            allRowLetters.forEach(letter => {
+                const label = document.createElement('div');
+                label.classList.add('row-label');
+                label.innerText = letter;
+                rowLabelsContainer.appendChild(label);
+            });
+        }
+
+        function createSeatElement(index, sectionKey, bookedSeats) {
+            const config = SECTIONS[sectionKey];
+            const isBooked = bookedSeats.includes(index);
+            
+            const seat = document.createElement('div');
+            seat.classList.add('seat');
+
+            if (isBooked) {
+                seat.classList.add('sold');
+            } else {
+                seat.classList.add('available');
+                seat.dataset.seatIndex = index;
+                seat.dataset.seatNumber = (index % config.seatsPerRow) + 1;
+            }
+            return seat;
+        }
+
+        function generateSectionSeats(container, sectionKey, bookedSeats) {
+            const config = SECTIONS[sectionKey];
+            container.innerHTML = '';
+
+            for (let r = 0; r < config.rows; r++) {
+                const row = document.createElement('div');
+                row.classList.add('row');
+                
+                for (let s = 0; s < config.seatsPerRow; s++) {
+                    const globalIndex = getGlobalIndex(sectionKey, r, s);
+                    const seat = createSeatElement(globalIndex, sectionKey, bookedSeats);
+                    row.appendChild(seat);
+                }
+                container.appendChild(row);
+            }
+        }
+
+        function generateSeatMap() {
+            const { bookedSeats } = getLocalStorageData();
+            
+            generateRowLabels();
+            generateSectionSeats(seatMapDressCircle, 'DRESS_CIRCLE', bookedSeats);
+            generateSectionSeats(seatMapSpecial, 'SPECIAL', bookedSeats);
+        }
+
+        function getLocalStorageData() {
+            const selectedSeats = JSON.parse(localStorage.getItem('selectedSeats')) || [];
+            const bookedSeats = JSON.parse(localStorage.getItem('bookedSeats')) || [];
+            return { selectedSeats, bookedSeats };
+        }
+
+        function saveSelectedData(selectedSeatIndexes) {
+            localStorage.setItem('selectedSeats', JSON.stringify(selectedSeatIndexes));
+        }
+
+        function saveBookedData(newBookedSeats) {
+            let { bookedSeats } = getLocalStorageData();
+            const updatedBookedSeats = [...new Set([...bookedSeats, ...newBookedSeats])];
+            localStorage.setItem('bookedSeats', JSON.stringify(updatedBookedSeats));
+            localStorage.removeItem('selectedSeats'); 
+        }
+
+        function restoreUIState() {
+            const { selectedSeats } = getLocalStorageData();
+            document.querySelectorAll('.seat:not(.sold)').forEach(seat => {
+                const index = +seat.dataset.seatIndex;
+                if (selectedSeats.includes(index)) {
+                    seat.classList.add('selected');
+                } else {
+                    seat.classList.remove('selected');
+                }
+            });
+            updateCountAndTotal();
+        }
+
+        function updateCountAndTotal() {
+            const selectedSeats = document.querySelectorAll('.seat.selected');
+            const selectedSeatIndexes = [...selectedSeats].map(seat => +seat.dataset.seatIndex);
+            saveSelectedData(selectedSeatIndexes);
+            const selectedSeatsCount = selectedSeats.length;
+            count.innerText = selectedSeatsCount;
+            total.innerText = selectedSeatsCount * TICKET_PRICE;
+        }
+
+        function handleSeatClick(e) {
+            const target = e.target;
+            if (target.classList.contains('seat') && !target.classList.contains('sold')) {
+                target.classList.toggle('selected');
+                updateCountAndTotal();
+            }
+        }
+        
+        // --- INITIALIZATION ---
+        
+        // Attach seat click listener to the main area once
+        document.querySelector('.seating-chart-wrapper').addEventListener('click', handleSeatClick); 
+        
+        // Attach payment button handler
+        document.getElementById('proceed-payment-btn').onclick = function() {
+            const selectedSeats = document.querySelectorAll('.seat.selected');
+            if (selectedSeats.length > 0) {
+                prepareCheckout(selectedSeats);
+                showPage('checkout-page');
+            } else {
+                 alert("Please select seats before proceeding to payment.");
+            }
+        };
+        
+        // Ensure only homepage is visible on load and footer is hidden
+        showPage('homepage'); 
+    </script>
+</body>
+</html>

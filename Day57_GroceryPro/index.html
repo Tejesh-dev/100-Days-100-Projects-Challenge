@@ -1,0 +1,1615 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grocery Management Dashboard</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #0a0a0a;
+            --bg-secondary: #1a1a1a;
+            --bg-tertiary: #2a2a2a;
+            --text-primary: #ffffff;
+            --text-secondary: #a0a0a0;
+            --accent-blue: #3b82f6;
+            --accent-green: #10b981;
+            --accent-red: #ef4444;
+            --accent-yellow: #f59e0b;
+            --border-color: #333333;
+            --hover-bg: #333333;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        .dashboard-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border-color);
+            padding: 2rem 0;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .logo {
+            padding: 0 2rem 2rem;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 2rem;
+        }
+
+        .logo h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--accent-blue);
+        }
+
+        .nav-menu {
+            list-style: none;
+        }
+
+        .nav-item {
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 1rem 2rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            background: var(--hover-bg);
+            color: var(--text-primary);
+        }
+
+        .nav-link i {
+            margin-right: 1rem;
+            width: 20px;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: 280px;
+            padding: 2rem;
+            background: var(--bg-primary);
+        }
+
+        .page-header {
+            margin-bottom: 2rem;
+        }
+
+        .page-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .page-subtitle {
+            color: var(--text-secondary);
+        }
+
+        /* Cards */
+        .card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            font-size: 1.5rem;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        /* Tables */
+        .table-container {
+            overflow-x: auto;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .table th,
+        .table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .table th {
+            background: var(--bg-tertiary);
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: var(--accent-blue);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #2563eb;
+        }
+
+        .btn-success {
+            background: var(--accent-green);
+            color: white;
+        }
+
+        .btn-danger {
+            background: var(--accent-red);
+            color: white;
+        }
+
+        .btn-warning {
+            background: var(--accent-yellow);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn i {
+            margin-right: 0.5rem;
+        }
+
+        /* Forms */
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.75rem;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 0.875rem;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+        }
+
+        /* Notifications */
+        .notifications-panel {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            width: 320px;
+            z-index: 1000;
+        }
+
+        .notification {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            animation: slideIn 0.3s ease;
+        }
+
+        .notification.alert {
+            border-left: 4px solid var(--accent-red);
+        }
+
+        .notification.warning {
+            border-left: 4px solid var(--accent-yellow);
+        }
+
+        .notification.success {
+            border-left: 4px solid var(--accent-green);
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 2000;
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 2rem;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Charts */
+        .chart-container {
+            position: relative;
+            height: 300px;
+            margin: 1rem 0;
+        }
+
+        /* Product Grid */
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .product-card {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .product-card:hover {
+            transform: translateY(-2px);
+        }
+
+        .product-image {
+            width: 80px;
+            height: 80px;
+            border-radius: 8px;
+            margin: 0 auto 1rem;
+            background: var(--bg-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+        }
+
+        .product-name {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .product-price {
+            color: var(--accent-green);
+            font-weight: 700;
+        }
+
+        .product-stock {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        /* Bill */
+        .bill-container {
+            background: white;
+            color: black;
+            padding: 2rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+
+        .bill-header {
+            text-align: center;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid #333;
+            padding-bottom: 1rem;
+        }
+
+        .bill-items {
+            margin: 2rem 0;
+        }
+
+        .bill-total {
+            border-top: 2px solid #333;
+            padding-top: 1rem;
+            text-align: right;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Utility Classes */
+        .hidden {
+            display: none !important;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .text-right {
+            text-align: right;
+        }
+
+        .mb-1 { margin-bottom: 0.5rem; }
+        .mb-2 { margin-bottom: 1rem; }
+        .mb-3 { margin-bottom: 1.5rem; }
+        .mt-1 { margin-top: 0.5rem; }
+        .mt-2 { margin-top: 1rem; }
+        .mt-3 { margin-top: 1.5rem; }
+
+        .flex {
+            display: flex;
+        }
+
+        .justify-between {
+            justify-content: space-between;
+        }
+
+        .items-center {
+            align-items: center;
+        }
+
+        .gap-2 {
+            gap: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+         Sidebar 
+        <nav class="sidebar" id="sidebar">
+            <div class="logo">
+                <h1><i class="fas fa-shopping-cart"></i> GroceryPro</h1>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="#" class="nav-link active" data-page="dashboard">
+                        <i class="fas fa-tachometer-alt"></i>
+                        Dashboard
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" data-page="inventory">
+                        <i class="fas fa-boxes"></i>
+                        Inventory
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" data-page="billing">
+                        <i class="fas fa-receipt"></i>
+                        Billing
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" data-page="analytics">
+                        <i class="fas fa-chart-bar"></i>
+                        Analytics
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" data-page="categories">
+                        <i class="fas fa-tags"></i>
+                        Categories
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" data-page="history">
+                        <i class="fas fa-history"></i>
+                        Bill History
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+         Main Content 
+        <main class="main-content">
+             <!-- Dashboard Page  -->
+            <div id="dashboard-page" class="page">
+                <div class="page-header">
+                    <h1 class="page-title">Dashboard Overview</h1>
+                    <p class="page-subtitle">Welcome to your grocery management system</p>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: rgba(59, 130, 246, 0.1); color: var(--accent-blue);">
+                            <i class="fas fa-dollar-sign"></i>
+                        </div>
+                        <div class="stat-value" id="todaySales">₹12,450</div>
+                        <div class="stat-label">Today's Sales</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: rgba(16, 185, 129, 0.1); color: var(--accent-green);">
+                            <i class="fas fa-boxes"></i>
+                        </div>
+                        <div class="stat-value" id="totalProducts">1,247</div>
+                        <div class="stat-label">Total Products</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: rgba(239, 68, 68, 0.1); color: var(--accent-red);">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <div class="stat-value" id="lowStock">23</div>
+                        <div class="stat-label">Low Stock Items</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: rgba(245, 158, 11, 0.1); color: var(--accent-yellow);">
+                            <i class="fas fa-receipt"></i>
+                        </div>
+                        <div class="stat-value" id="todayBills">156</div>
+                        <div class="stat-label">Today's Bills</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Sales Overview</h3>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="salesChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Trending Products</h3>
+                    </div>
+                    <div class="product-grid" id="trendingProducts">
+                         Trending products will be populated by JavaScript 
+                    </div>
+                </div>
+            </div>
+
+             <!-- Inventory Page  -->
+            <div id="inventory-page" class="page hidden">
+                <div class="page-header">
+                    <h1 class="page-title">Inventory Management</h1>
+                    <button class="btn btn-primary" onclick="openAddProductModal()">
+                        <i class="fas fa-plus"></i>
+                        Add Product
+                    </button>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Product Inventory</h3>
+                        <div class="flex gap-2">
+                            <input type="text" class="form-input" placeholder="Search products..." id="searchInput" style="width: 300px;">
+                            <select class="form-input" id="categoryFilter" style="width: 200px;">
+                                <option value="">All Categories</option>
+                                <option value="grocery">Grocery</option>
+                                <option value="pantry">Pantry</option>
+                                <option value="cleaners">Cleaners</option>
+                                <option value="fruits">Fruits</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="table-container">
+                        <table class="table" id="inventoryTable">
+                            <thead>
+                                <tr>
+                                    <th>Product</th>
+                                    <th>Category</th>
+                                    <th>Stock</th>
+                                    <th>Price</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="inventoryTableBody">
+                                 <!-- Inventory items will be populated by JavaScript  -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+             <!-- Billing Page  -->
+            <div id="billing-page" class="page hidden">
+                <div class="page-header">
+                    <h1 class="page-title">Billing System</h1>
+                    <button class="btn btn-primary" onclick="newBill()">
+                        <i class="fas fa-plus"></i>
+                        New Bill
+                    </button>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Create Bill</h3>
+                    </div>
+                    <div class="flex gap-2 mb-3">
+                        <div class="form-group" style="flex: 1;">
+                            <label class="form-label">Customer Name</label>
+                            <input type="text" class="form-input" id="customerName" placeholder="Enter customer name">
+                        </div>
+                        <div class="form-group" style="flex: 1;">
+                            <label class="form-label">Customer Phone</label>
+                            <input type="tel" class="form-input" id="customerPhone" placeholder="Enter phone number">
+                        </div>
+                    </div>
+
+                    <div class="flex gap-2 mb-3">
+                        <select class="form-input" id="productSelect" style="flex: 2;">
+                            <option value="">Select Product</option>
+                        </select>
+                        <input type="number" class="form-input" id="productQuantity" placeholder="Qty" min="1" style="width: 100px;">
+                        <button class="btn btn-primary" onclick="addToBill()">
+                            <i class="fas fa-plus"></i>
+                            Add
+                        </button>
+                    </div>
+
+                    <div class="table-container">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Product</th>
+                                    <th>Price</th>
+                                    <th>Quantity</th>
+                                    <th>Total</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="billItems">
+                                 <!-- Bill items will be populated by JavaScript  -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="text-right mt-3">
+                        <h3>Total: ₹<span id="billTotal">0.00</span></h3>
+                        <div class="flex gap-2 justify-end mt-2">
+                            <button class="btn btn-success" onclick="generateBill()">
+                                <i class="fas fa-file-pdf"></i>
+                                Generate Bill
+                            </button>
+                            <button class="btn btn-secondary" onclick="clearBill()">
+                                <i class="fas fa-trash"></i>
+                    
+                                Clear
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+             <!-- Analytics Page  -->
+            <div id="analytics-page" class="page hidden">
+                <div class="page-header">
+                    <h1 class="page-title">Sales Analytics</h1>
+                    <div class="flex gap-2">
+                        <select class="form-input" id="analyticsFilter">
+                            <option value="daily">Daily</option>
+                            <option value="weekly">Weekly</option>
+                            <option value="monthly">Monthly</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: rgba(59, 130, 246, 0.1); color: var(--accent-blue);">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="stat-value" id="periodSales">₹45,230</div>
+                        <div class="stat-label">Period Sales</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: rgba(16, 185, 129, 0.1); color: var(--accent-green);">
+                            <i class="fas fa-percentage"></i>
+                        </div>
+                        <div class="stat-value" id="growthRate">+12.5%</div>
+                        <div class="stat-label">Growth Rate</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: rgba(245, 158, 11, 0.1); color: var(--accent-yellow);">
+                            <i class="fas fa-shopping-cart"></i>
+                        </div>
+                        <div class="stat-value" id="avgOrderValue">₹285</div>
+                        <div class="stat-label">Avg Order Value</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: rgba(139, 69, 19, 0.1); color: #8b4513;">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="stat-value" id="totalCustomers">1,847</div>
+                        <div class="stat-label">Total Customers</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Revenue Trends</h3>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="revenueChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Top Selling Products</h3>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="topProductsChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+             <!-- Categories Page  -->
+            <div id="categories-page" class="page hidden">
+                <div class="page-header">
+                    <h1 class="page-title">Product Categories</h1>
+                    <button class="btn btn-primary" onclick="openAddCategoryModal()">
+                        <i class="fas fa-plus"></i>
+                        Add Category
+                    </button>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                <i class="fas fa-apple-alt" style="color: var(--accent-green);"></i>
+                                Grocery & Fresh
+                            </h3>
+                        </div>
+                        <div class="product-grid" id="groceryProducts">
+                             Products will be populated by JavaScript 
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                <i class="fas fa-bread-slice" style="color: var(--accent-yellow);"></i>
+                                Pantry Items
+                            </h3>
+                        </div>
+                        <div class="product-grid" id="pantryProducts">
+                             <!-- Products will be populated by JavaScript  -->
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                <i class="fas fa-spray-can" style="color: var(--accent-blue);"></i>
+                                Cleaners & Hygiene
+                            </h3>
+                        </div>
+                        <div class="product-grid" id="cleanerProducts">
+                             <!-- Products will be populated by JavaScript  -->
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                <i class="fas fa-seedling" style="color: var(--accent-green);"></i>
+                                Fruits & Vegetables
+                            </h3>
+                        </div>
+                        <div class="product-grid" id="fruitProducts">
+                             Products will be populated by JavaScript 
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+             <!-- History Page  -->
+            <div id="history-page" class="page hidden">
+                <div class="page-header">
+                    <h1 class="page-title">Bill History</h1>
+                    <div class="flex gap-2">
+                        <input type="date" class="form-input" id="dateFilter">
+                        <input type="text" class="form-input" placeholder="Search by customer..." id="customerFilter">
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Recent Bills</h3>
+                    </div>
+                    <div class="table-container">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Bill #</th>
+                                    <th>Customer</th>
+                                    <th>Date</th>
+                                    <th>Amount</th>
+                                    <th>Items</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="billHistoryTable">
+                                 <!-- Bill history will be populated by JavaScript  -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+     <!-- Notifications Panel  -->
+    <div class="notifications-panel" id="notificationsPanel">
+         <!-- Notifications will be populated by JavaScript  -->
+    </div>
+
+     <!-- Add Product Modal  -->
+    <div class="modal" id="addProductModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Add New Product</h3>
+                <button class="close-btn" onclick="closeModal('addProductModal')">&times;</button>
+            </div>
+            <form id="addProductForm">
+                <div class="form-group">
+                    <label class="form-label">Product Name</label>
+                    <input type="text" class="form-input" id="newProductName" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Category</label>
+                    <select class="form-input" id="newProductCategory" required>
+                        <option value="">Select Category</option>
+                        <option value="grocery">Grocery</option>
+                        <option value="pantry">Pantry</option>
+                        <option value="cleaners">Cleaners</option>
+                        <option value="fruits">Fruits</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Price (₹)</label>
+                    <input type="number" class="form-input" id="newProductPrice" step="0.01" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Stock Quantity</label>
+                    <input type="number" class="form-input" id="newProductStock" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Product Image</label>
+                    <input type="file" class="form-input" id="newProductImage" accept="image/*">
+                </div>
+                <div class="flex gap-2 justify-end">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('addProductModal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Add Product</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+     <!-- Bill Preview Modal  -->
+    <div class="modal" id="billPreviewModal">
+        <div class="modal-content" style="max-width: 800px;">
+            <div class="modal-header">
+                <h3 class="modal-title">Bill Preview</h3>
+                <button class="close-btn" onclick="closeModal('billPreviewModal')">&times;</button>
+            </div>
+            <div id="billPreview" class="bill-container">
+                 Bill content will be populated by JavaScript 
+            </div>
+            <div class="flex gap-2 justify-end mt-3">
+                <button class="btn btn-primary" onclick="downloadBill()">
+                    <i class="fas fa-download"></i>
+                    Download PDF
+                </button>
+                <button class="btn btn-success" onclick="printBill()">
+                    <i class="fas fa-print"></i>
+                    Print
+                </button>
+                <button class="btn btn-warning" onclick="shareBill()">
+                    <i class="fas fa-share"></i>
+                    Share
+                </button>
+            </div>
+        </div>
+    </div>
+
+     <!-- Share Modal  -->
+    <div class="modal" id="shareModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Share Bill</h3>
+                <button class="close-btn" onclick="closeModal('shareModal')">&times;</button>
+            </div>
+            <div class="flex gap-2 justify-center">
+                <button class="btn btn-success" onclick="shareViaWhatsApp()">
+                    <i class="fab fa-whatsapp"></i>
+                    WhatsApp
+                </button>
+                <button class="btn btn-primary" onclick="shareViaEmail()">
+                    <i class="fas fa-envelope"></i>
+                    Email
+                </button>
+                <button class="btn btn-secondary" onclick="copyBillLink()">
+                    <i class="fas fa-link"></i>
+                    Copy Link
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global Variables
+        let products = [
+            { id: 1, name: 'Organic Bananas', category: 'fruits', price: 45.00, stock: 120, image: '🍌' },
+            { id: 2, name: 'Whole Wheat Bread', category: 'pantry', price: 35.00, stock: 85, image: '🍞' },
+            { id: 3, name: 'Greek Yogurt', category: 'grocery', price: 125.00, stock: 45, image: '🥛' },
+            { id: 4, name: 'All-Purpose Cleaner', category: 'cleaners', price: 85.00, stock: 15, image: '🧽' },
+            { id: 5, name: 'Fresh Orange Juice', category: 'grocery', price: 95.00, stock: 30, image: '🧃' },
+            { id: 6, name: 'Toilet Paper Pack', category: 'cleaners', price: 145.00, stock: 8, image: '🧻' },
+            { id: 7, name: 'Basmati Rice 5kg', category: 'pantry', price: 285.00, stock: 25, image: '🍚' },
+            { id: 8, name: 'Fresh Apples', category: 'fruits', price: 165.00, stock: 75, image: '🍎' },
+            { id: 9, name: 'Dish Soap', category: 'cleaners', price: 65.00, stock: 12, image: '🧴' },
+            { id: 10, name: 'Olive Oil 500ml', category: 'grocery', price: 245.00, stock: 35, image: '🫒' }
+        ];
+
+        let currentBill = [];
+        let billHistory = [];
+        let billCounter = 1001;
+
+        // Initialize Dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeNavigation();
+            initializeCharts();
+            populateInventoryTable();
+            populateProductSelect();
+            populateTrendingProducts();
+            populateCategoryProducts();
+            populateBillHistory();
+            checkStockAlerts();
+            updateDashboardStats();
+        });
+
+        // Navigation
+        function initializeNavigation() {
+            const navLinks = document.querySelectorAll('.nav-link');
+            const pages = document.querySelectorAll('.page');
+
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetPage = this.getAttribute('data-page');
+
+                    // Update active nav link
+                    navLinks.forEach(l => l.classList.remove('active'));
+                    this.classList.add('active');
+
+                    // Show target page
+                    pages.forEach(page => page.classList.add('hidden'));
+                    document.getElementById(targetPage + '-page').classList.remove('hidden');
+                });
+            });
+        }
+
+        // Charts
+        function initializeCharts() {
+            // Sales Chart
+            const salesCtx = document.getElementById('salesChart').getContext('2d');
+            new Chart(salesCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                    datasets: [{
+                        label: 'Daily Sales (₹)',
+                        data: [8500, 12300, 9800, 15600, 11200, 18900, 14500],
+                        borderColor: '#3b82f6',
+                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            labels: { color: '#ffffff' }
+                        }
+                    },
+                    scales: {
+                        x: { ticks: { color: '#a0a0a0' } },
+                        y: { ticks: { color: '#a0a0a0' } }
+                    }
+                }
+            });
+
+            // Revenue Chart
+            const revenueCtx = document.getElementById('revenueChart');
+            if (revenueCtx) {
+                new Chart(revenueCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                        datasets: [{
+                            label: 'Monthly Revenue (₹)',
+                            data: [245000, 289000, 312000, 278000, 334000, 356000],
+                            backgroundColor: '#10b981'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                labels: { color: '#ffffff' }
+                            }
+                        },
+                        scales: {
+                            x: { ticks: { color: '#a0a0a0' } },
+                            y: { ticks: { color: '#a0a0a0' } }
+                        }
+                    }
+                });
+            }
+
+            // Top Products Chart
+            const topProductsCtx = document.getElementById('topProductsChart');
+            if (topProductsCtx) {
+                new Chart(topProductsCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Bananas', 'Bread', 'Yogurt', 'Rice', 'Apples'],
+                        datasets: [{
+                            data: [25, 20, 15, 18, 12],
+                            backgroundColor: ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6']
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                labels: { color: '#ffffff' }
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        // Inventory Management
+        function populateInventoryTable() {
+            const tbody = document.getElementById('inventoryTableBody');
+            tbody.innerHTML = '';
+
+            products.forEach(product => {
+                const row = document.createElement('tr');
+                const stockStatus = product.stock < 20 ? 'Low Stock' : 'In Stock';
+                const statusClass = product.stock < 20 ? 'text-danger' : 'text-success';
+
+                row.innerHTML = `
+                    <td>
+                        <div class="flex items-center gap-2">
+                            <span style="font-size: 1.5rem;">${product.image}</span>
+                            ${product.name}
+                        </div>
+                    </td>
+                    <td>${product.category}</td>
+                    <td>${product.stock}</td>
+                    <td>₹${product.price.toFixed(2)}</td>
+                    <td><span class="${statusClass}">${stockStatus}</span></td>
+                    <td>
+                        <button class="btn btn-secondary" onclick="editProduct(${product.id})">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn btn-danger" onclick="deleteProduct(${product.id})">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        function populateProductSelect() {
+            const select = document.getElementById('productSelect');
+            select.innerHTML = '<option value="">Select Product</option>';
+
+            products.forEach(product => {
+                const option = document.createElement('option');
+                option.value = product.id;
+                option.textContent = `${product.name} - ₹${product.price.toFixed(2)}`;
+                select.appendChild(option);
+            });
+        }
+
+        function populateTrendingProducts() {
+            const container = document.getElementById('trendingProducts');
+            const trending = products.slice(0, 6);
+
+            container.innerHTML = trending.map(product => `
+                <div class="product-card">
+                    <div class="product-image">${product.image}</div>
+                    <div class="product-name">${product.name}</div>
+                    <div class="product-price">₹${product.price.toFixed(2)}</div>
+                    <div class="product-stock">Stock: ${product.stock}</div>
+                </div>
+            `).join('');
+        }
+
+        function populateCategoryProducts() {
+            const categories = {
+                grocery: document.getElementById('groceryProducts'),
+                pantry: document.getElementById('pantryProducts'),
+                cleaners: document.getElementById('cleanerProducts'),
+                fruits: document.getElementById('fruitProducts')
+            };
+
+            Object.keys(categories).forEach(category => {
+                const categoryProducts = products.filter(p => p.category === category);
+                const container = categories[category];
+                
+                container.innerHTML = categoryProducts.map(product => `
+                    <div class="product-card">
+                        <div class="product-image">${product.image}</div>
+                        <div class="product-name">${product.name}</div>
+                        <div class="product-price">₹${product.price.toFixed(2)}</div>
+                        <div class="product-stock">Stock: ${product.stock}</div>
+                    </div>
+                `).join('');
+            });
+        }
+
+        // Billing System
+        function addToBill() {
+            const productId = document.getElementById('productSelect').value;
+            const quantity = parseInt(document.getElementById('productQuantity').value);
+
+            if (!productId || !quantity) {
+                showNotification('Please select a product and quantity', 'warning');
+                return;
+            }
+
+            const product = products.find(p => p.id == productId);
+            if (product.stock < quantity) {
+                showNotification('Insufficient stock available', 'alert');
+                return;
+            }
+
+            const existingItem = currentBill.find(item => item.productId == productId);
+            if (existingItem) {
+                existingItem.quantity += quantity;
+                existingItem.total = existingItem.quantity * existingItem.price;
+            } else {
+                currentBill.push({
+                    productId: product.id,
+                    name: product.name,
+                    price: product.price,
+                    quantity: quantity,
+                    total: product.price * quantity
+                });
+            }
+
+            updateBillTable();
+            document.getElementById('productSelect').value = '';
+            document.getElementById('productQuantity').value = '';
+        }
+
+        function updateBillTable() {
+            const tbody = document.getElementById('billItems');
+            tbody.innerHTML = '';
+
+            let grandTotal = 0;
+
+            currentBill.forEach((item, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${item.name}</td>
+                    <td>₹${item.price.toFixed(2)}</td>
+                    <td>${item.quantity}</td>
+                    <td>₹${item.total.toFixed(2)}</td>
+                    <td>
+                        <button class="btn btn-danger" onclick="removeFromBill(${index})">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+                grandTotal += item.total;
+            });
+
+            document.getElementById('billTotal').textContent = grandTotal.toFixed(2);
+        }
+
+        function removeFromBill(index) {
+            currentBill.splice(index, 1);
+            updateBillTable();
+        }
+
+        function clearBill() {
+            currentBill = [];
+            updateBillTable();
+            document.getElementById('customerName').value = '';
+            document.getElementById('customerPhone').value = '';
+        }
+
+        function generateBill() {
+            if (currentBill.length === 0) {
+                showNotification('Please add items to the bill', 'warning');
+                return;
+            }
+
+            const customerName = document.getElementById('customerName').value || 'Walk-in Customer';
+            const customerPhone = document.getElementById('customerPhone').value || '';
+            const billNumber = billCounter++;
+            const date = new Date().toLocaleDateString();
+            const time = new Date().toLocaleTimeString();
+
+            const bill = {
+                billNumber,
+                customerName,
+                customerPhone,
+                date,
+                time,
+                items: [...currentBill],
+                total: currentBill.reduce((sum, item) => sum + item.total, 0)
+            };
+
+            // Update stock
+            currentBill.forEach(item => {
+                const product = products.find(p => p.id === item.productId);
+                product.stock -= item.quantity;
+            });
+
+            // Add to history
+            billHistory.unshift(bill);
+
+            // Show bill preview
+            showBillPreview(bill);
+
+            // Update displays
+            populateInventoryTable();
+            populateBillHistory();
+            updateDashboardStats();
+            checkStockAlerts();
+
+            showNotification('Bill generated successfully!', 'success');
+        }
+
+        function showBillPreview(bill) {
+            const preview = document.getElementById('billPreview');
+            preview.innerHTML = `
+                <div class="bill-header">
+                    <h2>GroceryPro Store</h2>
+                    <p>123 Main Street, City, State 12345</p>
+                    <p>Phone: +91 98765 43210</p>
+                    <hr>
+                    <div class="flex justify-between">
+                        <div>
+                            <strong>Bill #: ${bill.billNumber}</strong><br>
+                            Date: ${bill.date}<br>
+                            Time: ${bill.time}
+                        </div>
+                        <div class="text-right">
+                            Customer: ${bill.customerName}<br>
+                            ${bill.customerPhone ? `Phone: ${bill.customerPhone}` : ''}
+                        </div>
+                    </div>
+                </div>
+                <div class="bill-items">
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <thead>
+                            <tr style="border-bottom: 1px solid #333;">
+                                <th style="text-align: left; padding: 8px;">Item</th>
+                                <th style="text-align: right; padding: 8px;">Price</th>
+                                <th style="text-align: right; padding: 8px;">Qty</th>
+                                <th style="text-align: right; padding: 8px;">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${bill.items.map(item => `
+                                <tr>
+                                    <td style="padding: 8px;">${item.name}</td>
+                                    <td style="text-align: right; padding: 8px;">₹${item.price.toFixed(2)}</td>
+                                    <td style="text-align: right; padding: 8px;">${item.quantity}</td>
+                                    <td style="text-align: right; padding: 8px;">₹${item.total.toFixed(2)}</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="bill-total">
+                    <strong>Total Amount: ₹${bill.total.toFixed(2)}</strong>
+                </div>
+                <div class="text-center mt-3">
+                    <p>Thank you for shopping with us!</p>
+                    <p>Visit again soon!</p>
+                </div>
+            `;
+
+            openModal('billPreviewModal');
+            window.currentBillData = bill;
+        }
+
+        function populateBillHistory() {
+            const tbody = document.getElementById('billHistoryTable');
+            tbody.innerHTML = '';
+
+            billHistory.forEach(bill => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>#${bill.billNumber}</td>
+                    <td>${bill.customerName}</td>
+                    <td>${bill.date}</td>
+                    <td>₹${bill.total.toFixed(2)}</td>
+                    <td>${bill.items.length}</td>
+                    <td>
+                        <button class="btn btn-primary" onclick="viewBill(${bill.billNumber})">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        <button class="btn btn-success" onclick="reprintBill(${bill.billNumber})">
+                            <i class="fas fa-print"></i>
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        function viewBill(billNumber) {
+            const bill = billHistory.find(b => b.billNumber === billNumber);
+            if (bill) {
+                showBillPreview(bill);
+            }
+        }
+
+        function reprintBill(billNumber) {
+            const bill = billHistory.find(b => b.billNumber === billNumber);
+            if (bill) {
+                window.currentBillData = bill;
+                printBill();
+            }
+        }
+
+        // PDF and Sharing Functions
+        function downloadBill() {
+            if (!window.currentBillData) return;
+
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            const bill = window.currentBillData;
+
+            // Header
+            doc.setFontSize(20);
+            doc.text('GroceryPro Store', 20, 20);
+            doc.setFontSize(12);
+            doc.text('123 Main Street, City, State 12345', 20, 30);
+            doc.text('Phone: +91 98765 43210', 20, 40);
+
+            // Bill details
+            doc.text(`Bill #: ${bill.billNumber}`, 20, 60);
+            doc.text(`Date: ${bill.date}`, 20, 70);
+            doc.text(`Customer: ${bill.customerName}`, 120, 60);
+            if (bill.customerPhone) {
+                doc.text(`Phone: ${bill.customerPhone}`, 120, 70);
+            }
+
+            // Items
+            let y = 90;
+            doc.text('Item', 20, y);
+            doc.text('Price', 80, y);
+            doc.text('Qty', 120, y);
+            doc.text('Total', 160, y);
+            y += 10;
+
+            bill.items.forEach(item => {
+                doc.text(item.name, 20, y);
+                doc.text(`₹${item.price.toFixed(2)}`, 80, y);
+                doc.text(item.quantity.toString(), 120, y);
+                doc.text(`₹${item.total.toFixed(2)}`, 160, y);
+                y += 10;
+            });
+
+            // Total
+            y += 10;
+            doc.setFontSize(14);
+            doc.text(`Total: ₹${bill.total.toFixed(2)}`, 160, y);
+
+            doc.save(`bill-${bill.billNumber}.pdf`);
+            showNotification('Bill downloaded successfully!', 'success');
+        }
+
+        function printBill() {
+            window.print();
+        }
+
+        function shareBill() {
+            openModal('shareModal');
+        }
+
+        function shareViaWhatsApp() {
+            if (!window.currentBillData) return;
+            const bill = window.currentBillData;
+            const message = `Bill #${bill.billNumber}\nCustomer: ${bill.customerName}\nTotal: ₹${bill.total.toFixed(2)}\nThank you for shopping with GroceryPro!`;
+            const url = `https://wa.me/?text=${encodeURIComponent(message)}`;
+            window.open(url, '_blank');
+            closeModal('shareModal');
+        }
+
+        function shareViaEmail() {
+            if (!window.currentBillData) return;
+            const bill = window.currentBillData;
+            const subject = `Bill #${bill.billNumber} - GroceryPro`;
+            const body = `Dear ${bill.customerName},\n\nThank you for shopping with us!\n\nBill Details:\nBill #: ${bill.billNumber}\nDate: ${bill.date}\nTotal Amount: ₹${bill.total.toFixed(2)}\n\nBest regards,\nGroceryPro Team`;
+            const url = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+            window.open(url);
+            closeModal('shareModal');
+        }
+
+        function copyBillLink() {
+            const billData = JSON.stringify(window.currentBillData);
+            const link = `${window.location.origin}?bill=${encodeURIComponent(billData)}`;
+            navigator.clipboard.writeText(link).then(() => {
+                showNotification('Bill link copied to clipboard!', 'success');
+                closeModal('shareModal');
+            });
+        }
+
+        // Utility Functions
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.add('active');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        function openAddProductModal() {
+            openModal('addProductModal');
+        }
+
+        function openAddCategoryModal() {
+            showNotification('Category management coming soon!', 'info');
+        }
+
+        function newBill() {
+            clearBill();
+            showNotification('New bill started', 'success');
+        }
+
+        function editProduct(id) {
+            showNotification('Edit product feature coming soon!', 'info');
+        }
+
+        function deleteProduct(id) {
+            if (confirm('Are you sure you want to delete this product?')) {
+                products = products.filter(p => p.id !== id);
+                populateInventoryTable();
+                populateProductSelect();
+                showNotification('Product deleted successfully!', 'success');
+            }
+        }
+
+        function showNotification(message, type = 'info') {
+            const panel = document.getElementById('notificationsPanel');
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.innerHTML = `
+                <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'alert' ? 'exclamation-triangle' : type === 'warning' ? 'exclamation-circle' : 'info-circle'}"></i>
+                <span>${message}</span>
+            `;
+            panel.appendChild(notification);
+
+            setTimeout(() => {
+                notification.remove();
+            }, 5000);
+        }
+
+        function checkStockAlerts() {
+            const lowStockProducts = products.filter(p => p.stock < 20);
+            lowStockProducts.forEach(product => {
+                if (product.stock < 10) {
+                    showNotification(`Critical: ${product.name} has only ${product.stock} items left!`, 'alert');
+                } else {
+                    showNotification(`Warning: ${product.name} is running low (${product.stock} items)`, 'warning');
+                }
+            });
+        }
+
+        function updateDashboardStats() {
+            // Calculate today's sales from bill history
+            const today = new Date().toLocaleDateString();
+            const todayBills = billHistory.filter(bill => bill.date === today);
+            const todaySales = todayBills.reduce((sum, bill) => sum + bill.total, 0);
+
+            document.getElementById('todaySales').textContent = `₹${todaySales.toFixed(0)}`;
+            document.getElementById('totalProducts').textContent = products.length.toString();
+            document.getElementById('lowStock').textContent = products.filter(p => p.stock < 20).length.toString();
+            document.getElementById('todayBills').textContent = todayBills.length.toString();
+        }
+
+        // Add Product Form Handler
+        document.getElementById('addProductForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const newProduct = {
+                id: Math.max(...products.map(p => p.id)) + 1,
+                name: document.getElementById('newProductName').value,
+                category: document.getElementById('newProductCategory').value,
+                price: parseFloat(document.getElementById('newProductPrice').value),
+                stock: parseInt(document.getElementById('newProductStock').value),
+                image: '📦' // Default image, could be enhanced with file upload
+            };
+
+            products.push(newProduct);
+            populateInventoryTable();
+            populateProductSelect();
+            populateTrendingProducts();
+            populateCategoryProducts();
+            updateDashboardStats();
+
+            closeModal('addProductModal');
+            this.reset();
+            showNotification('Product added successfully!', 'success');
+        });
+
+        // Search and Filter Functions
+        document.getElementById('searchInput')?.addEventListener('input', function() {
+            // Implement search functionality
+            console.log('Search:', this.value);
+        });
+
+        document.getElementById('categoryFilter')?.addEventListener('change', function() {
+            // Implement category filter
+            console.log('Filter:', this.value);
+        });
+
+        document.getElementById('analyticsFilter')?.addEventListener('change', function() {
+            // Update analytics based on filter
+            console.log('Analytics filter:', this.value);
+        });
+    </script>
+</body>
+</html>
