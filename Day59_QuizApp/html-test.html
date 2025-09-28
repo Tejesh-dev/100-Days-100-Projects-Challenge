@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTML Test - Dev Dashboard</title>
+    <style>
+        :root {
+            --bg: #f7f9fc;
+            --card: #ffffff;
+            --accent: #0d6efd;
+            --correct: #198754;
+            --wrong: #dc3545;
+            --current: #ffc107;
+            --text: #212529;
+            --muted: #6c757d;
+            --radius: 10px;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .header div {
+            font-weight: 600;
+            margin: 5px 0;
+        }
+
+        .timer {
+            font-family: monospace;
+            font-size: 18px;
+        }
+
+        .start-btn {
+            padding: 15px 30px;
+            background: var(--accent);
+            color: white;
+            font-weight: 600;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: 0.2s;
+        }
+
+        .start-btn:hover {
+            background: #0b5ed7;
+        }
+
+        .exam-area {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            display: none;
+            /* Hide exam until start */
+        }
+
+        .left-panel {
+            flex: 2;
+            background: var(--card);
+            padding: 20px;
+            border-radius: var(--radius);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .question {
+            font-size: 20px;
+            margin-bottom: 20px;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .option {
+            padding: 12px;
+            background: #e9ecef;
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: 0.2s;
+            text-align: left;
+            border: 1px solid #dee2e6;
+        }
+
+        .option:hover {
+            background: #d1e7fd;
+        }
+
+        .option.correct {
+            background: var(--correct);
+            color: white;
+        }
+
+        .option.wrong {
+            background: var(--wrong);
+            color: white;
+        }
+
+        .option.selected {
+            border: 2px solid var(--accent);
+        }
+
+        .right-panel {
+            flex: 1;
+            background: var(--card);
+            padding: 20px;
+            border-radius: var(--radius);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .question-nav {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .q-box {
+            width: 40px;
+            height: 40px;
+            background: #dc3545;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            color: white;
+        }
+
+        .q-box.current {
+            background: var(--current);
+            color: black;
+        }
+
+        .q-box.correct {
+            background: var(--correct);
+        }
+
+        .q-box.wrong {
+            background: var(--wrong);
+        }
+
+        .nav-btns {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .nav-btns button,
+        .submit-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            background: var(--accent);
+            color: white;
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.2s;
+        }
+
+        .nav-btns button:hover,
+        .submit-btn:hover {
+            background: #0b5ed7;
+        }
+
+        .submit-btn {
+            margin-top: auto;
+        }
+
+        @media(max-width:900px) {
+            .exam-area {
+                flex-direction: column;
+            }
+
+            .question-nav {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <div>Exam: HTML Test</div>
+            <div>Examiner: Tej Bhagat</div>
+            <div>Time Left: <span id="timer">15:00</span></div>
+            <div>Total Questions: 15</div>
+        </div>
+
+        <!-- Start Test Button -->
+        <div style="text-align:center; margin:40px 0;">
+            <button class="start-btn" id="startBtn">Start Test</button>
+        </div>
+
+        <!-- Exam Area -->
+        <div class="exam-area" id="examArea">
+            <div class="left-panel">
+                <div class="question" id="questionText"></div>
+                <div class="options" id="optionsContainer"></div>
+                <div class="nav-btns">
+                    <button id="prevBtn">Previous</button>
+                    <button id="nextBtn">Next</button>
+                </div>
+            </div>
+            <div class="right-panel">
+                <div class="question-nav" id="questionNav"></div>
+                <button class="submit-btn" id="submitBtn">Submit Exam</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const QUESTIONS = [
+            { q: "What does HTML stand for?", opts: ["Hyper Text Making Language", "Hyper Text Markup Language", "High Transfer Markup Language", "Hyperlinks and Text Markup Language"], ans: "Hyper Text Markup Language" },
+            { q: "Which tag defines largest heading?", opts: ["<h6>", "<head>", "<h1>", "<title>"], ans: "<h1>" },
+            { q: "Which element inserts line break?", opts: ["<br>", "<break>", "<lb>", "<newline>"], ans: "<br>" },
+            { q: "HTML hyperlink correct syntax?", opts: ['<a href="url">Link</a>', '<link url="url">Link</link>', '<a>url</a>', '<href="url">Link</href>'], ans: '<a href="url">Link</a>' },
+            { q: "Tag for image?", opts: ["<src>", "<image>", "<img>", "<picture>"], ans: "<img>" },
+            { q: "HTML ordered list tag?", opts: ["<ul>", "<ol>", "<li>", "<list>"], ans: "<ol>" },
+            { q: "Tag to define table row?", opts: ["<tr>", "<td>", "<table>", "<row>"], ans: "<tr>" },
+            { q: "Attribute to open link in new tab?", opts: ['target="_new"', 'target="_blank"', 'open="tab"', 'window="new"'], ans: 'target="_blank"' },
+            { q: "Tag for horizontal line?", opts: ["<hr>", "<hl>", "<line>", "<border>"], ans: "<hr>" },
+            { q: "Attribute for alt text in image?", opts: ["title", "alt", "src", "href"], ans: "alt" },
+            { q: "Tag for unordered list?", opts: ["<ul>", "<ol>", "<li>", "<list>"], ans: "<ul>" },
+            { q: "Attribute for inline styles?", opts: ["style", "class", "font", "css"], ans: "style" },
+            { q: "<iframe> does what?", opts: ["Creates a form", "Displays inline frame", "Creates image placeholder", "Defines a script"], ans: "Displays inline frame" },
+            { q: "Password input type?", opts: ["text", "password", "secret", "hidden"], ans: "password" },
+            { q: "Default position in CSS?", opts: ["static", "relative", "absolute", "fixed"], ans: "static" }
+        ];
+
+        let state = { currentIndex: 0, answers: Array(QUESTIONS.length).fill(null), timerSec: 900, timerId: null };
+        const questionText = document.getElementById('questionText');
+        const optionsContainer = document.getElementById('optionsContainer');
+        const questionNav = document.getElementById('questionNav');
+        const timerEl = document.getElementById('timer');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const submitBtn = document.getElementById('submitBtn');
+        const examArea = document.getElementById('examArea');
+        const startBtn = document.getElementById('startBtn');
+
+        function renderQuestion() {
+            const q = QUESTIONS[state.currentIndex];
+            questionText.textContent = q.q;
+            optionsContainer.innerHTML = '';
+            q.opts.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = 'option';
+                btn.textContent = opt;
+                if (state.answers[state.currentIndex] === opt) btn.classList.add('selected');
+                btn.onclick = () => selectAnswer(opt);
+                optionsContainer.appendChild(btn);
+            });
+            updateNav();
+        }
+
+        function selectAnswer(opt) {
+            state.answers[state.currentIndex] = opt;
+            renderQuestion();
+        }
+
+        function renderNav() {
+            questionNav.innerHTML = '';
+            QUESTIONS.forEach((q, i) => {
+                const box = document.createElement('div');
+                box.className = 'q-box';
+                box.textContent = i + 1;
+                box.onclick = () => { state.currentIndex = i; renderQuestion(); }
+                questionNav.appendChild(box);
+            });
+            updateNav();
+        }
+
+        function updateNav() {
+            const boxes = document.querySelectorAll('.q-box');
+            boxes.forEach((b, i) => {
+                b.classList.remove('current', 'correct', 'wrong');
+                if (i === state.currentIndex) b.classList.add('current');
+                if (state.answers[i] !== null) {
+                    b.classList.add(state.answers[i] === QUESTIONS[i].ans ? 'correct' : 'wrong');
+                }
+            });
+        }
+
+        function startTimer() {
+            state.timerId = setInterval(() => {
+                state.timerSec--;
+                const m = Math.floor(state.timerSec / 60).toString().padStart(2, '0');
+                const s = (state.timerSec % 60).toString().padStart(2, '0');
+                timerEl.textContent = `${m}:${s}`;
+                if (state.timerSec <= 0) submitExam();
+            }, 1000);
+        }
+
+        function submitExam() {
+            clearInterval(state.timerId);
+            let score = 0;
+            state.answers.forEach((ans, i) => { if (ans === QUESTIONS[i].ans) score++; });
+            alert(`Exam Submitted!\nScore: ${score}/${QUESTIONS.length}`);
+            window.location.href = "index.html";
+        }
+
+        prevBtn.onclick = () => { if (state.currentIndex > 0) state.currentIndex--; renderQuestion(); }
+        nextBtn.onclick = () => { if (state.currentIndex < QUESTIONS.length - 1) state.currentIndex++; renderQuestion(); }
+        submitBtn.onclick = submitExam;
+
+        startBtn.onclick = () => {
+            startBtn.style.display = 'none';
+            examArea.style.display = 'flex';
+            renderQuestion();
+            renderNav();
+            startTimer();
+        };
+    </script>
+</body>
+
+</html>

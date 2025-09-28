@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dev Exam Dashboard</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0f1724;
+      --card: #1e293b;
+      --accent: #5eead4;
+      --muted: #9aa7b2;
+      --radius: 12px;
+      --transition: 0.3s;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: #fff;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 1200px;
+      width: 100%;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 3rem;
+      margin-bottom: 10px;
+      color: #fff;
+    }
+
+    p {
+      color: var(--muted);
+      margin-bottom: 40px;
+      font-size: 1.1rem;
+    }
+
+    .tests {
+      display: flex;
+      justify-content: center;
+      gap: 25px;
+      flex-wrap: wrap;
+    }
+
+    .card {
+      background: var(--card);
+      padding: 30px 20px;
+      border-radius: var(--radius);
+      width: 220px;
+      cursor: pointer;
+      transition: var(--transition);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-decoration: none;
+      color: inherit;
+      position: relative;
+    }
+
+    .card:hover {
+      transform: translateY(-8px) scale(1.05);
+      border-color: var(--accent);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+    }
+
+    .card i {
+      font-size: 3rem;
+      color: var(--accent);
+      margin-bottom: 15px;
+    }
+
+    .card h2 {
+      font-size: 1.5rem;
+      margin-bottom: 10px;
+    }
+
+    .card p {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    @media (max-width: 900px) {
+      h1 {
+        font-size: 2.5rem;
+      }
+
+      .tests {
+        gap: 20px;
+      }
+
+      .card {
+        width: 45%;
+        padding: 25px 15px;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .card {
+        width: 100%;
+      }
+
+      h1 {
+        font-size: 2rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h1>Welcome to Dev Exam Platform</h1>
+    <p>Select a test to start and track your progress in real-time.</p>
+    <div class="tests">
+      <a href="html-test.html" class="card">
+        <i class="fab fa-html5"></i>
+        <h2>HTML Test</h2>
+        <p>Test your HTML knowledge</p>
+      </a>
+      <a href="css-test.html" class="card">
+        <i class="fab fa-css3-alt"></i>
+        <h2>CSS Test</h2>
+        <p>Test your CSS knowledge</p>
+      </a>
+      <a href="js-test.html" class="card">
+        <i class="fab fa-js-square"></i>
+        <h2>JavaScript Test</h2>
+        <p>Test your JavaScript knowledge</p>
+      </a>
+    </div>
+  </div>
+</body>
+
+</html>

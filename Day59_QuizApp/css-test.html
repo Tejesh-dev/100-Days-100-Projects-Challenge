@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSS Test - Dev Dashboard</title>
+    <style>
+        :root {
+            --bg: #f7f9fc;
+            --card: #ffffff;
+            --accent: #0d6efd;
+            --correct: #198754;
+            --wrong: #dc3545;
+            --current: #ffc107;
+            --text: #212529;
+            --muted: #6c757d;
+            --radius: 10px;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .header div {
+            font-weight: 600;
+            margin: 5px 0;
+        }
+
+        .timer {
+            font-family: monospace;
+            font-size: 18px;
+        }
+
+        .start-btn {
+            padding: 15px 30px;
+            background: var(--accent);
+            color: white;
+            font-weight: 600;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: 0.2s;
+        }
+
+        .start-btn:hover {
+            background: #0b5ed7;
+        }
+
+        .exam-area {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            display: none;
+        }
+
+        .left-panel {
+            flex: 2;
+            background: var(--card);
+            padding: 20px;
+            border-radius: var(--radius);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .question {
+            font-size: 20px;
+            margin-bottom: 20px;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .option {
+            padding: 12px;
+            background: #e9ecef;
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: 0.2s;
+            text-align: left;
+            border: 1px solid #dee2e6;
+        }
+
+        .option:hover {
+            background: #d1e7fd;
+        }
+
+        .option.correct {
+            background: var(--correct);
+            color: white;
+        }
+
+        .option.wrong {
+            background: var(--wrong);
+            color: white;
+        }
+
+        .option.selected {
+            border: 2px solid var(--accent);
+        }
+
+        .right-panel {
+            flex: 1;
+            background: var(--card);
+            padding: 20px;
+            border-radius: var(--radius);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .question-nav {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .q-box {
+            width: 40px;
+            height: 40px;
+            background: #dc3545;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            color: white;
+        }
+
+        .q-box.current {
+            background: var(--current);
+            color: black;
+        }
+
+        .q-box.correct {
+            background: var(--correct);
+        }
+
+        .q-box.wrong {
+            background: var(--wrong);
+        }
+
+        .nav-btns {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .nav-btns button,
+        .submit-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            background: var(--accent);
+            color: white;
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.2s;
+        }
+
+        .nav-btns button:hover,
+        .submit-btn:hover {
+            background: #0b5ed7;
+        }
+
+        .submit-btn {
+            margin-top: auto;
+        }
+
+        @media(max-width:900px) {
+            .exam-area {
+                flex-direction: column;
+            }
+
+            .question-nav {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <div>Exam: CSS Test</div>
+            <div>Examiner: Tej Bhagat</div>
+            <div>Time Left: <span id="timer">15:00</span></div>
+            <div>Total Questions: 15</div>
+        </div>
+
+        <div style="text-align:center; margin:40px 0;">
+            <button class="start-btn" id="startBtn">Start Test</button>
+        </div>
+
+        <div class="exam-area" id="examArea">
+            <div class="left-panel">
+                <div class="question" id="questionText"></div>
+                <div class="options" id="optionsContainer"></div>
+                <div class="nav-btns">
+                    <button id="prevBtn">Previous</button>
+                    <button id="nextBtn">Next</button>
+                </div>
+            </div>
+            <div class="right-panel">
+                <div class="question-nav" id="questionNav"></div>
+                <button class="submit-btn" id="submitBtn">Submit Exam</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const QUESTIONS = [
+            { q: "What does CSS stand for?", opts: ["Creative Style Sheets", "Cascading Style Sheets", "Computer Style System", "Colorful Style Syntax"], ans: "Cascading Style Sheets" },
+            { q: "Which property changes text color?", opts: ["font-color", "text-color", "color", "background-color"], ans: "color" },
+            { q: "How to center text?", opts: ["align", "text-align", "font-align", "center"], ans: "text-align" },
+            { q: "Font size property?", opts: ["font-size", "text-size", "font-style", "size"], ans: "font-size" },
+            { q: "Make text bold?", opts: ["font-weight: bold;", "text-decoration: bold;", "font: bold;", "style: bold;"], ans: "font-weight: bold;" },
+            { q: "Background color property?", opts: ["bgcolor", "background-color", "color-background", "background"], ans: "background-color" },
+            { q: "Select element by id 'header'?", opts: ["#header", ".header", "header", "*header"], ans: "#header" },
+            { q: "Select elements with class 'btn'?", opts: ["#btn", ".btn", "*btn", "btn"], ans: ".btn" },
+            { q: "Remove bullets in list?", opts: ["list-type: none;", "list-style-type: none;", "bullet: none;", "text-decoration: none;"], ans: "list-style-type: none;" },
+            { q: "CSS comment syntax?", opts: ["// comment", "<!-- comment -->" ,"/* comment */" ,"# comment"] ,ans :"/* comment */ "},
+            { q: "Position absolute means?", opts: ["relative to viewport", "relative to ancestor", "fixed", "floats freely"], ans: "relative to ancestor" },
+            { q: "Default position?", opts: ["static", "relative", "absolute", "fixed"], ans: "static" },
+            { q: "Add padding inside border?", opts: ["margin", "padding", "spacing", "border-spacing"], ans: "padding" },
+            { q: "Change font family?", opts: ["font-family", "font-style", "font-type", "text-font"], ans: "font-family" },
+            { q: "Property to change font color?", opts: ["color", "font-color", "text-color", "text-style"], ans: "color" }
+        ];
+
+        let state = { currentIndex: 0, answers: Array(QUESTIONS.length).fill(null), timerSec: 900, timerId: null };
+        const questionText = document.getElementById('questionText');
+        const optionsContainer = document.getElementById('optionsContainer');
+        const questionNav = document.getElementById('questionNav');
+        const timerEl = document.getElementById('timer');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const submitBtn = document.getElementById('submitBtn');
+        const examArea = document.getElementById('examArea');
+        const startBtn = document.getElementById('startBtn');
+
+        function renderQuestion() {
+            const q = QUESTIONS[state.currentIndex];
+            questionText.textContent = q.q;
+            optionsContainer.innerHTML = '';
+            q.opts.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = 'option';
+                btn.textContent = opt;
+                if (state.answers[state.currentIndex] === opt) btn.classList.add('selected');
+                btn.onclick = () => selectAnswer(opt);
+                optionsContainer.appendChild(btn);
+            });
+            updateNav();
+        }
+
+        function selectAnswer(opt) {
+            state.answers[state.currentIndex] = opt;
+            renderQuestion();
+        }
+
+        function renderNav() {
+            questionNav.innerHTML = '';
+            QUESTIONS.forEach((q, i) => {
+                const box = document.createElement('div');
+                box.className = 'q-box';
+                box.textContent = i + 1;
+                box.onclick = () => { state.currentIndex = i; renderQuestion(); }
+                questionNav.appendChild(box);
+            });
+            updateNav();
+        }
+
+        function updateNav() {
+            const boxes = document.querySelectorAll('.q-box');
+            boxes.forEach((b, i) => {
+                b.classList.remove('current', 'correct', 'wrong');
+                if (i === state.currentIndex) b.classList.add('current');
+                if (state.answers[i] !== null) {
+                    b.classList.add(state.answers[i] === QUESTIONS[i].ans ? 'correct' : 'wrong');
+                }
+            });
+        }
+
+        function startTimer() {
+            state.timerId = setInterval(() => {
+                state.timerSec--;
+                const m = Math.floor(state.timerSec / 60).toString().padStart(2, '0');
+                const s = (state.timerSec % 60).toString().padStart(2, '0');
+                timerEl.textContent = `${m}:${s}`;
+                if (state.timerSec <= 0) submitExam();
+            }, 1000);
+        }
+
+        function submitExam() {
+            clearInterval(state.timerId);
+            let score = 0;
+            state.answers.forEach((ans, i) => { if (ans === QUESTIONS[i].ans) score++; });
+            alert(`Exam Submitted!\nScore: ${score}/${QUESTIONS.length}`);
+            window.location.href = "index.html";
+        }
+
+        prevBtn.onclick = () => { if (state.currentIndex > 0) state.currentIndex--; renderQuestion(); }
+        nextBtn.onclick = () => { if (state.currentIndex < QUESTIONS.length - 1) state.currentIndex++; renderQuestion(); }
+        submitBtn.onclick = submitExam;
+
+        startBtn.onclick = () => {
+            startBtn.style.display = 'none';
+            examArea.style.display = 'flex';
+            renderQuestion();
+            renderNav();
+            startTimer();
+        };
+    </script>
+</body>
+
+</html>
