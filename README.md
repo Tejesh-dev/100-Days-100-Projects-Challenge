@@ -4,7 +4,7 @@
 > Hi, I’m **Tejesh Bhagat**, an MCA graduate and passionate developer on a mission to become a Full Stack Developer.  
 > This isn't just a challenge — it's my story of resilience, restart, and relentless pursuit of growth.
 
----
+----
 
 ## Motivation
 
